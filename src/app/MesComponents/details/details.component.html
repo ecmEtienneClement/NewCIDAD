@@ -1,0 +1,98 @@
+<div class="container">
+  <div class="alert alert-info mt-3">
+    <div class="row">
+      <div class="blocNom col-12 col-md-8 col-lg-8">
+        <p class="nomUser">MBAYE</p>
+        <p class="nomUser">ETIENNE CLEMENT</p>
+        <p class="nomUser">P7</p>
+        <mat-progress-bar
+          mode="buffer"
+          style="background-color: rgb(0, 0, 0)"
+        ></mat-progress-bar>
+      </div>
+      <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+        <div class="row">
+          <div class="col- 12">
+            <strong>language</strong><br />
+            {{ bugCmp.language }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col- 12">
+            <strong>Date de la Poste</strong><br />
+            {{ bugCmp.date | date: "short" }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col- 12">
+            <strong>Etat du Problème</strong><br />
+            <span
+              [ngStyle]="{ color: bugCmp.etat == 'Résolu' ? 'green' : 'red' }"
+            >
+              {{ bugCmp.etat }}
+            </span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col- 12">
+            <strong>Nombres de réponse (s)</strong><br />
+            {{ tbReponseBug.length }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img class="card-img-top" src="" alt="ici image de la capture" />
+    <div class="card-body">
+      <h1 class="card-title" style="font-weight: bold">{{ bugCmp.titre }}</h1>
+      <h4 class="card-text">{{ bugCmp.details }}</h4>
+    </div>
+  </div>
+  <!-- Partie de la Reponse -->
+  <div class="row mt-4">
+    <div class="col-12">
+      <legend>
+        <i class="fas fa-hand-holding-medical" style="color: green"></i> UNE
+        SOLUTION MOUSSA
+      </legend>
+      <div class="row">
+        <div class="col-12">
+          <textarea
+            class="form-control"
+            rows="2"
+            [(ngModel)]="reponse"
+            minlength="5"
+            placeholder="Votre reponse ici ...Min 5 caractères"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <button
+            class="btn btnrepondre"
+            [disabled]="reponse.length < 5"
+            (click)="onSubmitForm()"
+          >
+            Répondre
+          </button>
+          <button class="btn btnannuler" (click)="onResetForm()">
+            Annuler
+          </button>
+        </div>
+      </div>
+
+      <!-- Fin Partie de la Reponse -->
+    </div>
+  </div>
+  <div class="container-fluid containerParent">
+    <app-view-reponse-bug
+      [tbReponseBug]="tbReponseBug"
+      [totalPage]="totalPage"
+      [user_Id_Connect]="user_Id_Connect"
+      [user_Id_Bug]="user_Id_Bug"
+    ></app-view-reponse-bug>
+  </div>
+</div>

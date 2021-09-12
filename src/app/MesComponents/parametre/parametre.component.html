@@ -1,0 +1,167 @@
+<div class="container">
+  <div class="jumbotron jumbotron-fluid">
+    <div class="alert alert-success mt-2">
+      <h1 class="display-4">Modifier Vos Informations Personnelles</h1>
+    </div>
+
+    <hr class="my-4" />
+
+    <div class="row">
+      <div class="col-12">
+        <p class="lead" [ngStyle]="{ color: colorSelectedMail }">
+          Changer votre adresse mail
+        </p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <a
+          (click)="updateMail()"
+          style="cursor: pointer"
+          *ngIf="!afficheBlocMail"
+        >
+          <span class="lienMail">>>> </span>
+        </a>
+      </div>
+    </div>
+
+    <!--Bloc de  modification de l'adresse mail-->
+    <div *ngIf="afficheBlocMail">
+      <p>
+        Votre nouveau mail : <span class="newMail">{{ mail }}</span>
+      </p>
+      <input type="text" class="form-control" [(ngModel)]="mail" />
+
+      <button
+        type="button"
+        class="btn btn-success m-2"
+        *ngIf="!(mail.length <= 10)"
+        [disabled]="mail.length <= 10"
+      >
+        Modifier
+      </button>
+
+      <button type="button" class="btn btn-danger m-2" (click)="noUpdateMail()">
+        Annuler
+      </button>
+
+      <div class="alert alert-danger mt-2" *ngIf="false">
+        <strong>Title!</strong>
+      </div>
+    </div>
+    <hr class="my-4" />
+    <div class="row">
+      <div class="col-12">
+        <p class="lead" [ngStyle]="{ color: colorSelectedMdp }">
+          Changer votre mots de passe
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <a
+          (click)="updatemdp()"
+          style="cursor: pointer"
+          *ngIf="!afficheBlocMdp"
+        >
+          <span class="lienMail">>>> </span>
+        </a>
+      </div>
+    </div>
+
+    <!--Bloc de  modification du mots de passe-->
+    <div *ngIf="afficheBlocMdp">
+      <p>
+        Votre nouveau mots de passe : <span class="newMail">{{ mdp }}</span>
+      </p>
+      <p>
+        Confirmation du nouveau mots de passe :
+
+        <span class="newMail" [ngStyle]="{ color: colorConfirmation() }">{{
+          confmdp
+        }}</span>
+      </p>
+      <input
+        type="password"
+        class="form-control"
+        placeholder="Entrez votre nouveau mots de passe"
+        [(ngModel)]="mdp"
+      />
+      <input
+        *ngIf="mdp.length > 0"
+        [disabled]="mdp.length < 6"
+        type="password"
+        class="form-control mt-3"
+        placeholder="Confirmez votre nouveau mots de passe"
+        [(ngModel)]="confmdp"
+      />
+
+      <button
+        type="button"
+        class="btn btn-success m-2"
+        *ngIf="btnDisabledModifMdp"
+      >
+        Modifier
+      </button>
+
+      <button type="button" class="btn btn-danger m-2" (click)="noUpdateMdp()">
+        Annuler
+      </button>
+
+      <div class="alert alert-danger mt-2" *ngIf="false">
+        <strong>Title!</strong>
+      </div>
+    </div>
+    <hr class="my-4" />
+
+    <div class="row">
+      <div class="col-12">
+        <p class="lead" [ngStyle]="{ color: colorSelectedUser }">
+          Supprimer votre compte
+        </p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <a
+          (click)="deleteUser()"
+          style="cursor: pointer"
+          *ngIf="!afficheBlocDeleteUser"
+        >
+          <span class="lienMail">>>> </span>
+        </a>
+      </div>
+    </div>
+
+    <!--Bloc de  suppression de User -->
+    <div *ngIf="afficheBlocDeleteUser">
+      <p>Votre mots de passe</p>
+      <input
+        type="password"
+        class="form-control"
+        placeholder="Entrez votre nouveau mots de passe"
+        [(ngModel)]="confirmdp"
+      />
+
+      <button
+        type="button"
+        class="btn btn-success m-2"
+        *ngIf="!(confirmdp.length <= 6)"
+        [disabled]="confirmdp.length <= 6"
+      >
+        Modifier
+      </button>
+
+      <button type="button" class="btn btn-danger m-2" (click)="nodeleteUser()">
+        Annuler
+      </button>
+
+      <div class="alert alert-danger mt-2" *ngIf="false">
+        <strong>Title!</strong>
+      </div>
+    </div>
+    <hr class="my-4" />
+  </div>
+</div>

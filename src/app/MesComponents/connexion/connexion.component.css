@@ -1,0 +1,13 @@
+button,
+label {
+  font-weight: bold;
+}
+.reset {
+  margin-left: 25px;
+}
+mat-label {
+  font-weight: bold;
+}
+input {
+  width: 150px;
+}

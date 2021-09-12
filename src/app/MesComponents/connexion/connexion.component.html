@@ -1,0 +1,65 @@
+<div class="container">
+  <div class="jumbotron jumbotron-fluid">
+    <h1 class="display-4">BIENVENUE</h1>
+
+    <hr class="my-2" />
+  </div>
+  <div class="row">
+    <div class="col-12 col-lg-5">
+      <form [formGroup]="myForm" (ngSubmit)="onSubmitMyForm()">
+        <!--................................ PARTI DU MAIL ...................................-->
+        <div class="form-group mt-2">
+          <mat-form-field appearance="outline">
+            <mat-label>Entrez votre Mail</mat-label>
+            <input
+              required
+              matInput
+              placeholder="ecmbayeclement@gmail.com"
+              formControlName="mail"
+            />
+            <mat-hint>Mail</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <!--................................ PARTI DU MOT DE PASSE .............................-->
+        <div class="form-group mt-2">
+          <mat-form-field appearance="outline">
+            <mat-label>Entrez votre mot de passe</mat-label>
+            <input
+              required
+              matInput
+              type="password"
+              formControlName="mdp"
+              placeholder="mot de passe"
+            />
+            <mat-hint>Mot de passe</mat-hint>
+          </mat-form-field>
+        </div>
+        <!--................................ PARTI DES BOUTONS ...................................-->
+        <div>
+          <button
+            type="submit"
+            *ngIf="!myForm.invalid"
+            class="btn btn-outline-success mt-3"
+          >
+            Connexion
+          </button>
+          <button
+            (click)="masqueErreur()"
+            type="reset"
+            *ngIf="!myForm.invalid"
+            class="btn btn-outline-danger reset mt-3"
+          >
+            Annuler
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!---->
+
+  <div class="alert alert-danger mt-3" *ngIf="afficheErreur" role="alert">
+    {{ erreur }}
+  </div>
+</div>

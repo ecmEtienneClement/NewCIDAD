@@ -1,0 +1,102 @@
+<div class="container">
+  <div class="jumbotron jumbotron-fluid mt-3">
+    <div class="alert alert-success">
+      <strong>
+        <h1 class="display-4">
+          Enregistrez ! Partager ! Vos Problèmes Avec CIDAD
+        </h1></strong
+      >
+    </div>
+
+    <hr class="my-4" />
+  </div>
+
+  <form [formGroup]="myForm" (ngSubmit)="onSubmitForm()">
+    <!-- Partie du Language-->
+    <div class="form-group mt-4">
+      <mat-form-field appearance="outline">
+        <mat-label>Java Php JavaScript Nodejs SQL Python ect</mat-label>
+        <input
+          required
+          #langLength
+          maxlength="15"
+          matInput
+          type="text"
+          placeholder="Java  ect ..."
+          formControlName="language"
+        />
+        <mat-hint>Language</mat-hint>
+        <mat-hint align="end">{{ langLength.value.length }}/15</mat-hint>
+      </mat-form-field>
+    </div>
+    <!-- Partie du Titre-->
+    <div class="form-group mt-4">
+      <mat-form-field appearance="outline">
+        <mat-label>Entrez un titre pour le problème</mat-label>
+        <input
+          required
+          #titreLength
+          maxlength="25"
+          matInput
+          type="text"
+          placeholder="Votre titre"
+          formControlName="titre"
+        />
+        <mat-hint>Titre</mat-hint>
+        <mat-hint align="end">{{ titreLength.value.length }}/25</mat-hint>
+      </mat-form-field>
+    </div>
+    <!-- Partie des details-->
+    <div class="form-group mt-4">
+      <mat-form-field appearance="outline">
+        <mat-label>Entrez les détails portant sur ce problème</mat-label>
+        <textarea
+          #detailsLength
+          maxlength="500"
+          rows="7"
+          required
+          matInput
+          placeholder="Entrez les détails portant sur ce problème"
+          formControlName="details"
+        ></textarea>
+        <mat-hint>Details</mat-hint>
+        <mat-hint align="end">{{ detailsLength.value.length }}/500</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <!-- Partie de la photo-->
+    <div class="form-group mt-4">
+      <mat-form-field appearance="outline">
+        <mat-label>Importez une image de ce problème</mat-label>
+        <input matInput type="text" required />
+        <mat-hint>Image</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <!-- Partie de l'etat du probleme-->
+    <div class="form-group mt-4">
+      <mat-form-field appearance="outline">
+        <mat-label>Etat de ce problème</mat-label>
+        <mat-select formControlName="etat">
+          <mat-option value="Résolu">Résolu</mat-option>
+          <mat-option value="Non Résolu">Non Résolu</mat-option>
+        </mat-select>
+        <mat-hint>Etat</mat-hint>
+      </mat-form-field>
+    </div>
+    <button
+      type="submit"
+      class="btn btn-success mt-4"
+      [disabled]="myForm.invalid"
+    >
+      Enregistrer
+    </button>
+    <button
+      type="reset"
+      class="btn btn-danger mt-4"
+      [disabled]="myForm.invalid"
+    >
+      Annuler
+    </button>
+  </form>
+</div>

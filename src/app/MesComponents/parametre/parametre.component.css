@@ -1,0 +1,19 @@
+a {
+  text-decoration: none;
+}
+h1,
+.newMail,
+.lienMail,
+button {
+ 
+  font-weight: bold;
+}
+.newMail {
+  color: green;
+}
+.lienMail {
+  color: blue;
+}
+.danger {
+  margin-left: 15px;
+}

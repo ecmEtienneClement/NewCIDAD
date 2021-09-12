@@ -1,0 +1,25 @@
+.container {
+  justify-content: center;
+  align-items: center;
+}
+.contenentParent {
+  display: flex;
+  flex-direction: column;
+  background-color: yellow;
+  justify-content: center;
+  align-items: center;
+}
+.contenentFils {
+  width: 50%;
+}
+.row {
+  background-color: rebeccapurple;
+}
+.col {
+  border-radius: 20px;
+  box-shadow: 1px 1px black;
+  padding: 4px;
+  border: solid 1px black;
+  height: 80px;
+  background-color: red;
+}

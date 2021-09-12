@@ -1,0 +1,19 @@
+label,
+button,
+.alert,
+h1 {
+  font-weight: bold;
+}
+strong {
+  text-decoration: underline;
+}
+.Container-Fils-Formulaire {
+  margin-bottom: 80px;
+}
+
+button {
+  margin-left: 20px;
+}
+mat-label {
+  font-weight: bold;
+}

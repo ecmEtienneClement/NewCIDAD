@@ -1,0 +1,113 @@
+<div class="row">
+  <div
+    class="col-12 col-lg-4 mt-4"
+    *ngFor="
+      let item of tbCmpCh | paginate: { itemsPerPage: 4, currentPage: page };
+      let indice = index
+    "
+  >
+    <div class="row ligne mb-2">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-6">
+              <button
+                [matMenuTriggerFor]="aboveMenu"
+                type="button"
+                class="btn user btn-info"
+              >
+                <i class="fas fa-user-edit"></i>
+              </button>
+              <mat-menu #aboveMenu="matMenu" yPosition="above">
+                <b mat-menu-item>ETIENNE CLEMENT MBAYE</b>
+                <p mat-menu-item>Promotion 2</p>
+              </mat-menu>
+              <h4 class="card-title">
+                {{ item.titre | titlecase | slice: 0:10 }} ...
+              </h4>
+            </div>
+            <div class="col-6">
+              <p class="date">{{ item.date | date: "short" }}</p>
+            </div>
+          </div>
+
+          <div class="row">
+            <div
+              class="col-12 mb-3 details overflow-auto bg-light p-2 mr-3"
+              style="width: 100%; height: 50px"
+            >
+              <p class="card-text">{{ item.details }} ...</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-7">
+              <b>{{ item.language | titlecase | slice: 0:10 }}... </b>
+            </div>
+
+            <div class="col-5">
+              <span
+                [ngStyle]="{ color: item.etat == 'Résolu' ? 'green' : 'red' }"
+                class="etat"
+              >
+                {{ item.etat }}
+              </span>
+            </div>
+          </div>
+          <div class="row mt-2">
+            <div class="col-6">
+              <button
+                type="button"
+                class="btn btn-outline-primary"
+                (click)="onNavigate(indice)"
+              >
+                <i class="far fa-eye">Détails</i>
+              </button>
+            </div>
+            <div class="col-2">
+              <button
+                (click)="onUpdateBug(indice)"
+                type="button"
+                class="btn btn-outline-primary"
+                [disabled]="item.user_Id !== user_Id_Connect"
+              >
+                <i class="far fa-edit"></i>
+              </button>
+            </div>
+            <div class="col-2">
+              <button
+                (click)="onChangeEtatBug(indice)"
+                type="button"
+                class="btn btn-outline-primary btn"
+                [ngStyle]="{
+                  color: item.etat == 'Résolu' ? 'green' : 'red'
+                }"
+                [disabled]="item.user_Id !== user_Id_Connect"
+              >
+                <i class="far fa-thumbs-up" *ngIf="item.etat == 'Résolu'"></i>
+                <i
+                  class="far fa-thumbs-down"
+                  *ngIf="item.etat == 'Non Résolu'"
+                ></i>
+              </button>
+            </div>
+            <div class="col-2">
+              <button
+                (click)="onDeletBug(indice)"
+                type="button"
+                class="btn btn-outline-danger"
+                [disabled]="item.user_Id !== user_Id_Connect"
+              >
+                <i class="fas fa-archive alert-danger"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 paginate">
+      <pagination-controls (pageChange)="page = $event"></pagination-controls>
+    </div>
+  </div>
+</div>

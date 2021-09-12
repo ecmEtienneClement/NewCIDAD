@@ -1,0 +1,16 @@
+.container_Fils_Card {
+  align-items: center;
+  align-content: center;
+}
+.colver {
+  background-color: aqua;
+}
+.container_Parent_Card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+h5,
+button {
+  font-weight: bold;
+}
