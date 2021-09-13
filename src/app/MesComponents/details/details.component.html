@@ -2,9 +2,9 @@
   <div class="alert alert-info mt-3">
     <div class="row">
       <div class="blocNom col-12 col-md-8 col-lg-8">
-        <p class="nomUser">MBAYE</p>
-        <p class="nomUser">ETIENNE CLEMENT</p>
-        <p class="nomUser">P7</p>
+        <p class="nomUser">{{ nomUserBug }}</p>
+        <p class="nomUser">{{ prenomUserBug }}</p>
+        <p class="nomUser">{{ promoUserBug }}</p>
         <mat-progress-bar
           mode="buffer"
           style="background-color: rgb(0, 0, 0)"
@@ -55,7 +55,7 @@
     <div class="col-12">
       <legend>
         <i class="fas fa-hand-holding-medical" style="color: green"></i> UNE
-        SOLUTION MOUSSA
+        SOLUTION {{ nomUserConnected }} {{ prenomUserConnected }}
       </legend>
       <div class="row">
         <div class="col-12">
@@ -89,6 +89,10 @@
   </div>
   <div class="container-fluid containerParent">
     <app-view-reponse-bug
+      [nom]="nomUserReponse"
+      [prenom]="prenomUserReponse"
+      [promo]="promoUserReponse"
+      [fantome]="fantomeReponse"
       [tbReponseBug]="tbReponseBug"
       [totalPage]="totalPage"
       [user_Id_Connect]="user_Id_Connect"

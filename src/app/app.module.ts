@@ -41,11 +41,12 @@ import { AlertComponent } from './MesComponents/alert/alert.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { GardGuard } from './Mes_Services/gard.guard';
+import { UserService } from './Mes_Services/user.Service';
 const routes: Routes = [
   { path: '', canActivate: [GardGuard], component: AcceuilleComponent },
   {
     path: 'inscription',
-    component: AvantInscriptionComponent,
+    component: InscriptionComponent,
   },
   {
     path: 'ecminscription',
@@ -122,6 +123,7 @@ const routes: Routes = [
     AuthService,
     BugService,
     ReponseBugService,
+    UserService,
     EmitEvent,
     MatSnackBar,
   ],

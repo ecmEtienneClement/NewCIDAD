@@ -9,12 +9,25 @@ import { EventType } from 'src/app/Models/eventAction';
   styleUrls: ['./view-bug.component.css'],
 })
 export class ViewBugComponent {
+  @Input() prenom: string;
+  @Input() nom: string;
+  @Input() promo: string;
+  @Input() fantome: boolean;
   @Input() tbCmpCh: BugModel[];
   @Input() user_Id_Connect: string;
   @Input() totalPage: number;
   page: number = 1;
   constructor(private eventService: EmitEvent) {}
 
+  //Methode Pour Voir Les Informations du User
+  //TODO
+  onViewUser(user_Id: any) {
+    this.eventService.emit_Event_Update_({
+      type: EventType.VIEW_INFO_USER,
+      data_paylode_Number: 0,
+      data_paylode_String: user_Id,
+    });
+  }
   //Methode pour voir le nombre de reponses
   //TODO
   onViewNbrReponse(indice: number) {}

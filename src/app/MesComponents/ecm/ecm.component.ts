@@ -9,6 +9,7 @@ import { EventModel, EventType } from 'src/app/Models/eventAction';
 
 import { MatTabChangeEvent } from '@angular/material/tabs/tab-group';
 import { GardGuard } from 'src/app/Mes_Services/gard.guard';
+import { UserService } from 'src/app/Mes_Services/user.Service';
 
 @Component({
   selector: 'app-ecm',
@@ -22,25 +23,28 @@ export class EcmComponent implements OnInit, OnDestroy {
   tbCmpNonResolu: BugModel[] | any;
   tbCmpCh: BugModel[] | any;
   chargement: boolean = true;
-  delete: boolean = false;
   user_Id_Connect: string;
+  nomUser: string = '';
+  prenomUser: string = '';
+  promoUser: string = '';
+  fantome: boolean = true;
   subscriptionTbCmp: Subscription = new Subscription();
   subscriptionEvent: Subscription = new Subscription();
   totalPage: number = 0;
 
   constructor(
     private serviceBug: BugService,
-    private authService :GardGuard,
+    private authService: GardGuard,
     private dialog: MatDialog,
-    private eventService: EmitEvent
+    private eventService: EmitEvent,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
-
     //Recuperation du User_Id
     //TODO
-     this.user_Id_Connect= this.authService.user_Id_Connect
-    
+    this.user_Id_Connect = this.authService.user_Id_Connect;
+
     //.....Initialisation, recuperation de la base de donne distant
     //this.serviceBug.recupbase();
 
@@ -74,6 +78,9 @@ export class EcmComponent implements OnInit, OnDestroy {
   //TODO
   traintementEmitEvent(data_Event: EventModel) {
     switch (data_Event.type) {
+      case EventType.VIEW_INFO_USER:
+        this.onViewInfoUser(data_Event.data_paylode_String);
+        break;
       case EventType.NAVIGATBUG:
         this.onNavigate(
           data_Event.data_paylode_Number,
@@ -181,6 +188,26 @@ export class EcmComponent implements OnInit, OnDestroy {
           bug.language.toLocaleString().includes(query.toLowerCase())
         )
       : this.tbCmp;
+  }
+
+  //......Voir les information du User
+  //TODO
+  onViewInfoUser(user_Id: any = '') {
+    this.userService
+      .getInfoUser(user_Id)
+      .then((data_User) => {
+        this.nomUser = data_User.nom;
+        this.prenomUser = data_User.prenom;
+        this.promoUser = data_User.promotion;
+        this.fantome = data_User.fantome;
+      })
+      .catch((error) => {
+        alert('Une erreur est survenue recup info User !');
+      });
+    //Netoyage des donnes avec d'afficher un autre appelle de viewInfoUser
+    this.nomUser = '';
+    this.prenomUser = '';
+    this.promoUser = '';
   }
   //.....voir les details
   //TODO

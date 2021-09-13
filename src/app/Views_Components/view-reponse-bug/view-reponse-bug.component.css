@@ -8,6 +8,14 @@
 .matExpanssion {
   float: right;
 }
+.user {
+  float: right;
+  margin-top: 20px;
+}
+.btnChek {
+  float: left;
+  margin-top: 20px;
+}
 .check,
 .supprimer {
   margin-top: 40px;
@@ -15,7 +23,6 @@
 .commentaire,
 .voircommentaire {
   margin-right: 15px;
-
   float: right;
 }
 pre {

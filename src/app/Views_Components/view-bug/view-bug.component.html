@@ -8,19 +8,36 @@
   >
     <div class="row ligne mb-2">
       <div class="card">
+        <!--  ............................ Signalement de l'etat..........................-->
+        <span
+          class="m-2 spinner-grow text-warning"
+          *ngIf="item.etat == 'Non Résolu'"
+        >
+          <span class="initiale"></span>
+        </span>
+          <span
+          class="m-2  text-success"
+          *ngIf="item.etat == 'Résolu'"
+        >
+          <span class="initiale"></span>
+        </span>
         <div class="card-body">
           <div class="row">
+            <!--  ............................... btn View User...................................-->
             <div class="col-6">
               <button
                 [matMenuTriggerFor]="aboveMenu"
                 type="button"
                 class="btn user btn-info"
+                (click)="onViewUser(item.user_Id)"
               >
                 <i class="fas fa-user-edit"></i>
               </button>
               <mat-menu #aboveMenu="matMenu" yPosition="above">
-                <b mat-menu-item>ETIENNE CLEMENT MBAYE</b>
-                <p mat-menu-item>Promotion 2</p>
+                <b class="infoUser" mat-menu-item
+                  >{{ prenom | uppercase }}{{ nom | uppercase }}</b
+                >
+                <p class="infoUser" mat-menu-item>{{ promo }}</p>
               </mat-menu>
               <h4 class="card-title">
                 {{ item.titre | titlecase | slice: 0:10 }} ...
@@ -45,12 +62,7 @@
             </div>
 
             <div class="col-5">
-              <span
-                [ngStyle]="{ color: item.etat == 'Résolu' ? 'green' : 'red' }"
-                class="etat"
-              >
-                {{ item.etat }}
-              </span>
+            <!--  RAS dans cette parti ne op oublier-->
             </div>
           </div>
           <div class="row mt-2">

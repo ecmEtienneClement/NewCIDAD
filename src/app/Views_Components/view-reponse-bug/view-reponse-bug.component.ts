@@ -9,16 +9,20 @@ import { ReponseBugModel } from 'src/app/Models/reponseBug';
   styleUrls: ['./view-reponse-bug.component.css'],
 })
 export class ViewReponseBugComponent {
+  @Input() prenom: string;
+  @Input() nom: string;
+  @Input() promo: string;
+  @Input() fantome: boolean;
   @Input() tbReponseBug: ReponseBugModel[];
   @Input() totalPage: number;
   @Input() user_Id_Connect: string;
   @Input() user_Id_Bug: string;
 
- 
   page: number = 1;
   commentaire: string = '';
 
   constructor(private eventService: EmitEvent) {}
+
   //Suppression des donnees a envoye..
   //TODO
   onResetForm() {
@@ -33,6 +37,16 @@ export class ViewReponseBugComponent {
   // ..................................ALERT.............................................
   //Pour PageNavigation Voir commentaire ECM pour comprendre sont ajout au Event Emit
   //Methode pour modifer le isGood du commentaire ..
+
+  //Methode Pour Voir Les Informations du User
+  //TODO
+  onViewUser(user_Id: any) {
+    this.eventService.emit_Event_Update_({
+      type: EventType.VIEW_INFO_USER,
+      data_paylode_Number: 0,
+      data_paylode_String: user_Id,
+    });
+  }
   //TODO
   onCheck(indice: number) {
     this.eventService.emit_Event_Update_({

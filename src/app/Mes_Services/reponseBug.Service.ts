@@ -142,8 +142,8 @@ export class ReponseBugService {
         : [];
     //Veification si au moins une de ces reponses a etait cochée bonne(Merci)
     if (tbFilterByIdBug.length > 0) {
-      tbFilterByIdBug.forEach((element) => {
-        if (element.isGood == true) {
+      tbFilterByIdBug.forEach((reponse) => {
+        if (reponse.isGood == true) {
           nbrReponseChecked += 1;
         }
       });

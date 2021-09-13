@@ -8,22 +8,41 @@
 >
   <div class="col-12">
     <div class="row">
-      <div class="col-8">
-        <div class="checkbox">
-          <mat-slide-toggle
-            class="example-margin check"
-            [checked]="reponseBug.isGood"
-            [disabled]="user_Id_Connect != user_Id_Bug"
-            (click)="onCheck(indice)"
+      <div class="col-1">
+        <button
+          [matMenuTriggerFor]="aboveMenu"
+          type="button"
+          class="btn user btn-info"
+          (click)="onViewUser(reponseBug.user_Id)"
+        >
+          <i class="fas fa-user-edit"></i>
+        </button>
+        <mat-menu #aboveMenu="matMenu" yPosition="above">
+          <b class="infoUser" mat-menu-item
+            >{{ prenom | uppercase }}{{ nom | uppercase }}</b
           >
-            <strong>Merci</strong>
-          </mat-slide-toggle>
-        </div>
+          <p class="infoUser" mat-menu-item>{{ promo }}</p>
+        </mat-menu>
+      </div>
+
+      <div class="col-7">
+        <button
+          class="btn btn-outline-primary btnChek"
+          [disabled]="user_Id_Connect != user_Id_Bug"
+          (click)="onCheck(indice)"
+        >
+          <i style="color: green" class="fas fa-check" *ngIf="reponseBug.isGood"
+            ><strong>Merci</strong></i
+          >
+          <i class="fas fa-exclamation" *ngIf="!reponseBug.isGood"
+            ><strong>Merci</strong></i
+          >
+        </button>
       </div>
 
       <div class="col-4">
         <button
-          class="btn btn-sm supprimer mt-4"
+          class="btn btn-sm btn-outline-danger supprimer mt-4"
           [disabled]="reponseBug.user_Id != user_Id_Connect"
           (click)="onDelete(indice)"
         >
@@ -38,7 +57,9 @@
       <mat-expansion-panel hideToggle>
         <mat-expansion-panel-header class="mt-2">
           <mat-panel-title>
-            <strong>ETIENNE CLEMENT MBAYE</strong>
+            <i style="padding-top: 10px" class="fas fa-scroll"
+              >CLIQUER POUR DEPLIER ET VOIR LA REPONSE</i
+            >
           </mat-panel-title>
           <p class="date">{{ reponseBug.dateReponse | date: "short" }}</p>
         </mat-expansion-panel-header>

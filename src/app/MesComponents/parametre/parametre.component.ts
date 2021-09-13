@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/Mes_Services/auth.Service';
+import { GardGuard } from 'src/app/Mes_Services/gard.guard';
+import { UserService } from 'src/app/Mes_Services/user.Service';
+import { UserModel } from 'src/app/Models/user';
 @Component({
   selector: 'app-parametre',
   templateUrl: './parametre.component.html',
@@ -17,12 +21,15 @@ export class ParametreComponent implements OnInit {
   colorSelectedMail: any = 'black';
   colorSelectedMdp: any = 'black';
   colorSelectedUser: any = 'black';
- 
-  constructor(private route: Router) {}
+  User: UserModel;
+  userId: string;
+  constructor(
+    private route: Router,
+    private userService: UserService,
+    private auth: GardGuard
+  ) {}
 
-  ngOnInit(): void {
-   
-  }
+  ngOnInit(): void {}
 
   updateMail() {
     this.colorSelectedMail = 'blue';

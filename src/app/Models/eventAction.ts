@@ -5,6 +5,7 @@
 export enum EventType {
   //.................EVENEMENTS EMISENT DE LA PARTIE  BUG........................
   //TODO
+  VIEW_INFO_USER = '[BugModel] afficher information du user',
   NAVIGATBUG = '[BugModel] naviger ver detail bug',
   UPDATEBUG = '[BugModel] modifier le bug',
   CHANGEETATBUG = '[BugModel] changer etat du bug',

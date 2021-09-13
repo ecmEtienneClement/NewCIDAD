@@ -1,3 +1,14 @@
+.card {
+  border-radius: 15px;
+  box-shadow: 0 25px 25px;
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(45px);
+}
+.infoUser {
+  font-weight: bold;
+  justify-content: center;
+  text-align: center;
+}
 .date,
 .etat {
   font-weight: bold;
@@ -9,8 +20,47 @@ button {
   font-weight: bold;
 }
 .ligne {
-  box-shadow: 3px 3px rgb(31, 30, 30);
+  position: relative;
   margin-left: 10px;
+}
+.text-warning {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  translate: -15px -15px;
+  background: #e52d27; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    #b31217,
+    #e52d27
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #b31217,
+    #e52d27
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+.text-success {
+  border-radius: 50px;
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  translate: -15px -15px;
+  background: #56ab2f; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    #a8e063,
+    #56ab2f
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #a8e063,
+    #56ab2f
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 .user:hover {

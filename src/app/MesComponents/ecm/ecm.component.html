@@ -23,7 +23,6 @@
     </div>
   </div>
 
-
   <!-- .......................... Partie Recherche ........................................-->
 
   <div class="row">
@@ -94,6 +93,10 @@
   <!-- ..................... Partie des Bugs .............................-->
   <div class="container-fluid">
     <app-view-bug
+      [prenom]="prenomUser"
+      [nom]="nomUser"
+      [promo]="promoUser"
+      [fantome]="fantome"
       [tbCmpCh]="tbCmpCh"
       [user_Id_Connect]="user_Id_Connect"
       [totalPage]="totalPage"

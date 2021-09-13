@@ -7,6 +7,7 @@ import { EventModel, EventType } from 'src/app/Models/eventAction';
 import { ReponseBugService } from 'src/app/Mes_Services/reponseBug.Service';
 import { BugModel } from 'src/app/Models/bug';
 import { GardGuard } from 'src/app/Mes_Services/gard.guard';
+import { UserService } from 'src/app/Mes_Services/user.Service';
 
 @Component({
   selector: 'app-details',
@@ -14,7 +15,21 @@ import { GardGuard } from 'src/app/Mes_Services/gard.guard';
   styleUrls: ['./details.component.css'],
 })
 export class DetailsComponent implements OnInit, OnDestroy {
+  //le info de celui qui a poste ce bug
+  nomUserBug: string = '';
+  prenomUserBug: string = '';
+  promoUserBug: string = '';
+  //Info de qui est actuelement connecte
+  nomUserConnected: string = '';
+  prenomUserConnected: string = '';
+  //Info du user qui a reponde a cette poste
+  nomUserReponse: string = '';
+  prenomUserReponse: string = '';
+  promoUserReponse: string = '';
+  fantomeReponse: boolean = true;
+  //stocker des donnees dans le champs saisi
   reponse: string = '';
+  //Intialisation des info du bug
   bugCmp: any = new BugModel('id', '', '', '', '', '', 0, Date.now());
   //tbReponseCmp: any;
   indice: number;
@@ -32,13 +47,25 @@ export class DetailsComponent implements OnInit, OnDestroy {
     private eventEmit: EmitEvent,
     private serviceBug: BugService,
     private serviceReponseBug: ReponseBugService,
-    private authService: GardGuard
+    private authService: GardGuard,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
-    //Recuperation du User_Id
+    //Recuperation du User_Id Qui est connecter pour le texte UNE SOLUTION {{nomuser}}
     //TODO
     this.user_Id_Connect = this.authService.user_Id_Connect;
+    this.userService
+      .getInfoUser(this.user_Id_Connect)
+      .then((data_User) => {
+        this.nomUserConnected = data_User.nom;
+        this.prenomUserConnected = data_User.prenom;
+      })
+      .catch((error) => {
+        alert('Une erreur de connexion ...! ');
+        this.nomUserConnected = 'Fantom';
+        this.prenomUserConnected = 'Fantom';
+      });
     //...Recuperation de l'indice via l'url
     //TODO
     this.indice = this.extra.snapshot.params['indice'];
@@ -54,6 +81,17 @@ export class DetailsComponent implements OnInit, OnDestroy {
         //  console.log('call by subsBug .....');
         //Apelle de la methode filtre suite a l'arrivees des donnees ...
         this.filterTbReponse();
+        //Recuperation des info du user qui a poster ce bug ...via son ID
+        this.userService
+          .getInfoUser(this.user_Id_Bug)
+          .then((data_User) => {
+            this.nomUserBug = data_User.nom;
+            this.prenomUserBug = data_User.prenom;
+            this.promoUserBug = data_User.promotion;
+          })
+          .catch((error) => {
+            alert('Une erreur de connexion ...! ');
+          });
       })
       .catch((error) => {
         alert('Une erreur est survenue recup Bug ...!');
@@ -133,6 +171,9 @@ export class DetailsComponent implements OnInit, OnDestroy {
   //TODO
   traintementEmitEvent(event: EventModel) {
     switch (event.type) {
+      case EventType.VIEW_INFO_USER:
+        this.onViewInfoUser(event.data_paylode_String);
+        break;
       case EventType.COMMENTER__REPONSE_BUG:
         this.onCommenter(
           event.data_paylode_Number,
@@ -160,6 +201,25 @@ export class DetailsComponent implements OnInit, OnDestroy {
    .............................TRAITEMENT DES METHODES ................. ..................
  */
 
+  //......Voir les information du User
+  //TODO
+  onViewInfoUser(user_Id: any = '') {
+    this.userService
+      .getInfoUser(user_Id)
+      .then((data_User) => {
+        this.nomUserReponse = data_User.nom;
+        this.prenomUserReponse = data_User.prenom;
+        this.promoUserReponse = data_User.promotion;
+        this.fantomeReponse = data_User.fantome;
+      })
+      .catch((error) => {
+        alert('Une erreur est survenue recup info User !');
+      });
+    //Netoyage des donnes avec d'afficher un autre appelle de viewInfoUser
+    this.nomUserReponse = '';
+    this.prenomUserReponse = '';
+    this.promoUserReponse = '';
+  }
   //Methode pour Checked la reponse bug
   //TODO
   onCheckReponseBug(indice: number, page: number = 1) {
@@ -168,8 +228,29 @@ export class DetailsComponent implements OnInit, OnDestroy {
     indice += 10 * (page - 1);
     //Recuperation son ID voir commentaire serviceReponse Bug pour comprendre les raisons..
     const id_Reponse: string = this.tbReponseBug[indice].id_Reponse;
-    this.serviceReponseBug.onCheckReponseBug(id_Reponse);
-  
+    //Recuperation de la valeur de isChecked...
+    const isCheked: boolean =
+      this.serviceReponseBug.onCheckReponseBug(id_Reponse);
+
+    if (isCheked) {
+      //Changement de l'etat si ce n'est pas Resolu ...
+      this.serviceBug.onChangeEtatBugByCheckedIsTrue(this.bugCmp.bug_Id);
+      /*Changement de l'etat visuel du bug car ce bug a ete recupere par solo bug
+       onChangeEtatBugByCheckedIsTrue fera le changement c bien mais ne pour pas mettre
+       a jour l'etat automatiquement il faudrai que le user sort et revient pour qu'il affiche
+       resolu maintenant pour le faire d'une maniere automatique je modifier en meme temps
+       l'etat du bug solo pour que le changement soit automatique au yeusx du user
+      */
+      this.bugCmp.etat = 'Résolu';
+    } else {
+      //Verification si il n'y pas dabord une reponse cochée merci avant de modifier l'etat
+      const changementEtatBugCmpSolo: boolean =
+        this.serviceBug.onChangeEtatBugByCheckedIsFalse(this.bugCmp.bug_Id);
+      //Changement de l'etat du bugCmp apres verificarion du changementEtatBugCmpSolo
+      if (changementEtatBugCmpSolo) {
+        this.bugCmp.etat = 'Non Résolu';
+      }
+    }
   }
 
   //Ajout du commentaire dans le tbcommentaire de la reponse ...
