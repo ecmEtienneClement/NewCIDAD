@@ -1,167 +1,240 @@
 <div class="container">
-  <div class="jumbotron jumbotron-fluid">
-    <div class="alert alert-success mt-2">
-      <h1 class="display-4">Modifier Vos Informations Personnelles</h1>
-    </div>
-
-    <hr class="my-4" />
-
+  <!--Parti Modifier et reini Code-->
+  <div class="container-parametre">
     <div class="row">
-      <div class="col-12">
-        <p class="lead" [ngStyle]="{ color: colorSelectedMail }">
-          Changer votre adresse mail
-        </p>
+      <div class="col-12 col-lg-6">
+        <div class="form-modif-code">
+          <button>Modifier Code</button>
+          <div class="form-group mt-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Entrez votre ancien code </mat-label>
+              <input
+                style="color: blue"
+                #nomLength
+                maxlength="4"
+                matInput
+                placeholder="1234"
+                [(ngModel)]="ancienCode"
+              />
+              <mat-hint style="color: blue">Entrez ancien code</mat-hint>
+              <mat-hint align="end" style="color: blue">
+                {{ nomLength.value.length }} /4</mat-hint
+              >
+            </mat-form-field>
+          </div>
+          <div class="form-group mt-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Entrez votre nouveau code </mat-label>
+              <input
+                style="color: blue"
+                #nomLength
+                maxlength="4"
+                matInput
+                placeholder="1234"
+                [(ngModel)]="nouveauCode"
+              />
+              <mat-hint style="color: blue">Entrez nouveau code</mat-hint>
+              <mat-hint align="end" style="color: blue">
+                {{ nomLength.value.length }} /4</mat-hint
+              >
+            </mat-form-field>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <button
+                [disabled]="
+                  !data_Charger ||
+                  ancienCode.length < 4 ||
+                  nouveauCode.length < 4
+                "
+                type="button m-3"
+                class="btn btn-outline-success"
+                (click)="submitModifierCode()"
+              >
+                Valider
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-6">
+        <div class="form-reini-code">
+          <button>Réinitialiser Code</button>
+          <div class="form-group mt-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Entrez votre mail</mat-label>
+              <input
+                style="color: blue"
+                matInput
+                placeholder="ecmbayeclement@gmail.com"
+                [(ngModel)]="mailReiniCode"
+              />
+              <mat-hint style="color: blue">Entrez mail</mat-hint>
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <div class="col-12">
+              <button
+                [disabled]="!data_Charger || mailReiniCode.length < 11"
+                type="button m-3"
+                class="btn btn-outline-success"
+                (click)="onVerifyUser()"
+              >
+                Valider
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-
     <div class="row">
-      <div class="col-12">
-        <a
-          (click)="updateMail()"
-          style="cursor: pointer"
-          *ngIf="!afficheBlocMail"
-        >
-          <span class="lienMail">>>> </span>
-        </a>
+      <!--Parti Modifier et email et password-->
+      <div class="col-12 col-lg-6">
+        <div class="form-modif-Email">
+          <button>Modifier Mail</button>
+
+          <form [formGroup]="formUpdateEmail" (ngSubmit)="submitModifEmail()">
+            <div class="form-group mt-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Entrez votre ancien mail</mat-label>
+                <input
+                  style="color: blue"
+                  matInput
+                  placeholder="ecmbayeclement@gmail.com"
+                  formControlName="email"
+                />
+                <mat-hint style="color: blue">Entrez ancien mail</mat-hint>
+              </mat-form-field>
+            </div>
+            <div class="form-group mt-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Entrez votre nouveau mail</mat-label>
+                <input
+                  style="color: blue"
+                  matInput
+                  placeholder="ecmbayeclement@gmail.com"
+                  formControlName="newEmail"
+                />
+                <mat-hint style="color: blue">Entrez nouveau mail</mat-hint>
+              </mat-form-field>
+            </div>
+            <div class="form-group mt-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Entrez votre mot de passe</mat-label>
+                <input
+                  style="color: blue"
+                  matInput
+                  placeholder="*****************"
+                  formControlName="mdpUpdateMail"
+                />
+                <mat-hint style="color: blue">Entrez mot de passe</mat-hint>
+              </mat-form-field>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <button
+                  [disabled]="!data_Charger || formUpdateEmail.invalid"
+                  type="submit"
+                  class="btn btn-outline-success"
+                  *ngIf="!formUpdateEmail.invalid"
+                >
+                  Valider
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="col-12 col-lg-6">
+        <div class="form-modifmdp">
+          <button>Modifier Mot de Passe</button>
+
+          <form [formGroup]="formUpdateMdp" (ngSubmit)="submitmodifmdp()">
+            <div class="form-group mt-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Entrez votre mail</mat-label>
+                <input
+                  style="color: blue"
+                  matInput
+                  placeholder="ecmbayeclement@gmail.com"
+                  formControlName="emailmodifmdp"
+                />
+                <mat-hint style="color: blue">Entrez mail</mat-hint>
+              </mat-form-field>
+            </div>
+            <div class="form-group mt-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Entrez votre ancien mot de passe</mat-label>
+                <input
+                  style="color: blue"
+                  matInput
+                  placeholder="*****************"
+                  formControlName="mdpModif"
+                />
+                <mat-hint style="color: blue"
+                  >Entrez ancien mot de passe</mat-hint
+                >
+              </mat-form-field>
+            </div>
+            <div class="form-group mt-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Entrez votre nouveau mot de passe</mat-label>
+                <input
+                  style="color: blue"
+                  matInput
+                  placeholder="*****************"
+                  formControlName="newMdpModif"
+                />
+                <mat-hint style="color: blue"
+                  >Entrez nouveau mot de passe</mat-hint
+                >
+              </mat-form-field>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <button
+                  [disabled]="!data_Charger || formUpdateMdp.invalid"
+                  type="submit"
+                  class="btn btn-outline-success"
+                  *ngIf="!formUpdateMdp.invalid"
+                >
+                  Valider
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
-
-    <!--Bloc de  modification de l'adresse mail-->
-    <div *ngIf="afficheBlocMail">
-      <p>
-        Votre nouveau mail : <span class="newMail">{{ mail }}</span>
-      </p>
-      <input type="text" class="form-control" [(ngModel)]="mail" />
-
-      <button
-        type="button"
-        class="btn btn-success m-2"
-        *ngIf="!(mail.length <= 10)"
-        [disabled]="mail.length <= 10"
-      >
-        Modifier
-      </button>
-
-      <button type="button" class="btn btn-danger m-2" (click)="noUpdateMail()">
-        Annuler
-      </button>
-
-      <div class="alert alert-danger mt-2" *ngIf="false">
-        <strong>Title!</strong>
-      </div>
-    </div>
-    <hr class="my-4" />
+    <!--Parti Modifier et securite et session-->
     <div class="row">
-      <div class="col-12">
-        <p class="lead" [ngStyle]="{ color: colorSelectedMdp }">
-          Changer votre mots de passe
-        </p>
+      <div class="col-12 col-lg-6">
+        <div class="form-modif-securite">
+          <button>Modifier Securité</button>
+          <div class="form-group mt-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Votre Nouveau Mode de Securité</mat-label>
+              <mat-select [(ngModel)]="securite">
+                <mat-option #mode value="true">Sécurisé</mat-option>
+                <mat-option #mode value="false">Non Sécurisé</mat-option>
+              </mat-select>
+              <mat-hint>Nouveau Mode de Securité</mat-hint>
+            </mat-form-field>
+            <div class="row">
+              <div class="col-12">
+                <button
+                  (click)="submitModifierSecurite()"
+                  [disabled]="!data_Charger"
+                  class="btn btn-outline-success"
+                >
+                  Valider
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-12">
-        <a
-          (click)="updatemdp()"
-          style="cursor: pointer"
-          *ngIf="!afficheBlocMdp"
-        >
-          <span class="lienMail">>>> </span>
-        </a>
-      </div>
-    </div>
-
-    <!--Bloc de  modification du mots de passe-->
-    <div *ngIf="afficheBlocMdp">
-      <p>
-        Votre nouveau mots de passe : <span class="newMail">{{ mdp }}</span>
-      </p>
-      <p>
-        Confirmation du nouveau mots de passe :
-
-        <span class="newMail" [ngStyle]="{ color: colorConfirmation() }">{{
-          confmdp
-        }}</span>
-      </p>
-      <input
-        type="password"
-        class="form-control"
-        placeholder="Entrez votre nouveau mots de passe"
-        [(ngModel)]="mdp"
-      />
-      <input
-        *ngIf="mdp.length > 0"
-        [disabled]="mdp.length < 6"
-        type="password"
-        class="form-control mt-3"
-        placeholder="Confirmez votre nouveau mots de passe"
-        [(ngModel)]="confmdp"
-      />
-
-      <button
-        type="button"
-        class="btn btn-success m-2"
-        *ngIf="btnDisabledModifMdp"
-      >
-        Modifier
-      </button>
-
-      <button type="button" class="btn btn-danger m-2" (click)="noUpdateMdp()">
-        Annuler
-      </button>
-
-      <div class="alert alert-danger mt-2" *ngIf="false">
-        <strong>Title!</strong>
-      </div>
-    </div>
-    <hr class="my-4" />
-
-    <div class="row">
-      <div class="col-12">
-        <p class="lead" [ngStyle]="{ color: colorSelectedUser }">
-          Supprimer votre compte
-        </p>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-12">
-        <a
-          (click)="deleteUser()"
-          style="cursor: pointer"
-          *ngIf="!afficheBlocDeleteUser"
-        >
-          <span class="lienMail">>>> </span>
-        </a>
-      </div>
-    </div>
-
-    <!--Bloc de  suppression de User -->
-    <div *ngIf="afficheBlocDeleteUser">
-      <p>Votre mots de passe</p>
-      <input
-        type="password"
-        class="form-control"
-        placeholder="Entrez votre nouveau mots de passe"
-        [(ngModel)]="confirmdp"
-      />
-
-      <button
-        type="button"
-        class="btn btn-success m-2"
-        *ngIf="!(confirmdp.length <= 6)"
-        [disabled]="confirmdp.length <= 6"
-      >
-        Modifier
-      </button>
-
-      <button type="button" class="btn btn-danger m-2" (click)="nodeleteUser()">
-        Annuler
-      </button>
-
-      <div class="alert alert-danger mt-2" *ngIf="false">
-        <strong>Title!</strong>
-      </div>
-    </div>
-    <hr class="my-4" />
   </div>
 </div>

@@ -7,12 +7,14 @@ import 'firebase/auth';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ReponseBugService } from './reponseBug.Service';
+import { Notification } from './notification.service';
 
 @Injectable()
 export class BugService {
   constructor(
     private route: Router,
     private _snackBar: MatSnackBar,
+    private notify: Notification,
     private serviceReponseBug: ReponseBugService
   ) {}
   //....Partie Observable du tbBugService
@@ -30,7 +32,12 @@ export class BugService {
 
   //...Partie d'ajout d'un nouveau Bug
   //TODO
-  createNewBug(language: string, titre: string, details: string, etat: string) {
+  createNewBug(
+    language: string,
+    titre: string,
+    details: string,
+    codeBug: string[]
+  ) {
     //User_Id
     const user_Id = firebase.auth().currentUser?.uid;
     //Bug_Id
@@ -43,13 +50,15 @@ export class BugService {
       language,
       titre,
       details,
-      etat,
+      'Non Résolu',
       0,
-      Date.now()
+      Date.now(),
+      codeBug
     );
     this.tbBugService.unshift(newBug);
     this.sauvegardeBase();
     this.updatetbBugService();
+    this.notify.notifyNewBug();
     const message = 'Le Post a été bien publié !';
     //Affichage de l'alerte
     this.openSnackBar(message, 'ECM');
@@ -75,7 +84,8 @@ export class BugService {
     language: string,
     titre: string,
     details: string,
-    etat: string
+    etat: string,
+    codeBug: string[]
   ) {
     //Suppression du bug d'abord
     this.tbBugService.splice(indice, 1);
@@ -89,7 +99,8 @@ export class BugService {
       details,
       etat,
       1,
-      Date.now()
+      Date.now(),
+      codeBug
     );
 
     //Enregistrement du nouveau modifier Bug ..

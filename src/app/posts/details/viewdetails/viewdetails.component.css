@@ -1,0 +1,103 @@
+.extanssion {
+  border-radius: 15px;
+  backdrop-filter: blur(25px);
+  z-index: 2;
+  background-color: blue;
+}
+.btn {
+  float: right;
+}
+.reponse {
+  margin-bottom: 100px;
+}
+.date.supprimer,
+.matExpanssion {
+  float: right;
+}
+.user {
+  float: right;
+  margin-top: 20px;
+}
+.btnChek {
+  float: left;
+  margin-top: 20px;
+}
+.check,
+.supprimer {
+  margin-top: 40px;
+}
+.commentaire,
+.voircommentaire {
+  margin-right: 15px;
+  float: right;
+}
+pre {
+  background: #0f2027; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    #2c5364,
+    #203a43,
+    #0f2027
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #2c5364,
+    #203a43,
+    #0f2027
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  font-size: 16;
+
+  color: rgb(255, 255, 255);
+}
+.textecommentaire {
+  background: #373b44; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    #4286f4,
+    #373b44
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #4286f4,
+    #373b44
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  border-radius: 15px 0 15px 0;
+  padding: 10px;
+  color: white;
+
+  font-size: medium;
+  box-shadow: 15px;
+}
+.paginate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-weight: bold;
+}
+/*           ANIMATION DU TEXTE D'ETAIL            */
+
+.cliquerPourDeplier {
+  position: relative;
+  color: black; /* fallback for old browsers */
+  font-size: 16;
+}
+.cliquerPourDeplier::before {
+  content: "";
+  position: absolute;
+  right: 0;
+
+  width: 20%;
+  height: 100%;
+  background-color: #fff;
+  animation: animate 6s linear infinite;
+}
+@keyframes animate {
+  0%,
+  100% {
+    width: 100%;
+  }
+  50%,
+  80% {
+    width: 0%;
+  }
+}

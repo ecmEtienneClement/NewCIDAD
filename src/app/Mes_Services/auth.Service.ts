@@ -2,10 +2,12 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
 import { UserModel } from '../Models/user';
-
 import { Injectable } from '@angular/core';
+import { NotificationModel } from '../Models/notification';
+import { Notification } from './notification.service';
 @Injectable()
 export class AuthService {
+  constructor(private notifyService: Notification) {}
   /*
    .........................................METHODES ........................................
    */
@@ -30,9 +32,16 @@ export class AuthService {
               prenom: user.prenom,
               promotion: user.promotion,
               fantome: user.fantome,
+              mdp: user.mdp,
               code: user.code,
+              securite: user.securite,
             })
             .then(() => {
+              //Creation de la collection pour les notifications du user
+              const newNotifyModel: NotificationModel = new NotificationModel(
+                user_Id
+              );
+              this.notifyService.initNotify(newNotifyModel);
               resolve();
             })
             .catch((error) => {
@@ -61,9 +70,90 @@ export class AuthService {
     });
   }
 
+  //ReAuthentification d'un User ...
+  //TODO
+  reAuthentification(mail: string, mdp: string) {
+    return new Promise<void>((resolve, reject) => {
+      const user = firebase.auth().currentUser;
+      const credentials = firebase.auth.EmailAuthProvider.credential(mail, mdp);
+      user
+        ?.reauthenticateWithCredential(credentials)
+        .then(() => {
+          resolve();
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  }
+
+  //UpdateMail
+  //TODO
+  updateMail(email: string, newEmail: string, mdp: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(email, mdp)
+        .then((userCredential) => {
+          userCredential.user?.updateEmail(newEmail);
+          resolve(true);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  }
+  //UpdatePassword
+  //TODO
+  updatePassword(email: string, mdp: string, newMdp: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(email, mdp)
+        .then((userCredential) => {
+          userCredential.user?.updatePassword(newMdp);
+          resolve(true);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  }
+
+  //reInitialisation
+  //TODO
+  reInitialisation(mail: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      firebase
+        .auth()
+        .sendPasswordResetEmail(mail)
+        .then(() => {
+          resolve(true);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  }
   //Deconnexion d'un User ...
   //TODO
   signOutUser() {
     firebase.auth().signOut();
+  }
+
+  //Delete User
+  //TODO
+  deleteUser(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const user = firebase.auth().currentUser;
+      user
+        ?.delete()
+        .then(() => {
+          resolve(true);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
   }
 }

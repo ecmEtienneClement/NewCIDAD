@@ -9,7 +9,8 @@ export class UserModel {
     public promotion: string,
     public mail: string,
     public mdp: string,
-    public fantome: boolean = false,
-    public code: string[] = ['A', 'B', 'C', 'D']
+    public fantome: string = 'false',
+    public code: any = 1234,
+    public securite: string = 'true'
   ) {}
 }

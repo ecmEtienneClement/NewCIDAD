@@ -20,6 +20,7 @@ export class BugModel {
     public details: string,
     public etat: string,
     public bugUpdate: number,
-    public date: number
+    public date: number,
+    public codeBug: string[]
   ) {}
 }

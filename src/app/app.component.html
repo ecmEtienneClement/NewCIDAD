@@ -2,11 +2,25 @@
   <mat-drawer class="sideNave" #drawer mode="over">
     <ul class="list-group">
       <li class="list-group-item"><h1>CIDAD</h1></li>
-      <li class="list-group-item"><i class="fas fa-user"></i>PROFIL</li>
-      <li class="list-group-item"><i class="fas fa-user-cog"></i>EDIT PROFIL</li>
+      <a [routerLink]="['/profilUser']"
+        ><li class="list-group-item"><i class="fas fa-user"></i>PROFIL</li></a
+      >
+
+      <a>
+        <a [routerLink]="['/editUser']"
+          ><li class="list-group-item">
+            <i class="fas fa-user"></i>EDIT PROFIL
+          </li></a
+        ></a
+      >
+
       <li class="list-group-item"><i class="fas fa-school"></i>UVS-IDA</li>
-      <li class="list-group-item"><i class="fas fa-cogs"></i>PARAMETRE</li>
-      <li class="list-group-item deconnexion" >DECONNEXION<span class="fas fa-sign-out-alt"></span></li>
+      <a [routerLink]="['/parametre']">
+        <li class="list-group-item"><i class="fas fa-cogs"></i>PARAMETRE</li></a
+      >
+      <li class="list-group-item deconnexion">
+        DECONNEXION<span class="fas fa-sign-out-alt"></span>
+      </li>
     </ul>
   </mat-drawer>
 
@@ -45,20 +59,7 @@
                       >Enregistrer</a
                     >
                   </li>
-                  <li class="nav-item" *ngIf="user_Connected">
-                    <a class="nav-link active" aria-current="page" href="#"
-                      >Profil</a
-                    >
-                  </li>
-                  <li class="nav-item" *ngIf="user_Connected">
-                    <a
-                      class="nav-link active"
-                      aria-current="page"
-                      [routerLink]="['/parametre']"
-                      routerLinkActive="router-link-active"
-                      >Parametre</a
-                    >
-                  </li>
+
                   <li class="nav-item" *ngIf="user_Connected">
                     <a
                       class="nav-link active"
@@ -94,7 +95,7 @@
         </div>
       </div>
       <button class="btnNavSide" mat-raised-button (click)="drawer.toggle()">
-        <i class="fab fa-accusoft">CIDAD</i>
+        <i class="fab fa-accusoft"></i>CIDAD
       </button>
       <div class="container-fluid g sid">
         <router-outlet></router-outlet>

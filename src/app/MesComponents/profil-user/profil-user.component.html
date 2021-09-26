@@ -1,0 +1,30 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+      <section class="profilUser">
+        <span class="couverture"></span>
+        <span class="couverture"></span>
+        <p>
+          <b>{{ nomUser }} </b>
+        </p>
+        <p>
+          <b>{{ prenomUser }} </b>
+        </p>
+        <p>
+          Email: <b>{{ emailUser }} </b>
+        </p>
+        <p>
+          Promotion :<b>{{ promoUser }} </b>
+        </p>
+        <p>
+          <b *ngIf="modeNavUser == 'false'"
+            >Mode de Navigation : IDENTIFIABLE
+          </b>
+        </p>
+        <p>
+          <b *ngIf="modeNavUser == 'true'">Mode de Navigation : FANTOME </b>
+        </p>
+      </section>
+    </div>
+  </div>
+</div>

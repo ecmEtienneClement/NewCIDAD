@@ -1,0 +1,55 @@
+<div
+  class="container"
+  [ngClass]="{
+    containerverify: container_verify,
+    'container-true': container_true,
+    'container-false': container_false
+  }"
+>
+  <h1>ECM CIDAD</h1>
+  <!--....................Formulaire de reauthentification ...............................-->
+  <div class="row">
+    <div class="col-12 col-lg-5">
+      <form [formGroup]="myForm" (ngSubmit)="onSubmitMyForm()">
+        <!--................................ PARTI DU MAIL ...................................-->
+        <div class="form-group mt-2">
+          <mat-form-field appearance="outline">
+            <mat-label>Entrez votre Mail</mat-label>
+            <input
+              required
+              matInput
+              placeholder="ecmbayeclement@gmail.com"
+              formControlName="mail"
+            />
+            <mat-hint>Mail</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <!--................................ PARTI DU MOT DE PASSE .............................-->
+        <div class="form-group mt-2">
+          <mat-form-field appearance="outline">
+            <mat-label>Entrez votre mot de passe</mat-label>
+            <input
+              required
+              matInput
+              type="password"
+              formControlName="mdp"
+              placeholder="mot de passe"
+            />
+            <mat-hint>Mot de passe</mat-hint>
+          </mat-form-field>
+        </div>
+        <!--................................ PARTI DES BOUTONS ...................................-->
+        <div>
+          <button
+            type="submit"
+            *ngIf="!myForm.invalid"
+            class="btn btn-outline-success mt-3"
+          >
+            Réauthentifier
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

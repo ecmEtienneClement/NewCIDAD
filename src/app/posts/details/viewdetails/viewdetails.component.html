@@ -1,0 +1,138 @@
+<div
+  class="row rowParent mt-3"
+  *ngFor="
+    let reponseBug of tbReponseBug
+      | paginate: { itemsPerPage: 10, currentPage: page };
+    let indice = index
+  "
+>
+  <div class="col-12">
+    <div class="row">
+      <div class="col-1">
+        <button
+          [matMenuTriggerFor]="aboveMenu"
+          type="button"
+          class="btn user btn-info"
+          (click)="onViewUser(reponseBug.user_Id)"
+        >
+          <i class="fas fa-user-edit"></i>
+        </button>
+        <mat-menu #aboveMenu="matMenu" yPosition="above">
+          <b class="infoUser" mat-menu-item
+            >{{ prenom | uppercase }}{{ nom | uppercase }}</b
+          >
+          <p class="infoUser" mat-menu-item>{{ promo }}</p>
+        </mat-menu>
+      </div>
+
+      <div class="col-7">
+        <button
+          class="btn btn-outline-primary btnChek"
+          [disabled]="user_Id_Connect != user_Id_Bug"
+          (click)="onCheck(reponseBug.id_Reponse)"
+        >
+          <i style="color: green" class="fas fa-check" *ngIf="reponseBug.isGood"
+            ><strong>Merci</strong></i
+          >
+          <i class="fas fa-exclamation" *ngIf="!reponseBug.isGood"
+            ><strong>Merci</strong></i
+          >
+        </button>
+      </div>
+
+      <div class="col-4">
+        <button
+          class="btn btn-sm btn-outline-danger supprimer mt-4"
+          [disabled]="reponseBug.user_Id != user_Id_Connect"
+          (click)="onDelete(reponseBug.id_Reponse)"
+        >
+          <i class="far fa-trash-alt" style="color: red"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- ............................EXTENSION DE LA REPONSE ....................................-->
+  <div class="col-12">
+    <mat-accordion>
+      <mat-expansion-panel hideToggle>
+        <mat-expansion-panel-header class="mt-2">
+          <mat-panel-title>
+            <span class="cliquerPourDeplier">
+              CLIQUER POUR DEPLIER ...</span
+            >
+          </mat-panel-title>
+          <p class="date">{{ reponseBug.dateReponse | date: "short" }}</p>
+        </mat-expansion-panel-header>
+
+        <pre
+          class="mb-3 overflow-auto p-2 mr-3"
+          style="width: 100%; height: 500px"
+        >
+         {{ reponseBug.reponse }}</pre
+        >
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+  <!-- ...........................ENREGISTREMENT DE COMMENTAIRE ....................................-->
+  <div class="col-12">
+    <div class="col-12">
+      <mat-accordion>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title> </mat-panel-title>
+            <span class="voircommentaire">Commentez</span>
+          </mat-expansion-panel-header>
+
+          <div class="form-group">
+            <textarea
+              class="form-control"
+              [(ngModel)]="commentaire"
+              minlength="2"
+              maxlength="500"
+              placeholder="Votre commentaire ici max 500 caractères..."
+              cols="5"
+            ></textarea>
+          </div>
+
+          <button
+            (click)="onSubmitForm(reponseBug.id_Reponse)"
+            [disabled]="commentaire.length < 2"
+            class="btn btn-sm"
+          >
+            Enregistrer
+          </button>
+          <button (click)="onResetForm()" class="btn btn-sm">Annulez</button>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+    <!-- ........................EXTENSION VOIR COMMENTAIRE ....................................-->
+    <div class="col-12">
+      <mat-accordion>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title> </mat-panel-title>
+            <span class="voircommentaire">
+              Voir Commentaire (s)
+              <span style="background-color: blue" class="badge badge-primary"
+                >{{ reponseBug.commentaire.length - 1 }}
+              </span>
+            </span>
+          </mat-expansion-panel-header>
+          <p
+            class="textecommentaire"
+            *ngFor="let commentaire of reponseBug.commentaire"
+          >
+            {{ commentaire }}
+          </p>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+</div>
+<!-- ......................................PAGINATION ....................................-->
+
+<div class="row">
+  <div class="col-12 paginate mt-4">
+    <pagination-controls (pageChange)="page = $event"></pagination-controls>
+  </div>
+</div>

@@ -1,0 +1,117 @@
+<div class="container">
+  <div class="jumbotron jumbotron-fluid mt-3">
+    <div class="row">
+      <div class="col-12">
+        <app-notification-ecm
+          [nomUserNotify]="nomUserNotify"
+        ></app-notification-ecm>
+      </div>
+    </div>
+
+    <!-- ..................... Partie Chargement .............................-->
+    <div *ngIf="chargement">
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+
+      <div class="m-2 spinner-grow text-warning">
+        <span class="initiale">E</span>
+      </div>
+      <div class="m-2 spinner-grow text-success">
+        <span class="initiale">C</span>
+      </div>
+      <div class="m-2 spinner-grow text-primary">
+        <span class="initiale">M</span>
+      </div>
+    </div>
+
+    <!-- .......................... Partie Recherche ........................................-->
+
+    <div class="row">
+      <div class="col-12 parent-search form-group">
+        <input
+          type="text"
+          class="form-control"
+          #datalangLength
+          (keyup)="search(datalangLength.value)"
+          maxlength="15"
+          placeholder=" Entrez le language de programmation a recherché ... Java Php ect ..."
+        />
+      </div>
+    </div>
+    <!-- ..................... Partie menu de Nav .............................-->
+    <div class="row">
+      <div class="col-12">
+        <mat-tab-group
+          animationDuration="2000ms"
+          (selectedTabChange)="tabChanged($event)"
+        >
+          <mat-tab label="ALL"
+            ><h3>
+              Tout les Posts
+              <span
+                style="background-color: blue"
+                class="badge badge-secondary"
+                >{{ tbCmpCh.length }}</span
+              >
+            </h3></mat-tab
+          >
+          <mat-tab label="MES POSTS">
+            <h3>
+              Vos Post (s)
+              <span
+                style="background-color: blue"
+                class="badge badge-primary"
+                >{{ tbCmpCh.length }}</span
+              >
+            </h3></mat-tab
+          >
+          <mat-tab label="RESOLU (S)"
+            ><h3>
+              Post (s) Resolu (s)
+              <span
+                style="background-color: blue"
+                class="badge badge-primary"
+                >{{ tbCmpCh.length }}</span
+              >
+            </h3></mat-tab
+          >
+          <mat-tab label="NON RESOLU (S)"
+            ><h3>
+              Post (s) Non Resolu (s)
+              <span
+                style="background-color: blue"
+                class="badge badge-primary"
+                >{{ tbCmpCh.length }}</span
+              >
+            </h3></mat-tab
+          >
+          <mat-tab label="POSTS MODIFIE (S)"
+            ><h3>
+              Post (s) Modifié (s)
+              <span
+                style="background-color: blue"
+                class="badge badge-primary"
+                >{{ tbCmpCh.length }}</span
+              >
+            </h3></mat-tab
+          >
+        </mat-tab-group>
+      </div>
+    </div>
+
+    <!-- ..................... Partie des Bugs .............................-->
+    <div class="container-fluid container-bug">
+      <app-viewecm
+        [prenom]="prenomUser"
+        [nom]="nomUser"
+        [promo]="promoUser"
+        [nbrReponse]="nbrReponse"
+        [nbrReponseCoche]="nbrReponseCoche"
+        [fantome]="fantome"
+        [tbCmpCh]="tbCmpCh"
+        [user_Id_Connect]="user_Id_Connect"
+        [totalPage]="totalPage"
+      >
+      </app-viewecm>
+    </div>
+  </div>
+</div>

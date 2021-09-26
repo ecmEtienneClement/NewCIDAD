@@ -1,0 +1,107 @@
+<div class="container">
+  <div class="jumbotron jumbotron-fluid mt-3">
+    <div class="alert alert-success">
+      <strong>
+        <h1 class="display-4">
+          Enregistrez ! Partager ! Vos Problèmes Avec CIDAD
+        </h1></strong
+      >
+    </div>
+
+    <hr class="my-4" />
+  </div>
+
+  <form [formGroup]="myForm" (ngSubmit)="onSubmitForm()">
+    <!-- Partie du Language-->
+    <div class="form-group mt-4">
+      <mat-form-field appearance="outline">
+        <mat-label>Java Php JavaScript Nodejs SQL Python ect</mat-label>
+        <input
+          required
+          #langLength
+          maxlength="15"
+          matInput
+          type="text"
+          placeholder="Java  ect ..."
+          formControlName="language"
+        />
+        <mat-hint>Language</mat-hint>
+        <mat-hint align="end">{{ langLength.value.length }}/15</mat-hint>
+      </mat-form-field>
+    </div>
+    <!-- Partie du Titre-->
+    <div class="form-group mt-4">
+      <mat-form-field appearance="outline">
+        <mat-label>Entrez un titre pour le problème</mat-label>
+        <input
+          required
+          #titreLength
+          maxlength="25"
+          matInput
+          type="text"
+          placeholder="Votre titre"
+          formControlName="titre"
+        />
+        <mat-hint>Titre</mat-hint>
+        <mat-hint align="end">{{ titreLength.value.length }}/25</mat-hint>
+      </mat-form-field>
+    </div>
+    <!-- Partie des details-->
+    <div class="form-group mt-4">
+      <mat-form-field appearance="outline">
+        <mat-label>Entrez les détails portant sur ce problème</mat-label>
+        <textarea
+          #detailsLength
+          maxlength="500"
+          rows="7"
+          required
+          matInput
+          placeholder="Entrez les détails portant sur ce problème"
+          formControlName="details"
+        ></textarea>
+        <mat-hint>Details</mat-hint>
+        <mat-hint align="end">{{ detailsLength.value.length }}/500</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <!-- Partie du code Post-->
+    <div formArrayName="codeBug">
+      <div
+        class="form-group mt-4"
+        *ngFor="let item of getCodeBug().controls; let i = index"
+      >
+        <mat-form-field appearance="outline">
+          <mat-label>Veillez coller ici votre du post</mat-label>
+          <textarea
+            rows="7"
+            required
+            matInput
+            placeholder="Entrez le code du post"
+            [formControlName]="i"
+          ></textarea>
+          <mat-hint>code du post</mat-hint>
+        </mat-form-field>
+      </div>
+      <div *ngIf="getCodeBug().length < 3">
+        <button type="button" class="btn btn-outline" (click)="onAddCodeBug()">
+          Ajouter Code du Post
+        </button>
+      </div>
+    </div>
+
+    <button
+      type="submit"
+      class="btn btn-success mt-4"
+      [disabled]="myForm.invalid || getCodeBug().length == 0"
+    >
+      Enregistrer
+    </button>
+    <button
+      type="reset"
+      class="btn btn-danger mt-4"
+      [disabled]="myForm.invalid"
+    >
+      Annuler
+    </button>
+  </form>
+</div>

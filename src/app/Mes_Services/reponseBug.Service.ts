@@ -1,10 +1,12 @@
 import firebase from 'firebase/app';
 import 'firebase/database';
 import 'firebase/auth';
+
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ReponseBugModel } from '../Models/reponseBug';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Notification } from './notification.service';
 
 @Injectable()
 export class ReponseBugService {
@@ -12,8 +14,11 @@ export class ReponseBugService {
   public tbsubjectReponse: Subject<ReponseBugModel[]> = new Subject<
     ReponseBugModel[]
   >();
-  constructor(private _snackBar: MatSnackBar) {}
-  
+  constructor(
+    private _snackBar: MatSnackBar,
+    private notifyService: Notification
+  ) {}
+
   //....................
   //Methode Pour Les Notifications ...C'est un service..
   openSnackBar(message: string, action: string) {
@@ -28,8 +33,8 @@ export class ReponseBugService {
   //.................................PARTIE METHODE ....................................
   //Creation new Reponse Bug
   //TODO
-  creatNewReponseBug(bug_Id: string, reponse: string) {
-    //Recuperation du user qui reponde ...
+  creatNewReponseBug(bug_Id: string, reponse: string, user_Id_Bug: string) {
+    //Recuperation de l' Id du user qui reponde ...
     const user_Id = firebase.auth().currentUser?.uid;
     //Mise en place de ID de la reponse
     //Id de la reponse nous permet de bien identifier ,recuperé son index dans le tbReponse
@@ -41,11 +46,13 @@ export class ReponseBugService {
       user_Id,
       reponse,
       false,
-      ['pas de commentaire'],
+      [''],
       Date.now()
     );
     this.tbReponseBug.unshift(newReponseBug);
     this.sauvegardeBaseReponse();
+    //Appelle du service de notification
+    this.notifyService.notifyReponseBug(user_Id_Bug, bug_Id);
     //this.updateTbReponseBug();
     const message = 'Merci ! Votre réponse a été bien enregistrée ...';
     //Affichage de l'alerte
@@ -100,6 +107,13 @@ export class ReponseBugService {
         this.tbReponseBug[index].commentaire.unshift(commentaire);
         this.sauvegardeBaseReponse();
         this.updateTbReponseBug();
+        //Appelle de notify pour notifier le user
+        //recuperation de l'Id du user a qui appartient la reponse
+        let id_User_Reponse = this.tbReponseBug[index].user_Id;
+        this.notifyService.notifyCommentaireReponseBug(
+          id_Reponse,
+          id_User_Reponse
+        );
         const message = 'Votre commentaire a été bien ajouté ...';
         //Affichage de l'alerte
         this.openSnackBar(message, 'ECM');
@@ -122,6 +136,28 @@ export class ReponseBugService {
       } else {
       }
     });
+  }
+
+  //Verification du nombre de reponse
+  //TODO
+  verifyNbrReponse(id_Bug: string): number {
+    //Mise en place de mon tb pour receuillir les reponses pour l'ID de ce Bug
+    let tbFilterByIdBug: any[] = [];
+    //Mise en place pour recuperer le nombre de reponses marquée merci
+    let nbrReponse: number = 0;
+    //Debut du filtre
+    tbFilterByIdBug =
+      this.tbReponseBug.filter(
+        (reponse: { bug_Id: string }) => reponse.bug_Id == id_Bug
+      ).length != 0
+        ? this.tbReponseBug.filter(
+            (reponse: { bug_Id: string }) => reponse.bug_Id == id_Bug
+          )
+        : [];
+
+    nbrReponse = tbFilterByIdBug.length;
+    //Renvoie du nbr de reponses
+    return nbrReponse;
   }
   //Verification des reponses si au moin une a ete marque merci comme quoi que le bug
   //a etait resolu qui vas nous permettre de modifier l'etat du bug au niveau de ecm

@@ -1,0 +1,201 @@
+<mat-drawer-container class="example-container" hasBackdrop="true">
+  <mat-drawer class="sideNave" #drawer mode="over">
+    <ul class="list-group">
+      <li class="list-group-item"><h1>AFFICHAGE</h1></li>
+      <!-- .......................... Partie du btn details.....................................-->
+      <a (click)="onOpenBtnDetails()" *ngIf="!open_btn_details"
+        ><li class="list-group-item btn-item">
+          <b>Déployer Boutons détails</b>
+        </li></a
+      >
+      <a (click)="onOpenBtnDetails()" *ngIf="open_btn_details"
+        ><li class="list-group-item btn-item">
+          <b>Ranger Boutons détails</b>
+        </li></a
+      >
+      <!-- .......................... Partie du bloc.....................................-->
+      <a (click)="openBlocBtn()" *ngIf="!open_btn"
+        ><li class="list-group-item btn-item"><b>Déployer Pallettes</b></li></a
+      >
+      <a (click)="openBlocBtn()" *ngIf="open_btn"
+        ><li class="list-group-item btn-item"><b>Ranger Pallettes</b></li></a
+      >
+      <!-- .......................... Partie de l'animation.....................................-->
+      <a (click)="ligneAnimation()" *ngIf="!ligne_animation"
+        ><li class="list-group-item btn-item">
+          <b>Activer Animation Pallettes</b>
+        </li></a
+      >
+      <a (click)="ligneAnimation()" *ngIf="ligne_animation"
+        ><li class="list-group-item btn-item">
+          <b>Arreter Animation Pallettes</b>
+        </li></a
+      >
+    </ul>
+  </mat-drawer>
+
+  <mat-drawer-content>
+    <div class="row container-card">
+      <div
+        class="col-12 col-lg-4 mt-4"
+        *ngFor="
+          let item of tbCmpCh
+            | paginate: { itemsPerPage: 4, currentPage: page };
+          let indice = index
+        "
+      >
+        <div class="row ligne mb-2">
+          <div class="card tilt tilt-image">
+            <!--  ............................ Signalement de l'etat..........................-->
+            <span
+              class="m-2 spinner-grow text-warning"
+              *ngIf="item.etat == 'Non Résolu'"
+            >
+              <span class="initiale"></span>
+            </span>
+            <span class="m-2 text-success" *ngIf="item.etat == 'Résolu'">
+              <span class="initiale"></span>
+            </span>
+            <div class="card-body">
+              <div class="row">
+                <!--  ............................... btn View User...................................-->
+                <div class="col-6">
+                  <button
+                    [matMenuTriggerFor]="aboveMenu"
+                    type="button"
+                    class="btn user btn-info"
+                    (click)="onViewUser(item.user_Id)"
+                  >
+                    <i class="fas fa-user-edit"></i>
+                  </button>
+                  <mat-menu #aboveMenu="matMenu" yPosition="above">
+                    <!--Si le user n'est pas en mode fantome-->
+                    <div *ngIf="fantome == 'false'">
+                      <b class="infoUser" mat-menu-item
+                        >{{ prenom | uppercase }}{{ nom | uppercase }}</b
+                      >
+                      <p class="infoUser" mat-menu-item>{{ promo }}</p>
+                    </div>
+                    <!--Si le user est en mode fantome-->
+                    <div *ngIf="fantome == 'true'">
+                      <p><b class="infoUser" mat-menu-item>FANTOME ...</b></p>
+                    </div>
+                  </mat-menu>
+                  <h4 class="card-title">
+                    {{ item.titre | titlecase | slice: 0:7 }} ...
+                  </h4>
+                </div>
+                <div class="col-6">
+                  <p class="date">{{ item.date | date: "short" }}</p>
+                </div>
+              </div>
+
+              <div class="row">
+                <div
+                  class="col-12 mb-3 details overflow-auto bg-light p-2 mr-3"
+                  style="width: 100%; height: 50px"
+                >
+                  <p class="card-text">{{ item.details }} ...</p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12 titre">
+                  <b>{{ item.language | titlecase | slice: 0:15 }}... </b>
+                </div>
+              </div>
+              <div class="row ligne-container-btn-details mt-2">
+                <div class="col-12">
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary btn-details"
+                    [ngClass]="{ 'open-btn-details': open_btn_details }"
+                    (click)="onNavigate(item.bug_Id)"
+                  >
+                    <i class="far fa-eye"></i>
+                    Détails...
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!--..................................PARTIE BLOC BTN.........................................-->
+            <div
+              [ngClass]="{ 'bloc-btn': true, 'bloc-btn-open-btn': open_btn }"
+            >
+              <span [ngClass]="{ 'ligne-animation': ligne_animation }"></span>
+              <span [ngClass]="{ 'ligne-animation': ligne_animation }"></span>
+              <span [ngClass]="{ 'ligne-animation': ligne_animation }"></span>
+              <span [ngClass]="{ 'ligne-animation': ligne_animation }"></span>
+              <!--....................... btn Nbr Reponse ....................-->
+
+              <mat-menu #aboveMenuNbrReponse="matMenu" yPosition="above">
+                <p>
+                  <b class="infoNbrReponse" mat-menu-item>
+                    Nombre de réponse (s) : {{ nbrReponse }}
+                  </b>
+                </p>
+                <p>
+                  <b class="infoNbrReponse" mat-menu-item>
+                    Réponse (s) cochée (s) : {{ nbrReponseCoche }}
+                  </b>
+                </p>
+              </mat-menu>
+              <button
+                [matMenuTriggerFor]="aboveMenuNbrReponse"
+                (click)="onViewNbrReponse(item.bug_Id)"
+                type="button"
+                class="btn btn-outline-primary btn-nbr-reponse"
+              >
+                <i class="far fa-question-circle"></i>
+              </button>
+
+              <!--....................... btn CHANGER_ETAT....................-->
+              <button
+                (click)="onChangeEtatBug(item.bug_Id)"
+                type="button"
+                class="btn btn-outline-primary btn-changer-etat"
+                [ngStyle]="{
+                  color: item.etat == 'Résolu' ? 'green' : 'red'
+                }"
+                [disabled]="item.user_Id !== user_Id_Connect"
+              >
+                <i class="far fa-thumbs-up" *ngIf="item.etat == 'Résolu'"></i>
+                <i
+                  class="far fa-thumbs-down"
+                  *ngIf="item.etat == 'Non Résolu'"
+                ></i>
+              </button>
+              <!--....................... btn Update....................-->
+              <button
+                (click)="onUpdateBug(item.bug_Id)"
+                type="button"
+                class="btn btn-outline-primary btn-update"
+                [disabled]="item.user_Id !== user_Id_Connect"
+              >
+                <i class="far fa-edit"></i>
+              </button>
+              <!--....................... btn delete....................-->
+              <button
+                (click)="onDeletBug(item.bug_Id)"
+                type="button"
+                class="btn btn-outline-danger"
+                [disabled]="item.user_Id !== user_Id_Connect"
+              >
+                <i class="fas fa-archive alert-danger"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 paginate">
+          <pagination-controls
+            (pageChange)="page = $event"
+          ></pagination-controls>
+        </div>
+      </div>
+    </div>
+    <button class="btnNavSide" mat-raised-button (click)="drawer.toggle()">
+      <i class="fas fa-align-left"></i>VIEW
+    </button>
+  </mat-drawer-content>
+</mat-drawer-container>

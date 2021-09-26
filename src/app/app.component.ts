@@ -4,6 +4,7 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import { AuthService } from './Mes_Services/auth.Service';
 import { BugService } from './Mes_Services/bug.Service';
+import { Notification } from './Mes_Services/notification.service';
 import { ReponseBugService } from './Mes_Services/reponseBug.Service';
 
 @Component({
@@ -17,7 +18,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private serviceAuth: AuthService,
     private route: Router,
     private serviceBug: BugService,
-    private serviceReponseBug: ReponseBugService
+    private serviceReponseBug: ReponseBugService,
+    private notifyService: Notification
   ) {
     // For Firebase JS SDK v7.20.0 and later, measurementId is optional
     const firebaseConfig = {
@@ -41,6 +43,9 @@ export class AppComponent implements OnInit, OnDestroy {
     //Recuperation des Reponses bugs depuis la base de donnee
     //TODO
     this.serviceReponseBug.recupeBaseReponse();
+    //Recupration de la base de notification
+    //TODO
+    this.notifyService.recupbaseNotify();
     //Verification du User s'il est connecter
     //TODO
     firebase.auth().onAuthStateChanged((data_User: any) => {
@@ -58,7 +63,5 @@ export class AppComponent implements OnInit, OnDestroy {
     this.serviceAuth.signOutUser();
   }
 
-  ngOnDestroy(): void {
-    alert('component app detruite oui....');
-  }
+  ngOnDestroy(): void {}
 }

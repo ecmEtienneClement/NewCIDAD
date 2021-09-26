@@ -1,0 +1,86 @@
+<div class="container">
+  <div class="row forme">
+    <span class="cercle"></span>
+    <span class="cercle"></span>
+    <span class="cercle"></span>
+    <span class="cercle"></span>
+    <span class="cercle"></span>
+    <span class="cercle"></span>
+    <div class="col-12 col-lg-6">
+      <!--.................................PARTIE  DU NEW NOM ..................................-->
+      <div class="form-group mt-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Votre Nouveau Nom</mat-label>
+          <input
+            #nomLength
+            maxlength="15"
+            matInput
+            placeholder="MBAYE"
+            [(ngModel)]="newNom"
+          />
+          <mat-hint>Nouveau Nom</mat-hint>
+          <mat-hint align="end"> {{ nomLength.value.length }} /15</mat-hint>
+        </mat-form-field>
+      </div>
+
+      <!--.................................PARTIE  DU NEW PRENOM ..................................-->
+      <div class="form-group mt-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Votre Nouveau Prenom</mat-label>
+          <input
+            #nomLength
+            maxlength="25"
+            matInput
+            placeholder="ETIENNE CLEMENT"
+            [(ngModel)]="newPrenom"
+          />
+          <mat-hint>Nouveau Prenom</mat-hint>
+          <mat-hint align="end"> {{ nomLength.value.length }} /25</mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-6">
+      <!--.................................PARTIE  DU NEW PROMO ..................................-->
+      <div class="form-group mt-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Votre Nouveau Promotion</mat-label>
+          <mat-select [(ngModel)]="newPromo">
+            <mat-option value="P1">Promotion : 1</mat-option>
+            <mat-option value="P2">Promotion : 2</mat-option>
+            <mat-option value="P3">Promotion : 3</mat-option>
+            <mat-option value="P4">Promotion : 4</mat-option>
+            <mat-option value="P5">Promotion : 5</mat-option>
+            <mat-option value="P6">Promotion : 6</mat-option>
+            <mat-option value="P7">Promotion : 7</mat-option>
+            <mat-option value="P8">Promotion : 8</mat-option>
+          </mat-select>
+          <mat-hint>Nouveau Promotion</mat-hint>
+        </mat-form-field>
+      </div>
+
+      <!--.................................PARTIE  DU NEW MODE DE NAV ..................................-->
+      <div class="form-group mt-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Votre Nouveau Mode de Navigation</mat-label>
+          <mat-select [(ngModel)]="newModeNav">
+            <mat-option #mode value="true">Mode Fantome</mat-option>
+            <mat-option #mode value="false">Mode Identifiable</mat-option>
+          </mat-select>
+          <mat-hint>Nouveau Mode de Navigation</mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="col-12 btn">
+      <button
+        [disabled]="!data_Charger"
+        type="button"
+        class="btn mt-4 btn-outline-primary"
+        (click)="onVerifyUser()"
+      >
+        Enregistrez
+      </button>
+    </div>
+  </div>
+</div>

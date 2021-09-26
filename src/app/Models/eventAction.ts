@@ -7,6 +7,7 @@ export enum EventType {
   //TODO
   VIEW_INFO_USER = '[BugModel] afficher information du user',
   NAVIGATBUG = '[BugModel] naviger ver detail bug',
+  NBR_REPONSE = '[BugModel] le nombre de reponse de ce bug',
   UPDATEBUG = '[BugModel] modifier le bug',
   CHANGEETATBUG = '[BugModel] changer etat du bug',
   DELETEBUG = '[BugModel] supprimer cet bug',
@@ -16,6 +17,11 @@ export enum EventType {
   DELETE_REPONSE_BUG = '[ReponseBugModel] supprimer cette reponse du bug',
   VOIR_COMMENTAIRES__REPONSE_BUG = '[ReponseBugModel] voir commentaire de cette reponse du bug',
   COMMENTER__REPONSE_BUG = '[ReponseBugModel] commente de cette reponse du bug',
+  //.................EVENEMENTS EMISENT POUR LA VERIFICATION DU CODE USER........................
+  //TODO
+  VERIFICATION_CODE = 'verifier si le mot de passe est correcte',
+  //.................EVENEMENTS EMISENT POUR L'ARRIVE DE LA BD NOTIFY........................
+  BD_NOTIFY_LOADED = 'la bd notification est bien rechargée',
 }
 
 //...................................................................................................
@@ -26,7 +32,14 @@ export enum EventType {
 //TODO
 export interface EventModel {
   type: EventType;
-  data_paylode_Number: number;
+  data_paylode_Number?: number;
   data_paylode_String?: string;
-  data_paylode_PageNavigate?: number;
+  data_paylode_Donnee_String?: string;
+}
+
+//Modele pour la notification id et valeur
+//TODO
+export interface NotifyModel {
+  id: string;
+  nbr: number;
 }

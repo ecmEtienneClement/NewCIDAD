@@ -1,0 +1,40 @@
+<div
+  class="container"
+  [ngClass]="{
+    containerverify: container_verify,
+    'container-true': container_true,
+    'container-false': container_false
+  }"
+>
+  <h1>ECM CIDAD</h1>
+  <div class="form-group mt-4">
+    <mat-form-field appearance="outline">
+      <mat-label>Veillez saisir votre code de confirmation </mat-label>
+      <input
+        style="color: blue"
+        #nomLength
+        type="password"
+        maxlength="4"
+        matInput
+        placeholder="1234"
+        [(ngModel)]="codeUserSaisi"
+      />
+      <mat-hint style="color: blue">Entrez votre</mat-hint>
+      <mat-hint align="end" style="color: blue">
+        {{ nomLength.value.length }} /4</mat-hint
+      >
+    </mat-form-field>
+  </div>
+
+  <button
+    [disabled]="!data_Charger || codeUserSaisi.length < 4"
+    type="button m-3"
+    class="btn btn-outline-success"
+    (click)="valider()"
+  >
+    Valider
+  </button>
+  <button type="button m-3" class="btn btn-outline-danger" (click)="reset()">
+    Effacer
+  </button>
+</div>

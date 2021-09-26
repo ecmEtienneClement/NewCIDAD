@@ -1,0 +1,215 @@
+.container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  outline: 0;
+  overflow: hidden;
+}
+.container::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(#f00, #f0f);
+  clip-path: circle(40% at right 80%);
+}
+.container::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(#2196f3, #e91e63);
+  clip-path: circle(40% at 25% 10%);
+}
+.forme {
+  position: absolute;
+  left: 10%;
+  top: 50%;
+  transform: translateY(-50%);
+  border-radius: 15px;
+  box-shadow: 0 5px 35px rgba(0, 0, 0, 0.2);
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  width: 80%;
+  z-index: 2;
+}
+
+.col-lg-6 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+}
+button {
+  font-weight: bold;
+}
+.example-box {
+  background-color: blueviolet;
+  border-radius: 20px;
+  text-align: center;
+}
+
+.button {
+  overflow: hidden;
+}
+/*Animation des petits cercles....*/
+.cercle:nth-child(1) {
+  position: absolute;
+  left: 10%;
+  bottom: -810px;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(#2196f3, #e91e63);
+  clip-path: circle(5% at 5% 10%);
+  animation: anim1 8s linear infinite;
+}
+@keyframes anim1 {
+  0% {
+    bottom: -810px;
+  }
+  40%,
+  50% {
+    background: linear-gradient(#d4e2cb, #4610db);
+  }
+  50%,
+  95% {
+    background: linear-gradient(#5f9640, #640424);
+    bottom: 200px;
+  }
+  98%,
+  100% {
+    background: transparent;
+  }
+}
+.cercle:nth-child(2) {
+  position: absolute;
+  left: 32%;
+  bottom: -810px;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(#042138, #e91e63);
+  clip-path: circle(5% at 5% 10%);
+  animation: anim2 10s linear infinite;
+}
+@keyframes anim2 {
+  0%,
+  15% {
+    bottom: -810px;
+  }
+  40%,
+  50% {
+    background: linear-gradient(#9c566d, #83db10);
+  }
+  50%,
+  100% {
+    background: linear-gradient(#5f9640, #640424);
+    bottom: 200px;
+  }
+}
+.cercle:nth-child(3) {
+  position: absolute;
+  left: 48%;
+  bottom: -810px;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(#2196f3, #0f8488);
+  clip-path: circle(5% at 5% 10%);
+  animation: anim3 10s linear infinite;
+}
+@keyframes anim3 {
+  0%,
+  35% {
+    bottom: -810px;
+  }
+  40%,
+  50% {
+    background: linear-gradient(#d4e2cb, #4610db);
+  }
+  50%,
+  100% {
+    background: linear-gradient(#2d068a, #da8da6);
+    bottom: 200px;
+  }
+}
+.cercle:nth-child(4) {
+  position: absolute;
+  left: 55%;
+  bottom: -810px;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(#2196f3, #e91e63);
+  clip-path: circle(5% at 5% 10%);
+  animation: anim4 10s linear infinite;
+}
+@keyframes anim4 {
+  0%,
+  20% {
+    bottom: -810px;
+  }
+  20%,
+  50% {
+    background: linear-gradient(#63ff02, #4f4c57);
+  }
+  50%,
+  100% {
+    background: linear-gradient(#050c01, #640424);
+    bottom: 200px;
+  }
+}
+.cercle:nth-child(5) {
+  position: absolute;
+  left: 70px;
+  bottom: -810px;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(#2196f3, #030303);
+  clip-path: circle(5% at 5% 10%);
+  animation: anim5 12s linear infinite;
+}
+@keyframes anim5 {
+  0%,
+  40% {
+    bottom: -810px;
+  }
+  40%,
+  50% {
+    background: linear-gradient(#ddc808, #6e40ec);
+  }
+  50%,
+  100% {
+    background: linear-gradient(#40a306, #640424);
+    bottom: 200px;
+  }
+}
+.cercle:nth-child(6) {
+  position: absolute;
+  left: 80%;
+  bottom: -810px;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(#c6f321, #b8335f);
+  clip-path: circle(5% at 5% 10%);
+  animation: anim6 12s linear infinite;
+}
+@keyframes anim6 {
+  0%,
+  38% {
+    bottom: -810px;
+  }
+  40%,
+  50% {
+    background: linear-gradient(#d4e2cb, #4610db);
+  }
+  50%,
+  100% {
+    background: linear-gradient(#bfc4bc, #640424);
+    bottom: 200px;
+  }
+}
