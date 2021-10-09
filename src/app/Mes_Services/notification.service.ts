@@ -75,7 +75,7 @@ export class Notification {
   }
   //Methode pour Notifier une Reponse la collection du user...........
   //TODO
-  notifyReponseBug(user_Id_Bug: string, bug_Id: string) {
+  notifyReponseBug(user_Id_Bug: string, titre_Bug: string) {
     let trouver: boolean = false;
     //Recuperation de l'id du User qui repond car si c'est le user qui reponse a son propre
     //post il ne sera pas notifier
@@ -87,13 +87,13 @@ export class Notification {
         (reponse) => reponse.id_User == user_Id_Bug
       );
       tbFilterByIdBug[0].tbIdReponseBug.forEach((item) => {
-        if (item.id == bug_Id) {
+        if (item.titre == titre_Bug) {
           item.nbr += 1;
           trouver = true;
         }
       });
       if (!trouver) {
-        tbFilterByIdBug[0].tbIdReponseBug.unshift({ id: bug_Id, nbr: 1 });
+        tbFilterByIdBug[0].tbIdReponseBug.unshift({ titre: titre_Bug, nbr: 1 });
         //Suppression de la valeur initialiser par defaut...
         if (tbFilterByIdBug[0].tbIdReponseBug[1].nbr == 0) {
           tbFilterByIdBug[0].tbIdReponseBug.splice(1, 1);
@@ -114,7 +114,7 @@ export class Notification {
   }
   //Methode pour Notifier un commentaire la collection du user...........
   //TODO
-  notifyCommentaireReponseBug(reponse_Id: string, user_Id_Reponse?: string) {
+  notifyCommentaireReponseBug(debut_Reponse: string, user_Id_Reponse?: string) {
     let trouver: boolean = false;
     //Recuperation de l'id du User qui repond car si c'est le user qui reponse a son propre
     //post il ne sera pas notifier
@@ -127,7 +127,7 @@ export class Notification {
       );
       //On cherche d'abord si ce id n'existe pas
       tbFilterByIdReponse[0].tbIdCommentaireReponse.forEach((item) => {
-        if (item.id == reponse_Id) {
+        if (item.titre == debut_Reponse) {
           item.nbr += 1;
           trouver = true;
         }
@@ -135,7 +135,7 @@ export class Notification {
       //Cas ou l'id n'est pas le tb apres la boucle
       if (!trouver) {
         tbFilterByIdReponse[0].tbIdCommentaireReponse.unshift({
-          id: reponse_Id,
+          titre: debut_Reponse,
           nbr: 1,
         });
         //Suppression de la valeur initialiser par defaut...
@@ -169,8 +169,8 @@ export class Notification {
     //TODO
     tbFilterByIdNotify[0].length_Tb_Bug = 0;
     tbFilterByIdNotify[0].nbrTotalNotify = 0;
-    tbFilterByIdNotify[0].tbIdReponseBug = [{ id: '', nbr: 0 }];
-    tbFilterByIdNotify[0].tbIdCommentaireReponse = [{ id: '', nbr: 0 }];
+    tbFilterByIdNotify[0].tbIdReponseBug = [{ titre: '', nbr: 0 }];
+    tbFilterByIdNotify[0].tbIdCommentaireReponse = [{ titre: '', nbr: 0 }];
     this.sauvegardeBase();
     this.emitUpdateTbNotify();
   }

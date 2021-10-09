@@ -1,0 +1,64 @@
+<form [formGroup]="myForm" (ngSubmit)="onSubmitForm()">
+  <!-- Partie du Language-->
+  <div class="form-group mt-4">
+    <mat-form-field appearance="outline">
+      <mat-label>Java Php JavaScript Python ect</mat-label>
+      <input
+        required
+        #langLength
+        maxlength="15"
+        matInput
+        type="text"
+        placeholder="Java  ect ..."
+        formControlName="language"
+        [matAutocomplete]="auto"
+      />
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let option of options" [value]="option">
+          {{ option }}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-hint>Language</mat-hint>
+      <mat-hint align="end">{{ langLength.value.length }}/15</mat-hint>
+    </mat-form-field>
+  </div>
+  <!-- Partie de la documentation-->
+  <div class="form-group mt-4">
+    <mat-form-field appearance="outline">
+      <mat-label>Entrez la documentation portant sur cet plugin</mat-label>
+      <textarea
+        #detailsLength
+        maxlength="500"
+        rows="7"
+        required
+        matInput
+        placeholder="Entrez la documentation portant sur cet plugin"
+        formControlName="documentation"
+      ></textarea>
+      <mat-hint>documentation</mat-hint>
+      <mat-hint align="end">{{ detailsLength.value.length }}/500</mat-hint>
+    </mat-form-field>
+  </div>
+  <!-- Partie du code plugin-->
+  <div class="form-group mt-4">
+    <mat-form-field appearance="outline">
+      <mat-label>coller le code portant sur cet plugin</mat-label>
+      <textarea
+        maxlength="500"
+        rows="7"
+        required
+        matInput
+        placeholder="Coller le code ici"
+        formControlName="code"
+      ></textarea>
+      <mat-hint>code plugin</mat-hint>
+    </mat-form-field>
+  </div>
+  <button
+    type="submit"
+    class="btn btn-success mt-4"
+    [disabled]="myForm.invalid"
+  >
+    Enregistrer
+  </button>
+</form>

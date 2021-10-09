@@ -10,6 +10,9 @@ import { UserService } from '../Mes_Services/user.Service';
 import { EmitEvent } from '../Mes_Services/emitEvent.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Notification } from '../Mes_Services/notification.service';
+import { AppVideoService } from '../Mes_Services/appVideo.Service';
+import { UserMoogoService } from '../Mes_Services/userMongo.Service';
+import { AppPlugingService } from '../Mes_Services/appPlugin.Service';
 
 @NgModule({
   declarations: [],
@@ -22,7 +25,10 @@ import { Notification } from '../Mes_Services/notification.service';
     EmitEvent,
     GardGuard,
     MatSnackBar,
-    Notification
+    Notification,
+    AppVideoService,
+    UserMoogoService,
+    AppPlugingService,
   ],
 })
 export class CorpFilsModule {}

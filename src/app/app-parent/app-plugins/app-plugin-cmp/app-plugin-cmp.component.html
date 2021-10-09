@@ -1,0 +1,190 @@
+<div class="container">
+  <!--
+  <ng-particles
+    style="height: 1000px"
+    class="particle"
+    [id]="id"
+    [options]="particlesOptions"
+    (particlesLoaded)="particlesLoaded($event)"
+    (particlesInit)="particlesInit($event)"
+  >
+  </ng-particles>
+
+  -->
+  <div class="container-fluid">
+    <div class="jumbotron jumbotron-fluid mt-3">
+      <div class="row">
+        <div class="col-12">
+          <app-notify-app-plugin></app-notify-app-plugin>
+        </div>
+      </div>
+    </div>
+    <!-- ..................... Partie Chargement .............................-->
+    <div *ngIf="chargement">
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+
+      <div class="m-2 spinner-grow text-warning">
+        <span class="initiale">E</span>
+      </div>
+      <div class="m-2 spinner-grow text-success">
+        <span class="initiale">C</span>
+      </div>
+      <div class="m-2 spinner-grow text-primary">
+        <span class="initiale">M</span>
+      </div>
+    </div>
+
+    <!-- .......................... Partie Recherche ........................................-->
+
+    <div class="row">
+      <div class="col-12 parent-search form-group">
+        <input
+          type="text"
+          class="form-control"
+          #datalangLength
+          (keyup)="search(datalangLength.value)"
+          maxlength="15"
+          placeholder=" Entrez le language de programmation a recherché ... Java Php ect ..."
+        />
+      </div>
+    </div>
+    <!-- ..................... Partie menu de Nav .............................-->
+    <div class="row">
+      <div class="col-12 menurecherche">
+        <mat-tab-group
+          animationDuration="2000ms"
+          (selectedTabChange)="tabChanged($event)"
+        >
+          <mat-tab label="ALL"
+            ><h3>
+              Tout les Plugins
+              <span style="background-color: blue" class="badge badge-secondary"
+                >{{ tbAppPluginSearh.length }}
+              </span>
+            </h3></mat-tab
+          >
+          <mat-tab label="MES PLUGINS">
+            <h3>
+              Vos Plugins (s)
+              <span style="background-color: blue" class="badge badge-primary"
+                >{{ tbAppPluginSearh.length }}
+              </span>
+            </h3></mat-tab
+          >
+
+          <mat-tab label="PLUGIN (S) MODIFIE (S)"
+            ><h3>
+              Plugins (s) Modifié (s)
+              <span style="background-color: blue" class="badge badge-primary"
+                >{{ tbAppPluginSearh.length }}
+              </span>
+            </h3></mat-tab
+          >
+        </mat-tab-group>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 col-lg-4 mt-4" *ngFor="let item of tbAppPluginSearh">
+        <mat-card class="example-card">
+          <mat-card-subtitle>
+            <div class="row">
+              <div class="col-12">
+                <span class="date">{{ item.date | date: "short" }}</span>
+              </div>
+              <div class="col-12">
+                <mat-menu #aboveMenu="matMenu" yPosition="above">
+                  <!--Si le user n'est pas en mode fantome-->
+                  <div *ngIf="fantome == 'false'">
+                    <b class="infoUser" mat-menu-item
+                      >{{ prenomUser | uppercase }}{{ nomUser | uppercase }}</b
+                    >
+                    <p class="infoUser" mat-menu-item>{{ promoUser }}</p>
+                  </div>
+                  <!--Si le user est en mode fantome-->
+                  <div *ngIf="fantome == 'true'">
+                    <p><b class="infoUser" mat-menu-item>FANTOME ...</b></p>
+                  </div>
+                </mat-menu>
+                <li
+                  title="Information du User"
+                  [matMenuTriggerFor]="aboveMenu"
+                  (click)="onViewInfoUser(item.userId)"
+                  class="list-group-item liUser"
+                  [ngClass]="{ liUserbtn: deployerbtnUser }"
+                >
+                  <a class="aUser"> <i class="fas fa-user-injured"></i></a>
+                </li>
+              </div>
+            </div>
+          </mat-card-subtitle>
+
+          <mat-card-title
+            ><p class="titre">{{ item.language }}</p></mat-card-title
+          >
+          <mat-card-content>
+            <p class="documentation">{{ item.documentation }}</p>
+          </mat-card-content>
+          <mat-divider inset></mat-divider>
+          <mat-menu #aboveMenuNbr="matMenu" yPosition="above">
+            <!--Si le user n'est pas en mode fantome-->
+            <div *ngIf="nbrCommentaire == 0">
+              <b mat-menu-item>Cet plugin n'a pas de commentaire</b>
+            </div>
+            <!--Si le user est en mode fantome-->
+            <div *ngIf="nbrCommentaire > 0">
+              <p>
+                <b mat-menu-item
+                  >Cet plugin a {{ nbrCommentaire }} commentaire (s)
+                </b>
+              </p>
+            </div>
+          </mat-menu>
+          <mat-card-actions>
+            <ul class="list-group">
+              <li
+                title="Voir les détails du plugin"
+                (click)="viewPlugin(item._id)"
+                class="list-group-item view"
+                [ngClass]="{ btnView: deployerbtnView }"
+              >
+                <a><i class="far fa-eye"></i></a>
+              </li>
+
+              <li
+                [matMenuTriggerFor]="aboveMenuNbr"
+                title="Voir le nombre de commentaire (s)"
+                (click)="nbrPlugin(item._id)"
+                class="list-group-item nbr"
+                [ngClass]="{ btnnbr: deployerbtnnbr }"
+              >
+                <a><i class="fas fa-question"></i></a>
+              </li>
+              <li
+                title="Modifié le plugin"
+                (click)="updatePlugin(item._id)"
+                class="list-group-item update"
+                [ngClass]="{ btnupdate: deployerbtnupdate }"
+              >
+                <a routerLinkActive="router-link-active"
+                  ><i class="far fa-edit"></i
+                ></a>
+              </li>
+              <li
+                title="Supprimé le plugin"
+                (click)="deletePlugin(item._id)"
+                class="list-group-item delete"
+                [ngClass]="{ btndelete: deployerbtndelete }"
+              >
+                <a><i class="fas fa-minus-circle"></i></a>
+              </li>
+            </ul>
+          </mat-card-actions>
+          <mat-card-footer>
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+          </mat-card-footer>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>

@@ -8,6 +8,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatSidenavModule } from '@angular/material/sidenav';
 //import { CorpFilsModule } from 'src/app/corp-fils/corp-fils.module';
 
 @NgModule({
@@ -21,6 +22,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     NgxPaginationModule,
     FormsModule,
     ReactiveFormsModule,
+    MatSidenavModule,
     //   CorpFilsModule,
   ],
 })

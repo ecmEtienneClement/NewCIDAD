@@ -11,6 +11,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
 import { EventModel, EventType } from 'src/app/Models/eventAction';
 import { EmitEvent } from 'src/app/Mes_Services/emitEvent.service';
+
+import { SwiperOptions } from 'swiper';
+import { UserMongo } from 'src/app/Models/modelApi';
+import { UserMoogoService } from 'src/app/Mes_Services/userMongo.Service';
+import { BugService } from 'src/app/Mes_Services/bug.Service';
+import { ReponseBugService } from 'src/app/Mes_Services/reponseBug.Service';
 //....
 
 @Component({
@@ -24,7 +30,8 @@ export class ParametreComponent implements OnInit, OnDestroy {
   subscriptionVerificationCode: Subscription = new Subscription();
   //Variable pour le nombre de tentative
   nbrTentative: number = 3;
-
+  //Model user Mongo
+  userMongo: UserMongo = { _id: 0, email: '', password: '' };
   Id_User_Connected: string = '';
   constructor(
     public dialog: MatDialog,
@@ -33,6 +40,9 @@ export class ParametreComponent implements OnInit, OnDestroy {
     private user: UserService,
     private eventService: EmitEvent,
     private gard: GardGuard,
+    private userMongoService: UserMoogoService,
+    private bugService: BugService,
+    private reponseBusService: ReponseBugService,
     private _snackBar: MatSnackBar //  private location: Location
   ) {}
 
@@ -47,26 +57,69 @@ export class ParametreComponent implements OnInit, OnDestroy {
   nouveauCode: any = '';
   //Variable pour reini code
   mailReiniCode: string = '';
-  user_Email_Connect: string | null;
+  user_Email_Connect?: string | null;
   //form pour modif email
   formUpdateEmail: FormGroup;
   //form pour modif mdp
   formUpdateMdp: FormGroup;
+  //form pour supprimer le compte
+  formDeleteCompte: FormGroup;
   //Variable pour la securite
   securite: string = 'true';
+  //Variable aQui nous permet  de savoir la methode qui a demander la reauthentification
+  aQui: string = 'null';
 
+  config: SwiperOptions = {
+    effect: 'coverflow',
+    grabCursor: true,
+    centeredSlides: true,
+    slidesPerView: 'auto',
+    coverflowEffect: {
+      rotate: 20,
+      stretch: 0,
+      depth: 50,
+      modifier: 1,
+      slideShadows: true,
+    },
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+    },
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+    spaceBetween: 30,
+  };
   ngOnInit(): void {
+    ///Recuperation de l'ID du User Connecter et son email
+    //TODO
+    this.Id_User_Connected = this.gard.user_Id_Connect;
+    this.user_Email_Connect = this.gard.user_Email_Connect;
+    //Recuperation du mdp et id UserMongo
+    //TODO
+
+    this.userMongoService
+      .getUserMongo(this.user_Email_Connect)
+      .then((data_User: UserMongo) => {
+        this.userMongo = data_User;
+      })
+      .catch((error) => {
+        const message =
+          "Une erreur s'est produite veillez actualiser ou verifier votre connexion !";
+        //Affichage de l'alerte
+        this.openSnackBar(message, 'ECM');
+      });
     //InitFormUpdateMail
     //TODO
     this.initFormUpdateEmail();
     //InitFormUpdateMdp
     //TODO
     this.initFormUpdateMdp();
-
-    ///Recuperation de l'ID du User Connecter et son email
+    //initFormDeletCompte
     //TODO
-    this.Id_User_Connected = this.gard.user_Id_Connect;
-    this.user_Email_Connect = this.gard.user_Email_Connect;
+    this.initFormDeletCompte();
+
     //recuperation des information du User Connected
     //TODO
     this.user
@@ -77,7 +130,9 @@ export class ParametreComponent implements OnInit, OnDestroy {
         this.securite = data_User.securite;
       })
       .catch((error) => {
-        alert("Une erreur s'est produite ...");
+        alert(
+          "Une erreur s'est produite recup info User veillez actualisé ..."
+        );
       });
 
     //Subsciption Pour la verification du code ...
@@ -102,7 +157,19 @@ export class ParametreComponent implements OnInit, OnDestroy {
   verifyReponseEvent(reponse: number | undefined) {
     if (reponse == 1) {
       this.dialog.closeAll();
-      this.submitReiniCode();
+      switch (this.aQui) {
+        case 'ResetCode':
+          this.submitReiniCode();
+          break;
+        case 'Securite':
+          this.submitModifierSecurite();
+          break;
+        default: {
+          alert(
+            "Une erreur inattendue s'est produite ! veillez reprendre la procedure"
+          );
+        }
+      }
     } else {
       if (this.nbrTentative > 1) {
         --this.nbrTentative;
@@ -154,7 +221,15 @@ export class ParametreComponent implements OnInit, OnDestroy {
   }
   //Methode pour verifier la securiter du User cette methode declanche la procedure de securite...
   //TODO
-  onVerifyUser() {
+  onVerifyUserResetCode() {
+    this.aQui = 'ResetCode';
+    //Popope pour le code
+    this.openDialog();
+  }
+  //Methode pour verifier la securiter du User cette methode declanche la procedure de securite...
+  //TODO
+  onVerifyUserSecurite() {
+    this.aQui = 'Securite';
     //Popope pour le code
     this.openDialog();
   }
@@ -199,14 +274,42 @@ export class ParametreComponent implements OnInit, OnDestroy {
     this.authService
       .updateMail(email, newEmail, mdp)
       .then(() => {
-        const message =
-          'Votre mail a était bien modifié ! La page sera actualisée dans 2s';
-        //Affichage de l'alerte
-        this.openSnackBar(message, 'ECM');
-        //Attendre 3s avant Actualisation de la page
-        setTimeout(() => {
-          this.refresh();
-        }, 3000);
+        if (this.userMongo._id == 0) {
+          alert('vos données sont chargées partiellement Veillez actualisé !');
+        } else {
+          //Modification dans mongo
+          this.userMongoService
+            .updateMailUserMongo(
+              newEmail,
+              this.userMongo.password,
+              this.userMongo._id
+            )
+            .then(() => {
+              const message =
+                'Votre mail a était bien modifié ! La page sera actualisée dans 2s';
+              //Affichage de l'alerte
+              this.openSnackBar(message, 'ECM');
+              //Attendre 3s avant Actualisation de la page
+              setTimeout(() => {
+                this.refresh();
+              }, 3000);
+            })
+            .catch(() => {
+              //Cas ou le mongo echou on remet l'ancien email
+
+              this.authService
+                .updateMail(newEmail, email, mdp)
+                .then(() => {
+                  const message =
+                    "Une erreur s'est produite l'or de la modification veillez actualiser ou verifier votre connexion !";
+                  //Affichage de l'alerte
+                  this.openSnackBar(message, 'ECM');
+                })
+                .catch(() => {
+                  alert('ERREUR NV2 VEILLER LE SIGNALER A ECM !!!');
+                });
+            });
+        }
       })
       .catch((error) => {
         alert('Erreur ! Veillez bien verifié votre mail saisi');
@@ -222,17 +325,37 @@ export class ParametreComponent implements OnInit, OnDestroy {
     this.authService
       .updatePassword(emailmodifmdp, mdpModif, newMdpModif)
       .then(() => {
-        const message =
-          'Votre mot de passe a était bien modifié ! La page sera actualisée dans 2s';
-        //Affichage de l'alerte
-        this.openSnackBar(message, 'ECM');
-        //Attendre 3s avant Actualisation de la page
-        setTimeout(() => {
-          this.refresh();
-        }, 3000);
+        this.userMongoService
+          .updateMdpUserMongo(emailmodifmdp, newMdpModif, this.userMongo._id)
+          .then(() => {
+            const message =
+              'Votre mot de passe a était bien modifié ! La page sera actualisée dans 2s';
+            //Affichage de l'alerte
+            this.openSnackBar(message, 'ECM');
+            //Attendre 3s avant Actualisation de la page
+            setTimeout(() => {
+              this.refresh();
+            }, 3000);
+          })
+          .catch(() => {
+            //Cas ou le mongo echou on remet l'ancien mdp
+            this.authService
+              .updatePassword(emailmodifmdp, newMdpModif, mdpModif)
+              .then(() => {
+                const message =
+                  "Une erreur s'est produite l'or de la modification veillez actualiser ou verifier votre connexion !";
+                //Affichage de l'alerte
+                this.openSnackBar(message, 'ECM');
+              })
+              .catch(() => {
+                alert('ERREUR NV2 VEILLER LE SIGNALER A ECM !!!');
+              });
+          });
       })
       .catch((error) => {
-        alert('Erreur ! Veillez bien verifié votre mail ou mot de passe saisi');
+        alert(
+          'Erreur ! Veillez bien verifié votre mail ou mot de passe saisis'
+        );
       });
   }
   //Methode pour modifier la securite..
@@ -259,9 +382,85 @@ export class ParametreComponent implements OnInit, OnDestroy {
         }, 3000);
       })
       .catch((error) => {
-        alert("une erreur s'est produite ...");
+        const message =
+          "Une erreur s'est produite l'or de la modification veillez actualiser ou verifier votre connexion !";
+        //Affichage de l'alerte
+        this.openSnackBar(message, 'ECM');
       });
   }
+
+  //Methode pour supprimer compte User
+  //TODO
+  deleteUser() {
+    const value = this.formDeleteCompte.value;
+    const emailDeleteCompte = value['emailDeleteCompte'];
+    const mdpDeleteCompte = value['mdpDeleteCompte'];
+    //Reauthentification du user
+    this.authService
+      .reAuthentification(emailDeleteCompte, mdpDeleteCompte)
+      .then(() => {
+        const message =
+          'Demarrage de la procedure de suppression de vos posts ...';
+        this.openSnackBar(message, 'ECM');
+        setTimeout(() => {
+          //Suppression des posts
+          //todo
+          this.bugService
+            .deleteBugTotalUserDeleteCompte(this.Id_User_Connected)
+            .then(() => {
+              setTimeout(() => {
+                const message =
+                  'Demarrage de la procedure de suppression de vos réponses ...';
+                this.openSnackBar(message, 'ECM');
+              }, 3000);
+              //Attendre une 2.5s pour le temps d'afficher le message de suppression des posts
+              setTimeout(() => {
+                //Suppression des reponses
+                //todo
+                this.reponseBusService
+                  .DeleteReponseBugUserDeleteCompte(this.Id_User_Connected)
+                  .then(() => {
+                    setTimeout(() => {
+                      const message =
+                        'Demarrage de la procedure de suppression de votre compte ...';
+                      this.openSnackBar(message, 'ECM');
+                    }, 3000);
+                    //Attendre une 2.5s pour le temps d'afficher le message de suppression des reponses
+                    setTimeout(() => {
+                      this.authService
+                        .deleteUser()
+                        .then(() => {
+                          const message = 'Votre compte a était bien supprimer';
+                          this.openSnackBar(message, 'ECM');
+                        })
+                        .catch((error) => {
+                          const message =
+                            "Une erreure inattendu ! l'or de la procedure de suppression de votre compte ...";
+                          this.openSnackBar(message, 'ECM');
+                        });
+                    }, 3500);
+                  })
+                  .catch((error) => {
+                    const message =
+                      "Une erreure inattendu ! l'or de la procedure de suppression de vos reponses ...";
+                    this.openSnackBar(message, 'ECM');
+                  });
+              }, 3500);
+            })
+            .catch((error) => {
+              const message =
+                "Une erreure inattendu ! l'or de la procedure de suppression de vos posts ...";
+              this.openSnackBar(message, 'ECM');
+            });
+        }, 5000);
+      })
+      .catch(() => {
+        const message =
+          "Une erreur s'est produite l'or de la modification veillez actualiser ou verifier votre connexion !";
+        this.openSnackBar(message, 'ECM');
+      });
+  }
+
   //Initialisation formModifEmail
   //TODO
   initFormUpdateEmail() {
@@ -283,6 +482,16 @@ export class ParametreComponent implements OnInit, OnDestroy {
       emailmodifmdp: [mailUser, [Validators.required, Validators.email]],
       mdpModif: ['', Validators.required],
       newMdpModif: ['', Validators.required],
+    });
+  }
+  //Initialisation formModifMdp
+  //TODO
+  initFormDeletCompte() {
+    //Recuperation du mail user pour remplire le premier champ par defaut...
+    const mailUser = firebase.auth().currentUser?.email;
+    this.formDeleteCompte = this.formBuilder.group({
+      emailDeleteCompte: [mailUser, [Validators.required, Validators.email]],
+      mdpDeleteCompte: ['', Validators.required],
     });
   }
 

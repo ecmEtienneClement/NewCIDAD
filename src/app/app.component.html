@@ -2,23 +2,25 @@
   <mat-drawer class="sideNave" #drawer mode="over">
     <ul class="list-group">
       <li class="list-group-item"><h1>CIDAD</h1></li>
-      <a [routerLink]="['/profilUser']"
-        ><li class="list-group-item"><i class="fas fa-user"></i>PROFIL</li></a
-      >
+      <li class="list-group-item">
+        <a [routerLink]="['/profilUser']"><i class="fas fa-user"></i>PROFIL</a>
+      </li>
+      <li class="list-group-item">
+        <a [routerLink]="['/editUser']">
+          <i class="fas fa-user"></i>EDIT PROFIL</a
+        >
+      </li>
 
-      <a>
-        <a [routerLink]="['/editUser']"
-          ><li class="list-group-item">
-            <i class="fas fa-user"></i>EDIT PROFIL
-          </li></a
-        ></a
-      >
+      <li class="list-group-item">
+        <a href=""> <i class="fas fa-school"></i>UVS-IDA </a>
+      </li>
 
-      <li class="list-group-item"><i class="fas fa-school"></i>UVS-IDA</li>
-      <a [routerLink]="['/parametre']">
-        <li class="list-group-item"><i class="fas fa-cogs"></i>PARAMETRE</li></a
-      >
-      <li class="list-group-item deconnexion">
+      <li class="list-group-item">
+        <a [routerLink]="['/parametre']">
+          <i class="fas fa-cogs"></i>PARAMETRE
+        </a>
+      </li>
+      <li (click)="onsignOut()" class="list-group-item deconnexion">
         DECONNEXION<span class="fas fa-sign-out-alt"></span>
       </li>
     </ul>
@@ -54,41 +56,107 @@
                     <a
                       class="nav-link active"
                       aria-current="page"
-                      [routerLink]="['/enregistre']"
+                      [routerLink]="['/appPlugin']"
                       routerLinkActive="router-link-active"
-                      >Enregistrer</a
+                      >AppPlugin</a
                     >
                   </li>
-
                   <li class="nav-item" *ngIf="user_Connected">
                     <a
                       class="nav-link active"
                       aria-current="page"
-                      style="cursor: pointer"
-                      (click)="onsignOut()"
-                      >Déconnexion</a
+                      [routerLink]="['/enregistre']"
+                      routerLinkActive="router-link-active"
+                      >Enregistrer Post</a
                     >
                   </li>
-
-                  <li class="nav-item" *ngIf="!user_Connected">
+                  <li class="nav-item" *ngIf="user_Connected">
                     <a
                       class="nav-link active"
                       aria-current="page"
-                      [routerLink]="['/connexion']"
+                      [routerLink]="['/EnregistrePlugin']"
                       routerLinkActive="router-link-active"
-                      >Connexion</a
+                    >
+                      Enregistrer Plugin</a
                     >
                   </li>
-                  <li class="nav-item" *ngIf="!user_Connected">
+                  <li *ngIf="user_Connected" class="nav-item dropdown">
                     <a
-                      class="nav-link active"
-                      aria-current="page"
-                      [routerLink]="['/inscription']"
-                      routerLinkActive="router-link-active"
-                      >Inscription</a
+                      class="nav-link dropdown-toggle"
+                      id="navbarDropdownMenuLink"
+                      role="button"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
                     >
+                      Paramètres Affichage
+                    </a>
+                    <ul
+                      class="dropdown-menu"
+                      aria-labelledby="navbarDropdownMenuLink"
+                    >
+                      <li
+                        *ngIf="affichageParametreEcm"
+                        (click)="onOpenBtnDetails()"
+                      >
+                        <a class="dropdown-item" *ngIf="!open_btn_details"
+                          >Déployer Bouton détails</a
+                        >
+                        <a class="dropdown-item" *ngIf="open_btn_details">
+                          Ranger Bouton détails</a
+                        >
+                      </li>
+                      <li *ngIf="affichageParametreEcm" (click)="openBlocBtn()">
+                        <a class="dropdown-item" *ngIf="!open_btn"
+                          >Déployer Pallette Boutons</a
+                        >
+                        <a class="dropdown-item" *ngIf="open_btn"
+                          >Ranger Pallette Boutons</a
+                        >
+                      </li>
+                      <li
+                        *ngIf="affichageParametreEcm"
+                        (click)="ligneAnimation()"
+                      >
+                        <a class="dropdown-item" *ngIf="!ligne_animation"
+                          >Activer Animation Pallettes</a
+                        >
+                        <a class="dropdown-item" *ngIf="ligne_animation"
+                          >Arreter Animation Pallettes</a
+                        >
+                      </li>
+                      <li
+                        *ngIf="affichageParametrePlugin"
+                        (click)="openBtnCardPlugin()"
+                      >
+                        <a class="dropdown-item" *ngIf="!open_btn_Card_Plugin"
+                          >Déployer Boutons</a
+                        >
+                        <a class="dropdown-item" *ngIf="open_btn_Card_Plugin"
+                          >Ranger Boutons</a
+                        >
+                      </li>
+                    </ul>
                   </li>
                 </ul>
+
+                <li class="nav-item" *ngIf="!user_Connected">
+                  <a
+                    class="nav-link active"
+                    aria-current="page"
+                    [routerLink]="['/connexion']"
+                    routerLinkActive="router-link-active"
+                    >Connexion</a
+                  >
+                </li>
+                <li class="nav-item" *ngIf="!user_Connected">
+                  <a
+                    class="nav-link active"
+                    aria-current="page"
+                    [routerLink]="['/inscription']"
+                    routerLinkActive="router-link-active"
+                    >Inscription</a
+                  >
+                </li>
               </div>
             </div>
           </nav>
@@ -97,8 +165,10 @@
       <button class="btnNavSide" mat-raised-button (click)="drawer.toggle()">
         <i class="fab fa-accusoft"></i>CIDAD
       </button>
-      <div class="container-fluid g sid">
-        <router-outlet></router-outlet>
+      <div class="container-fluid sid">
+        <div class="container">
+          <router-outlet></router-outlet>
+        </div>
       </div>
     </div>
   </mat-drawer-content>

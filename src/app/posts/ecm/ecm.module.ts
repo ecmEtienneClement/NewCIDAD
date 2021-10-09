@@ -6,9 +6,9 @@ import { CmpecmComponent } from './cmpecm/cmpecm.component';
 import { ViewecmComponent } from './viewecm/viewecm.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ShearedEcmDetailModule } from '../sheared-ecm-detail/sheared-ecm-detail.module';
-import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatCardModule } from '@angular/material/card';
 import { NotificationEcmComponent } from './notification-ecm/notification-ecm.component';
-
+import { MatDividerModule } from '@angular/material/divider';
 //..........
 
 @NgModule({
@@ -18,7 +18,8 @@ import { NotificationEcmComponent } from './notification-ecm/notification-ecm.co
     EcmRoutingModule,
     MatProgressBarModule,
     ShearedEcmDetailModule,
-    MatSidenavModule,
+    MatCardModule,
+    MatDividerModule,
   ],
 })
 export class EcmModule {}

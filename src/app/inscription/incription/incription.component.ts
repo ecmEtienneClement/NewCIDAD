@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/Mes_Services/auth.Service';
+import { UserMoogoService } from 'src/app/Mes_Services/userMongo.Service';
 import { UserModel } from 'src/app/Models/user';
 
 @Component({
@@ -23,7 +24,8 @@ export class IncriptionComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private serviceAuth: AuthService,
-    private route: Router
+    private route: Router,
+    private userMongoService: UserMoogoService
   ) {}
 
   ngOnInit(): void {
@@ -85,7 +87,34 @@ export class IncriptionComponent implements OnInit {
       this.serviceAuth
         .createUser(user)
         .then(() => {
-          this.route.navigate(['/ecm']);
+          //Creation du user Mongo
+          this.userMongoService
+            .creatNewUser(user.mail, user.mdp)
+            .then(() => {
+              //Auth firebase
+              this.serviceAuth
+                .authUser(user.mail, user.mdp)
+                .then(() => {
+                  //auth mongo
+                  this.userMongoService
+                    .connectUserMoogo(user.mail, user.mdp)
+                    .then(() => {
+                      this.route.navigate(['/ecm']);
+                    })
+                    .catch((error) => {
+                      this.afficheErreur = true;
+                      this.erreur = 'Erreur mongo fir !' + error;
+                    });
+                })
+                .catch((error) => {
+                  this.afficheErreur = true;
+                  this.erreur = 'Erreur auth fir !' + error;
+                });
+            })
+            .catch((error) => {
+              this.afficheErreur = true;
+              this.erreur = 'Erreur Mongo !' + error;
+            });
         })
         .catch((error) => {
           this.afficheErreur = true;

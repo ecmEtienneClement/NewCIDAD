@@ -89,6 +89,7 @@ export class CmpecmComponent implements OnInit {
         this.tbCmpCh = this.tbCmp = valuetb ? valuetb : [];
         if (valuetb) {
           this.chargement = false;
+          //this.eventService.emit_Event_Update_({ type: EventType.ANIM_CARD });
         }
 
         this.totalPage = this.tbCmpCh.length;
@@ -98,7 +99,12 @@ export class CmpecmComponent implements OnInit {
       }
     );
     this.serviceBug.updatetbBugService();
-    //.................
+
+    //Emmission event pour affiche parametre ecm
+    //TODO
+    this.eventService.emit_Event_Update_({
+      type: EventType.AFFICHE_PARAMETRE_ECM,
+    });
     //Abonnement pour EventEmit de recupere les evennements ...
     //TODO
     this.subscriptionEvent = this.eventService.emitEventSubjectBug.subscribe(
@@ -106,7 +112,6 @@ export class CmpecmComponent implements OnInit {
         this.traintementEmitEvent(data_Event);
       }
     );
-
     //Subsciption Pour la verification du code
     //TODO
     this.subscriptionVerificationCode =
@@ -372,5 +377,10 @@ export class CmpecmComponent implements OnInit {
     this.subscriptionVerificationCode.unsubscribe();
 
     console.log('subscription detruite');
+    //Emmission event pour fermer les parametres ecm
+    //TODO
+    this.eventService.emit_Event_Update_({
+      type: EventType.FERMER_PARAMETRE_ECM,
+    });
   }
 }

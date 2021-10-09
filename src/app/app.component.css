@@ -5,12 +5,22 @@
   margin: 0;
   padding: 0;
   outline: none;
-  
 }
 a {
   text-decoration: none;
+  cursor: pointer;
 }
-
+li {
+  cursor: pointer;
+}
+.navbar-expand-sm {
+  position: fixed;
+  z-index: 20;
+  width: 100%;
+}
+.container {
+  margin-top: 65px;
+}
 .general_Parent,
 .sid {
   width: 100%;

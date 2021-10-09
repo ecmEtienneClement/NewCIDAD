@@ -1,0 +1,77 @@
+<mat-drawer-container class="example-container" hasBackdrop="true">
+  <mat-drawer class="sideNave" #drawer mode="over">
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <span class="voirnewpost">
+              Post (s)
+              <span style="background-color: blue" class="badge badge-primary"
+                >{{ nbrNewBug
+              </span>
+            </span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <p>{{ nbrNewBug nouveau (x) Post (s)a etaient ajouter</p>
+      </mat-expansion-panel>
+    </mat-accordion>
+
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <span class="voircommentaire">
+              Commentaire (s)
+              <span style="background-color: blue" class="badge badge-primary"
+                >{{ nbrtbIdCommentaireReponse
+              </span>
+            </span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <p>
+          {{ item.titre
+          <span
+            style="background-color: rgb(255, 0, 242)"
+            class="badge badge-primary"
+          >
+            {{ item.nbr
+          </span>
+        </p>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </mat-drawer>
+
+  <mat-drawer-content>
+    <div class="row">
+      <div class="col-12 col-lg-4">
+        <div class="img">
+          <div class="box-img">
+            <img
+              class="srcimg"
+              src="https://images.pexels.com/photos/5486199/pexels-photo-5486199.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+              alt=""
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-lg-4 nom">
+        <div class="box-nom">nomUserNotify</div>
+      </div>
+    </div>
+    <button
+      type="button"
+      class="btn btn-notify btn-default"
+      mat-raised-button
+      (click)="drawer.toggle()"
+    >
+      <i class="far fa-bell"></i>
+    </button>
+    <span
+      style="background-color: blue; font-weight: bold"
+      class="badge badge-primary"
+    >
+      nbrTotalNotify
+    </span>
+  </mat-drawer-content></mat-drawer-container
+>

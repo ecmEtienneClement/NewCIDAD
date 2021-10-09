@@ -11,6 +11,7 @@ import { EmitEvent } from 'src/app/Mes_Services/emitEvent.service';
 import { EventModel, EventType } from 'src/app/Models/eventAction';
 import { Router } from '@angular/router';
 
+
 @Component({
   selector: 'app-edit-user',
   templateUrl: './edit-user.component.html',
@@ -71,6 +72,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
       );
   }
 
+ 
   /* .............................................................................*/
 
   //Methode pour verifier la securiter du User cette methode declanche la procedure de securite...

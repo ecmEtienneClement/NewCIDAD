@@ -23,9 +23,12 @@ import { MatSelectModule } from '@angular/material/select';
 import { AlertDialogueCodeComponent } from './MesComponents/alert-dialogue-code/alert-dialogue-code.component';
 import { ModelReauthVueDialogComponent } from './MesComponents/model-reauth-vue-dialog/model-reauth-vue-dialog.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgxUsefulSwiperModule } from 'ngx-useful-swiper';
+import { HttpClientModule } from '@angular/common/http';
+import { AppParentModule } from './app-parent/app-parent.module';
 
 const routes: Routes = [
-  { path: '', canActivate: [GardGuard], component: AcceuilleComponent },
+  { path: '', component: AcceuilleComponent },
   {
     path: 'inscription',
     loadChildren: () =>
@@ -80,13 +83,46 @@ const routes: Routes = [
     canActivate: [GardGuard],
     component: ParametreComponent,
   },
+
+  {
+    path: 'appPlugin',
+    canActivate: [GardGuard],
+    loadChildren: () =>
+      import('./app-parent/app-parent.module').then(
+        (mod) => mod.AppParentModule
+      ),
+  },
+  {
+    path: 'EnregistrePlugin',
+    canActivate: [GardGuard],
+    loadChildren: () =>
+      import('./app-parent/app-parent.module').then(
+        (mod) => mod.AppParentModule
+      ),
+  },
+  {
+    path: 'detailsPluging/:idPlugin',
+    canActivate: [GardGuard],
+    loadChildren: () =>
+      import('./app-parent/app-parent.module').then(
+        (mod) => mod.AppParentModule
+      ),
+  },
+  {
+    path: 'updatePluging/:idPlugin',
+    canActivate: [GardGuard],
+    loadChildren: () =>
+      import('./app-parent/app-parent.module').then(
+        (mod) => mod.AppParentModule
+      ),
+  },
 ];
 @NgModule({
   declarations: [
     //  {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue:{appearance: 'fill'}},
     AppComponent,
     AcceuilleComponent,
-    // ParametreComponent,
+  //  ParametreComponent,
     AvantInscriptionComponent,
     ProfilUserComponent,
     EditUserComponent,
@@ -97,6 +133,7 @@ const routes: Routes = [
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
     RouterModule.forRoot(routes),
     BrowserAnimationsModule,
     DragDropModule,
@@ -105,11 +142,13 @@ const routes: Routes = [
     MatButtonModule,
     MatDialogModule,
     MatSidenavModule,
- 
+    NgxUsefulSwiperModule,
+
     ShearedModuleGeneralModule,
     PostsModule,
     CorpFilsModule,
     FontAwesomeModule,
+    AppParentModule,
   ],
 
   bootstrap: [AppComponent],

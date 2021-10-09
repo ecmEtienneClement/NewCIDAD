@@ -48,21 +48,21 @@
       class="btn btn-sm-outline"
       (click)="onCodeBug1()"
     >
-      Code Bug 1
+      Voir Code Bug 1
     </button>
     <button
       *ngIf="bugCmp.codeBug.length > 1"
       class="btn btn-sm-outline"
       (click)="onCodeBug2()"
     >
-      Code Bug 2
+      Voir Code Bug 2
     </button>
     <button
       *ngIf="bugCmp.codeBug.length > 2"
       class="btn btn-sm-outline"
       (click)="onCodeBug3()"
     >
-      Code Bug 3
+      Voir Code Bug 3
     </button>
     <div class="card-body">
       <h1 class="card-title" style="font-weight: bold">{{ bugCmp.titre }}</h1>
@@ -83,7 +83,7 @@
             rows="2"
             [(ngModel)]="reponse"
             minlength="5"
-            placeholder="Votre reponse ici ...Min 5 caractères"
+            placeholder="Collez votre reponse ici ...Min 5 caractères"
           ></textarea>
         </div>
       </div>

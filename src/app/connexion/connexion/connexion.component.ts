@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/Mes_Services/auth.Service';
+import { UserMoogoService } from 'src/app/Mes_Services/userMongo.Service';
 
 @Component({
   selector: 'app-connexion',
@@ -13,10 +14,12 @@ export class ConnexionComponent implements OnInit {
   afficheErreur: Boolean | any = false;
   erreur: string | any;
   hide = true;
+  token: string = '';
   constructor(
     private formBuilder: FormBuilder,
     private serviceAuth: AuthService,
-    private route: Router
+    private route: Router,
+    private userMongoService: UserMoogoService
   ) {}
 
   ngOnInit(): void {
@@ -41,7 +44,17 @@ export class ConnexionComponent implements OnInit {
     this.serviceAuth
       .authUser(mail, mdp)
       .then(() => {
-        this.route.navigate(['/ecm']);
+        //Connection du user a mongodb
+        this.userMongoService
+          .connectUserMoogo(mail, mdp)
+          .then((data_Token: string) => {
+            this.token = data_Token;
+            this.route.navigate(['/ecm']);
+          })
+          .catch((error) => {
+            this.afficheErreur = true;
+            this.erreur = 'Erreur Mongo' + error;
+          });
       })
       .catch((error) => {
         this.afficheErreur = true;

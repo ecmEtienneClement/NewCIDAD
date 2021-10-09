@@ -171,7 +171,8 @@ export class CpmdetailsComponent implements OnInit {
     this.serviceReponseBug.creatNewReponseBug(
       this.bugCmp.bug_Id,
       this.reponse,
-      this.bugCmp.user_Id
+      this.bugCmp.user_Id,
+      this.bugCmp.titre
     );
     this.reponse = '';
   }

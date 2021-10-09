@@ -5,7 +5,8 @@ import { ShearedModuleGeneralRoutingModule } from './sheared-module-general-rout
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatMenuModule } from '@angular/material/menu';
 @NgModule({
   declarations: [],
   imports: [CommonModule, ShearedModuleGeneralRoutingModule],
@@ -14,6 +15,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FormsModule,
     MatFormFieldModule,
     ReactiveFormsModule,
+    MatAutocompleteModule,
+    MatMenuModule,
   ],
 })
 export class ShearedModuleGeneralModule {}

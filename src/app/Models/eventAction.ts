@@ -22,6 +22,16 @@ export enum EventType {
   VERIFICATION_CODE = 'verifier si le mot de passe est correcte',
   //.................EVENEMENTS EMISENT POUR L'ARRIVE DE LA BD NOTIFY........................
   BD_NOTIFY_LOADED = 'la bd notification est bien rechargée',
+  //.................EVENEMENTS EMISENT POUR PARAMETRE AFFICHAGE ECM........................
+  AFFICHE_PARAMETRE_ECM = 'affichage des parametres de ecm',
+  FERMER_PARAMETRE_ECM = 'fermer les parametres de ecm',
+  OPEN_BTN_DETAILS = 'deployement du bouton details',
+  OPEN_BLOC_BTN = 'deployement du bloc des boutons',
+  ANIMATION_LIGNES = 'activer animation des lignes',
+  //.................EVENEMENTS EMISENT POUR PARAMETRE AFFICHAGE PLUGIN........................
+  AFFICHE_PARAMETRE_PLUGIN = 'affichage des parametre du plugin',
+  FERMER_PARAMETRE_PLUGIN = 'fermer les parametres du plugin',
+  OPEN_BTN_CARD_PLUGIN = 'deployement du bouton details',
 }
 
 //...................................................................................................
@@ -40,6 +50,6 @@ export interface EventModel {
 //Modele pour la notification id et valeur
 //TODO
 export interface NotifyModel {
-  id: string;
+  titre: string;
   nbr: number;
 }

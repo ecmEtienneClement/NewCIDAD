@@ -1,0 +1,7 @@
+<div class="container">
+  <button type="button" (click)="inscriptionMongo()" class="btn btn-success">VALIDER</button>
+
+    <div class="alert alert-danger" *ngIf="afficheErreur" role="alert">
+      {{ erreur }}
+    </div>
+</div>

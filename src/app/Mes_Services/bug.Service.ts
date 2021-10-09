@@ -234,6 +234,44 @@ export class BugService {
         //Affichage de l'alerte
         this.openSnackBar(message, 'ECM');
       } else {
+        const message = 'Oups erreur inattendue de delete bug !';
+        //Affichage de l'alerte
+        this.openSnackBar(message, 'ECM');
+      }
+    });
+  }
+  //...Partie de la suppression compte du User
+  //TODO
+  deleteBugTotalUserDeleteCompte(id_User: string) {
+    let nbrPoste: number = 0;
+    return new Promise((resolve, reject) => {
+      try {
+        //Voir commentaire du service tbReponse
+        this.tbBugService.forEach((element) => {
+          if (element.user_Id == id_User) {
+            nbrPoste += 1;
+            const index: number = this.tbBugService.indexOf(element);
+            this.tbBugService.splice(index, 1);
+          }
+        });
+        if (nbrPoste == 0) {
+          const message = 'Nous constatons que avez aucun Post a supprimé !';
+          //Affichage de l'alerte
+          this.openSnackBar(message, 'ECM');
+        } else if (nbrPoste == 1) {
+          const message = 'Vous avez un seul Post supprimé !';
+          //Affichage de l'alerte
+          this.openSnackBar(message, 'ECM');
+        } else {
+          const message = `Vous avez ${nbrPoste} Posts qui sont supprimés !`;
+          //Affichage de l'alerte
+          this.openSnackBar(message, 'ECM');
+        }
+        this.sauvegardeBase();
+        this.updatetbBugService();
+        resolve(true);
+      } catch (error) {
+        reject(error);
       }
     });
   }

@@ -33,7 +33,12 @@ export class ReponseBugService {
   //.................................PARTIE METHODE ....................................
   //Creation new Reponse Bug
   //TODO
-  creatNewReponseBug(bug_Id: string, reponse: string, user_Id_Bug: string) {
+  creatNewReponseBug(
+    bug_Id: string,
+    reponse: string,
+    user_Id_Bug: string,
+    titre_Bug: string
+  ) {
     //Recuperation de l' Id du user qui reponde ...
     const user_Id = firebase.auth().currentUser?.uid;
     //Mise en place de ID de la reponse
@@ -52,7 +57,7 @@ export class ReponseBugService {
     this.tbReponseBug.unshift(newReponseBug);
     this.sauvegardeBaseReponse();
     //Appelle du service de notification
-    this.notifyService.notifyReponseBug(user_Id_Bug, bug_Id);
+    this.notifyService.notifyReponseBug(user_Id_Bug, titre_Bug);
     //this.updateTbReponseBug();
     const message = 'Merci ! Votre réponse a été bien enregistrée ...';
     //Affichage de l'alerte
@@ -110,8 +115,12 @@ export class ReponseBugService {
         //Appelle de notify pour notifier le user
         //recuperation de l'Id du user a qui appartient la reponse
         let id_User_Reponse = this.tbReponseBug[index].user_Id;
+        //recuperation des 10 premieres lettres de la reponse
+        let debut_Reponse = this.tbReponseBug[index].reponse
+          .trim()
+          .substr(0, 10);
         this.notifyService.notifyCommentaireReponseBug(
-          id_Reponse,
+          debut_Reponse,
           id_User_Reponse
         );
         const message = 'Votre commentaire a été bien ajouté ...';
@@ -134,6 +143,42 @@ export class ReponseBugService {
         //Affichage de l'alerte
         this.openSnackBar(message, 'ECM');
       } else {
+      }
+    });
+  }
+  //...Partie de la suppression compte du User
+  //TODO
+  DeleteReponseBugUserDeleteCompte(id_User: string) {
+    let nbrPoste: number = 0;
+    return new Promise((resolve, rejects) => {
+      try {
+        //Voir commentaire dessus
+        this.tbReponseBug.forEach((element) => {
+          if (element.user_Id == id_User) {
+            nbrPoste += 1;
+            const index: number = this.tbReponseBug.indexOf(element);
+            this.tbReponseBug.splice(index, 1);
+          }
+        });
+        if (nbrPoste == 0) {
+          const message =
+            'Nous constatons que avez aucune reponse a supprimée !';
+          //Affichage de l'alerte
+          this.openSnackBar(message, 'ECM');
+        } else if (nbrPoste == 1) {
+          const message = 'Vous avez une seule reponse supprimée !';
+          //Affichage de l'alerte
+          this.openSnackBar(message, 'ECM');
+        } else {
+          const message = `Vous avez ${nbrPoste} reponses qui sont supprimées !`;
+          //Affichage de l'alerte
+          this.openSnackBar(message, 'ECM');
+        }
+        this.sauvegardeBaseReponse();
+        this.updateTbReponseBug();
+        resolve(true);
+      } catch (error) {
+        rejects(error);
       }
     });
   }

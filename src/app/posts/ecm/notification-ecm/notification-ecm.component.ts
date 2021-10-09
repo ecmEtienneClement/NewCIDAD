@@ -28,13 +28,11 @@ export class NotificationEcmComponent implements OnInit, OnDestroy {
   subscriptionTbCmp: Subscription = new Subscription();
 
   nbrNewBug: number = 0;
-  tbIdBug: NotifyModel[] = [];
-  tbObjectBug: string[] = [];
+  tbTitreBug: NotifyModel[] = [];
   nbrtbIdBug: number = 0;
   tbIdCommentaireReponse: NotifyModel[] = [];
   nbrtbIdCommentaireReponse: number = 0;
   nbrTotalNotify: number = 0;
-  tbCmp: BugModel[] = [];
   @Input() nomUserNotify: string;
 
   ///Ces variables sont des variable de communication qui permet l'appelle des methodes avec les fonctions async
@@ -42,8 +40,7 @@ export class NotificationEcmComponent implements OnInit, OnDestroy {
 
   constructor(
     private notifyService: Notification,
-    private serviceBug: BugService,
-
+    
     private authService: GardGuard
   ) {}
 
@@ -75,18 +72,13 @@ export class NotificationEcmComponent implements OnInit, OnDestroy {
           //Recuperation du tbBud
           //todo
           if (tbFilterByIdNotify[0].tbIdReponseBug[0].nbr != 0) {
-            this.tbIdBug = tbFilterByIdNotify[0].tbIdReponseBug;
+            this.tbTitreBug = tbFilterByIdNotify[0].tbIdReponseBug;
             //Comptage de nbr reponse total
             this.nbrtbIdBug = 0;
-            this.tbIdBug.forEach((item) => {
+            this.tbTitreBug.forEach((item) => {
               this.nbrtbIdBug += item.nbr;
             });
-            //Appelle de la methode recupObjById
-            //todo
-            alert('appelle recup byIdBug');
-            this.recupObjById();
-            //Cette tactique permet a la subsTbCmp d'appeller la methode recupObjById quand les donnees sont completes
-            this.appellerecupObjById = true;
+         
           }
           //Recuperation du tbIdCommentaireReponse
           //todo
@@ -110,50 +102,10 @@ export class NotificationEcmComponent implements OnInit, OnDestroy {
       }
     );
     this.notifyService.emitUpdateTbNotify();
-    //...Subscription pour la recuperation du tbServiceBug
-    this.subscriptionTbCmp = this.serviceBug.tbSubjectBugService.subscribe(
-      (valuetb) => {
-        if (valuetb) {
-          this.tbCmp = valuetb ? valuetb : [];
-          if (this.appellerecupObjById) {
-            //Appelle de la methode recupObjById
-            //todo
-            alert('appelle recup byTbCmp');
-            this.recupObjById();
-          }
-        }
-      },
-      (error) => {
-        alert('erreur recup database !');
-      }
-    );
-    this.serviceBug.updatetbBugService();
+ 
   }
   /**.................................................................................. */
-  //Cette methode permet de recupere le titre du post concerne pour la notifaction recuperation fait
-  //a partir de son Id dans le tbCmp
-  //TODO
-  recupObjById() {
-    alert('recupObCaaled');
-    let trouver: Boolean = false;
-    this.tbIdBug.forEach((itemtbIdBug) => {
-      this.tbCmp.forEach((itemtbCmp) => {
-        if (itemtbIdBug.id == itemtbCmp.bug_Id) {
-          //recuperation du titre qui sera stocke dans tbObjectBug
-          //on verifi d'abord si ce obj n'est deja pas pushe dans le tb avant qu'on push le mm element plusieurs fois
-          this.tbObjectBug.forEach((item) => {
-            if (item == itemtbCmp.titre) {
-              trouver = true;
-            }
-          });
-          if (!trouver) {
-            this.tbObjectBug.unshift(itemtbCmp.titre);
-          }
-        }
-      });
-    });
-    alert(this.tbObjectBug.length);
-  }
+ 
 
   ngOnDestroy(): void {
     this.subscriptionDbNotify.unsubscribe();

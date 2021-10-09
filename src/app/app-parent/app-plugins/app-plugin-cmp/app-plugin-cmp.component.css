@@ -1,0 +1,275 @@
+.example-card {
+  box-shadow: 0 5px 35px rgba(0, 0, 0, 0.2);
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+/*Animation card*/
+.example-card::before {
+  position: absolute;
+  content: "";
+  left: 0;
+  bottom: 0;
+  height: 100%;
+  width: 40px;
+  background: rgba(255, 255, 255, 0.2);
+  transform: skewX(-45deg) translateX(-300px);
+
+  animation: animcard 4s linear infinite;
+}
+@keyframes animcard {
+  0% {
+    transform: skewX(-45deg) translateX(-300px);
+  }
+  100% {
+    transform: skewX(-45deg) translateX(500px);
+  }
+}
+.spinner-grow {
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: auto;
+}
+.initiale {
+  margin-left: 2.5px;
+  font-weight: bold;
+  color: whitesmoke;
+}
+.parent-search {
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  z-index: 5;
+}
+.fa-search {
+  margin-right: 8px;
+  color: rgb(153, 147, 147);
+}
+.btn-search {
+  font-size: 10px;
+}
+.menurecherche {
+  position: relative;
+}
+.menurecherche::before {
+  position: absolute;
+  content: "";
+  top: 10px;
+  left: 12px;
+  width: 98%;
+  height: 40%;
+  background: rgb(77, 75, 75);
+  border-radius: 4px;
+}
+mat-tab-group,
+mat-tab {
+  z-index: 5;
+  color: #f1f1f1;
+}
+.container {
+  position: relative;
+  border: 0;
+  padding: 0;
+  outline: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  object-fit: cover;
+  padding-bottom: 30px;
+}
+
+.container::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("src/app/images/pexels-photo-952670.jpeg");
+  overflow: hidden;
+  object-fit: cover;
+  animation: anim 10s linear infinite;
+}
+@keyframes anim {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 0 333px;
+  }
+}
+.date {
+  float: right;
+  color: white;
+}
+.titre {
+  text-transform: uppercase;
+}
+mat-card-content {
+  margin: 45px 0 45px 0;
+}
+.documentation {
+  word-wrap: break-word;
+}
+.btn-outline {
+  position: fixed;
+  font-weight: bold;
+  z-index: 5;
+  background-color: #f1f1f1;
+  float: left;
+  left: -15px;
+  opacity: 0.4;
+}
+.btn-outline:hover {
+  opacity: 1;
+}
+ul {
+  background: transparent;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  list-style: none;
+}
+.liUser {
+  position: relative;
+  cursor: pointer;
+  list-style: none;
+  text-decoration: none;
+  margin: 0 10px;
+  background-color: #f1f1f1;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  padding: 10px;
+  list-style: none;
+  box-sizing: border-box;
+  box-shadow: 0 5px 8px rgb(40, 83, 139);
+  transition: 1s;
+  background: linear-gradient(0deg, #ddd, #fff);
+  transform: translateY(-40px);
+  visibility: hidden;
+  opacity: 0;
+  z-index: 0;
+}
+/* Animation du btn user*/
+.example-card:hover .liUser {
+  visibility: visible;
+  transform: translateY(0px);
+  opacity: 1;
+}
+.liUserbtn {
+  visibility: visible;
+  transform: translateY(0px);
+  opacity: 1;
+}
+.view,
+.nbr,
+.update,
+.delete {
+  position: relative;
+  cursor: pointer;
+  list-style: none;
+  text-decoration: none;
+  margin: 0 10px;
+  background-color: #f1f1f1;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  padding: 10px;
+  list-style: none;
+  box-sizing: border-box;
+  box-shadow: 0 5px 8px rgb(40, 83, 139);
+  transition: 1s;
+  background: linear-gradient(0deg, #ddd, #fff);
+  transform: translateY(40px);
+  visibility: hidden;
+  opacity: 0;
+  z-index: 0;
+}
+ul li:hover {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+.aUser {
+  position: absolute;
+  display: flex;
+  top: 50%;
+  right: 10%;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  width: 80%;
+  height: 80%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  list-style: none;
+  background: linear-gradient(0deg, #fff, #ddd);
+}
+ul li a {
+  position: absolute;
+  display: flex;
+  top: 50%;
+  right: 10%;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  width: 80%;
+  height: 80%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  list-style: none;
+  background: linear-gradient(0deg, #fff, #ddd);
+}
+/* Animation des btn */
+.example-card:hover ul li:nth-child(1) {
+  visibility: visible;
+  transform: translateY(0px);
+  opacity: 1;
+}
+.btnView {
+  visibility: visible;
+  transform: translateY(0px);
+  opacity: 1;
+}
+.example-card:hover ul li:nth-child(2) {
+  visibility: visible;
+  opacity: 1;
+  transition-delay: 0.25s;
+  transform: translateY(0px);
+}
+.btnnbr {
+  visibility: visible;
+  opacity: 1;
+  transition-delay: 0.25s;
+  transform: translateY(0px);
+}
+.example-card:hover ul li:nth-child(3) {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0.5s;
+  transform: translateY(0px);
+}
+.btnupdate {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0.5s;
+  transform: translateY(0px);
+}
+.example-card:hover ul li:nth-child(4) {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0.75s;
+  transform: translateY(0px);
+}
+.btndelete {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0.75s;
+  transform: translateY(0px);
+}

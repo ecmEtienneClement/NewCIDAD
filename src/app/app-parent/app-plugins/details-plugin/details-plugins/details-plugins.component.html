@@ -1,0 +1,35 @@
+<div class="container">
+  <div class="alert alert-info mt-3">
+    <div class="row cadre">
+      <div class="blocNom col-12 col-md-8 col-lg-8">
+        <p class="nomUser">{{ nomUserBug</p>
+        <p class="nomUser">{{ prenomUserBug</p>
+        <p class="nomUser">{{ promoUserBug</p>
+      </div>
+      <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+        <div class="row">
+          <div class="col- 12">
+            <strong>language</strong><br />
+            {{ language }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col- 12">
+            <strong>Date de la Poste</strong><br />
+            {{ date | date: "short" }}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col- 12">
+            <strong>Nombres de réponse (s)</strong><br />
+            {{ tbCommentaire.length }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p>{{ documentation }}</p>
+  <p>{{ code }}</p>
+</div>
