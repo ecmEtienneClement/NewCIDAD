@@ -110,9 +110,9 @@ export class UserMoogoService {
 
   //Methode pour supprimer le user Moogo
   //TODO
-  deletUserMongo(email: string): Promise<boolean> {
+  deletUserMongo(_id: string): Promise<boolean> {
     return new Promise((resolve, rejects) => {
-      this.http.delete(environment.URL_API + '/delete/' + email).subscribe(
+      this.http.delete(environment.URL_API + '/user/delete/' + _id).subscribe(
         () => {
           resolve(true);
         },

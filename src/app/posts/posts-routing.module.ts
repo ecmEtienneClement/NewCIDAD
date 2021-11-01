@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { GardDetailGuard } from '../Mes_Services/gard-detail.guard';
+import { GardUpdateGuardBug } from '../Mes_Services/gard-update-bug.guard';
 import { GardGuard } from '../Mes_Services/gard.guard';
 
 const routes: Routes = [
@@ -10,13 +12,13 @@ const routes: Routes = [
   },
   {
     path: 'ecm/details/:indice',
-    canActivate: [GardGuard],
+    canActivate: [GardGuard, GardDetailGuard],
     loadChildren: () =>
       import('./details/details.module').then((mod) => mod.DetailsModule),
   },
   {
-    path: 'ecm/modifier/:indice',
-    canActivate: [GardGuard],
+    path: 'ecm/:idUser/modifier/:indice',
+    canActivate: [GardGuard, GardUpdateGuardBug],
     loadChildren: () =>
       import('./add-and-update-bug/update/update.module').then(
         (mod) => mod.UpdateModule

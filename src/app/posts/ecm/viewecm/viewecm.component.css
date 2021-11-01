@@ -236,7 +236,35 @@ mat-card-actions {
   left: 5px;
   bottom: 0;
 }
-
+.notViewUser {
+  position: absolute;
+  text-align: center;
+  width: 0;
+  height: 0;
+  right: 0px;
+  top: 10%;
+}
+.viewUser,
+.newMessage,
+.newCommentaire {
+  position: absolute;
+  text-align: center;
+  width: 0;
+  height: 0;
+}
+.viewUser {
+  color: rgb(62, 245, 102);
+  right: 0px;
+  top: 10%;
+}
+.newMessage {
+  right: 10px;
+  top: -5px;
+}
+.newCommentaire {
+  right: 40px;
+  top: -5px;
+}
 .titre {
   left: 0;
   top: 5px;
@@ -484,7 +512,7 @@ button {
   justify-content: space-between;
 }
 
-.spinner-grow {
+.alertNonResolu {
   position: absolute;
   bottom: -20px;
   left: 0;
@@ -495,6 +523,7 @@ button {
 }
 
 .paginate {
+  margin-top: 55px;
   display: flex;
   flex-direction: column;
   align-items: center;

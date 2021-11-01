@@ -7,7 +7,7 @@
         ></app-notification-ecm>
       </div>
     </div>
-  
+
     <!-- ..................... Partie Chargement .............................-->
     <div *ngIf="chargement">
       <mat-progress-bar mode="indeterminate"></mat-progress-bar>
@@ -101,6 +101,12 @@
     <!-- ..................... Partie des Bugs .............................-->
     <div class="container-fluid container-bug">
       <app-viewecm
+        [tbSignalUserCommentaire]="tbSignalUserCommentaire"
+        [tbViewUserCommentaire]="tbViewUserCommentaire"
+        [tbViewSignalUserCharged]="tbViewSignalUserCharged"
+        [tbSignalUserCharged]="tbSignalUserCharged"
+        [tbViewUser]="tbViewUser"
+        [tbViewUserCharged]="tbViewUserCharged"
         [prenom]="prenomUser"
         [nom]="nomUser"
         [promo]="promoUser"
@@ -109,7 +115,6 @@
         [fantome]="fantome"
         [tbCmpCh]="tbCmpCh"
         [user_Id_Connect]="user_Id_Connect"
-        [totalPage]="totalPage"
       >
       </app-viewecm>
     </div>

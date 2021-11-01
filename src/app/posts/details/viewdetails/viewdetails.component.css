@@ -4,28 +4,45 @@
   z-index: 2;
   background-color: blue;
 }
-.btn {
-  float: right;
+/*PARTIC BLC BTN*/
+.blcBtn {
+  position: relative;
+  width: 100%;
+  height: 35px;
+  overflow: hidden;
+  margin-bottom: 5px;
 }
-.reponse {
-  margin-bottom: 100px;
+.btn-delete,
+.btn-merci,
+.btn-copy,
+.btn-user,
+.btn-closed {
+  position: absolute;
+  width: auto;
+  height: 90%;
+  bottom: 0;
+  right: -30%;
+  visibility: hidden;
 }
+.viewUser {
+  color: rgb(62, 245, 102);
+}
+
+.btn-nav {
+  position: absolute;
+  width: auto;
+  height: 100%;
+  bottom: 3px;
+  right: 0;
+}
+/*FIN PARTI BLC BTN*/
+
 .date.supprimer,
-.matExpanssion {
+.matExpanssion,
+.btn-commentaire {
   float: right;
 }
-.user {
-  float: right;
-  margin-top: 20px;
-}
-.btnChek {
-  float: left;
-  margin-top: 20px;
-}
-.check,
-.supprimer {
-  margin-top: 40px;
-}
+
 .commentaire,
 .voircommentaire {
   margin-right: 15px;
@@ -49,24 +66,38 @@ pre {
 
   color: rgb(255, 255, 255);
 }
+.blcInfUserCommentaire {
+  margin-bottom: 5px;
+}
+.fa-comment-dots {
+  margin-right: 15px;
+}
+.newCommentaire {
+  width: 0;
+  height: 0;
+}
 .textecommentaire {
-  background: #373b44; /* fallback for old browsers */
-  background: -webkit-linear-gradient(
-    to right,
-    #4286f4,
-    #373b44
-  ); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(
-    to right,
-    #4286f4,
-    #373b44
-  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-  border-radius: 15px 0 15px 0;
+  border-radius: 7px;
+  background: linear-gradient(145deg, #cacaca, #f0f0f0);
+  box-shadow: 5px 5px 10px #5a5a5a, -5px -5px 10px #ffffff;
   padding: 10px;
-  color: white;
-
+  word-wrap: break-word;
+}
+.txtdateCommentaire {
+  float: right;
+  margin-bottom: -2px;
+}
+.iconUser {
+  padding-right: 4px;
+}
+.infoUser {
+  font-weight: bold;
   font-size: medium;
-  box-shadow: 15px;
+}
+.btnDeleleCommentaire {
+  float: right;
+  color: red;
+  margin-top: -10px;
 }
 .paginate {
   display: flex;

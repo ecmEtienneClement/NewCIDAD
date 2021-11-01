@@ -30,7 +30,10 @@ button {
   height: auto;
 }
 .initiale {
-  margin-left: 2.5px;
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
   font-weight: bold;
   color: whitesmoke;
 }

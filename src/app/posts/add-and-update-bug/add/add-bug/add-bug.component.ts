@@ -44,6 +44,8 @@ export class AddBugComponent implements OnInit {
     let codeBug = valueForm['codeBug'] ? valueForm['codeBug'] : [];
 
     this.serviceBug.createNewBug(language, titre, details, codeBug);
+
+    // this.notify.notifyNewBug();
     this.route.navigate(['/ecm']);
   }
 }

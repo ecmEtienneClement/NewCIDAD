@@ -14,13 +14,17 @@
 export class BugModel {
   constructor(
     public bug_Id: string,
-    public user_Id: string | undefined,
+    public user_Id: string,
     public language: string,
     public titre: string,
     public details: string,
     public etat: string,
     public bugUpdate: number,
     public date: number,
-    public codeBug: string[]
+    public codeBug: string[],
+    public tbViewUser: string[] = [''],
+    public newReponse: boolean = false,
+    public tbcommentaireUser: string[] = [user_Id],
+    public tbViewcommentaireUser: string[] = [user_Id]
   ) {}
 }

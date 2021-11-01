@@ -5,7 +5,11 @@ import { BugModel } from 'src/app/Models/bug';
 //import { ModelVueDialogComponent } from '../model-vue-dialog/model-vue-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { EmitEvent } from 'src/app/Mes_Services/emitEvent.service';
-import { EventModel, EventType } from 'src/app/Models/eventAction';
+import {
+  EventModel,
+  EventModelObjBug,
+  EventType,
+} from 'src/app/Models/eventAction';
 
 import { MatTabChangeEvent } from '@angular/material/tabs/tab-group';
 import { GardGuard } from 'src/app/Mes_Services/gard.guard';
@@ -14,6 +18,7 @@ import { ReponseBugService } from 'src/app/Mes_Services/reponseBug.Service';
 import { AlertDialogueCodeComponent } from 'src/app/MesComponents/alert-dialogue-code/alert-dialogue-code.component';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ErrorService } from 'src/app/Mes_Services/error.Service';
 
 @Component({
   selector: 'app-cmpecm',
@@ -21,6 +26,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./cmpecm.component.css'],
 })
 export class CmpecmComponent implements OnInit {
+  tbSignalUserCommentaire: boolean[] = [];
+  tbViewUserCommentaire: boolean[] = [];
+  tbSignalUserCharged: boolean = false;
+  tbViewSignalUserCharged: boolean = false;
+  tbViewUser: boolean[] = [];
+  tbViewUserCharged: boolean = false;
   nomUserNotify: string = '';
   tbCmp: BugModel[] | any;
   tbCmpMesPostes: BugModel[] | any;
@@ -36,10 +47,8 @@ export class CmpecmComponent implements OnInit {
   promoUser: string = '';
   fantome: string = '';
   securiteUser: string = '';
-  subscriptionTbCmp: Subscription = new Subscription();
-  subscriptionEvent: Subscription = new Subscription();
-  subscriptionVerificationCode: Subscription = new Subscription();
-  totalPage: number = 0;
+  subscription: Subscription = new Subscription();
+  page_Event?: number = 1;
   //Variable pour le nombre de tentative
   nbrTentative: number = 3;
   /* ATTENTION ....Cette partie des variables est complexe ECM..*/
@@ -47,11 +56,11 @@ export class CmpecmComponent implements OnInit {
   Ces variables sont des variables d'ecriture memoire qui me permetrons d'identifier les evenements
   et leur donnees chaque Event la fonction appelle va ecrire sur la variable aQui pour que apres le traitement
   de la verification du code on puis l'identifier et le rappeller pour passer a l'action..
-   la fonction va aussi ecrire sur a variable id_Event pour apres rappelle de cette fonction
-   on puisse la passé cette variable id_Event ...
+   la fonction va aussi ecrire sur a variable obj_Event pour apres rappelle de cette fonction
+   on puisse la passé cette variable obj_Event ...
 */
   aQui: string = '';
-  id_Event?: string = '';
+  obj_Event: BugModel;
   constructor(
     private serviceBug: BugService,
     private authService: GardGuard,
@@ -61,7 +70,8 @@ export class CmpecmComponent implements OnInit {
     private reponseBugService: ReponseBugService,
     private user: UserService,
     private route: Router,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private errorAlertService: ErrorService
   ) {}
 
   ngOnInit(): void {
@@ -78,25 +88,31 @@ export class CmpecmComponent implements OnInit {
         this.securiteUser = data_User.securite;
       })
       .catch((error) => {
-        alert("Une erreur s'est produite ...");
+        const message =
+          "Une erreur inattendu ! l'or de la recupération de vos données ! Veillez actualiser ou vérifier votre connexion ...";
+        this.openSnackBar(message, 'ECM');
       });
     //.....Initialisation, recuperation de la base de donne distant
     //this.serviceBug.recupbase();
 
     //...Subscription pour la recuperation du tbServiceBug
-    this.subscriptionTbCmp = this.serviceBug.tbSubjectBugService.subscribe(
-      (valuetb) => {
-        this.tbCmpCh = this.tbCmp = valuetb ? valuetb : [];
-        if (valuetb) {
-          this.chargement = false;
-          //this.eventService.emit_Event_Update_({ type: EventType.ANIM_CARD });
+    this.subscription.add(
+      this.serviceBug.tbSubjectBugService.subscribe(
+        (valuetb) => {
+          this.tbCmpCh = this.tbCmp = valuetb ? valuetb : [];
+          if (valuetb) {
+            this.chargement = false;
+          }
+          this.verifyViewUserPaginate(this.page_Event);
+          this.verifySignaleUserCommentairePaginate(this.page_Event);
+          this.verifyViewSignaleUserCommentairePaginate(this.page_Event);
+        },
+        (error) => {
+          alert(
+            "erreur ! l'or de la recupération des données ! Veillez actualiser ou vérifier votre connexion ..."
+          );
         }
-
-        this.totalPage = this.tbCmpCh.length;
-      },
-      (error) => {
-        alert('erreur recup database !');
-      }
+      )
     );
     this.serviceBug.updatetbBugService();
 
@@ -107,26 +123,83 @@ export class CmpecmComponent implements OnInit {
     });
     //Abonnement pour EventEmit de recupere les evennements ...
     //TODO
-    this.subscriptionEvent = this.eventService.emitEventSubjectBug.subscribe(
-      (data_Event: EventModel) => {
-        this.traintementEmitEvent(data_Event);
-      }
-    );
-    //Subsciption Pour la verification du code
-    //TODO
-    this.subscriptionVerificationCode =
+    //event code
+    this.subscription.add(
       this.eventService.emitEventSubjectBug.subscribe(
         (data_Event: EventModel) => {
-          //Transmission des donnees a la methode traitement ...
-          this.traitementSubcriptionCode(data_Event);
+          this.traintementEmitEventVeifyCode(data_Event);
         }
-      );
+      )
+    );
+    //TODO
+    //event bug
+    this.subscription.add(
+      this.eventService.emitEventSubjectObjBug.subscribe(
+        (data_Event: EventModelObjBug) => {
+          this.traintementEmitEvent(data_Event);
+        }
+      )
+    );
   }
 
   /*.....................................................................................*/
-  //Methode pour le traitement des donnees de la subcription
+
+  //Methode pour Verifier si le user a deja pas vu ce message
   //TODO
-  traitementSubcriptionCode(data_Event: EventModel) {
+  verifySignaleUserCommentairePaginate(pageIndex: number = 1) {
+    //Lire le commentaire dessus de VerifyViewUserPaginate...
+    pageIndex = 10 * (pageIndex - 1);
+    this.tbSignalUserCharged = false;
+    this.tbSignalUserCommentaire = [];
+
+    if (this.user_Id_Connect != '') {
+      this.tbCmpCh.forEach(
+        (element: { tbcommentaireUser: string | string[] }) => {
+          const indexElement: number = this.tbCmpCh.indexOf(element);
+          if (indexElement >= pageIndex) {
+            //verifier si le user fait parti  de ce qui ont commenté...
+            if (element.tbcommentaireUser.includes(this.user_Id_Connect)) {
+              this.tbSignalUserCommentaire.push(true);
+            } else {
+              this.tbSignalUserCommentaire.push(false);
+            }
+          }
+        }
+      );
+      this.tbSignalUserCharged = true;
+    } else {
+      //  this.alertErrorDefaultService.notifyAlertErrorDefault();
+    }
+  }
+  //Methode pour Verifier si le user a deja pas vu ce message
+  //TODO
+  verifyViewSignaleUserCommentairePaginate(pageIndex: number = 1) {
+    //Lire le commentaire dessus de VerifyViewUserPaginate...
+    pageIndex = 10 * (pageIndex - 1);
+    this.tbViewSignalUserCharged = false;
+    this.tbViewUserCommentaire = [];
+    if (this.user_Id_Connect != '') {
+      this.tbCmpCh.forEach(
+        (element: { tbViewcommentaireUser: string | string[] }) => {
+          const indexElement: number = this.tbCmpCh.indexOf(element);
+          if (indexElement >= pageIndex) {
+            //verifier si le user fait parti  de ce qui ont commenté ...
+            if (element.tbViewcommentaireUser.includes(this.user_Id_Connect)) {
+              this.tbViewUserCommentaire.push(true);
+            } else {
+              this.tbViewUserCommentaire.push(false);
+            }
+          }
+        }
+      );
+      this.tbViewSignalUserCharged = true;
+    } else {
+      //   this.alertErrorDefaultService.notifyAlertErrorDefault();
+    }
+  }
+  //Verification de l'evenement afin de le traite avec la bonne methode ..
+  //TODO
+  traintementEmitEventVeifyCode(data_Event: EventModel) {
     switch (data_Event.type) {
       case EventType.VERIFICATION_CODE:
         //appelle pour la verification
@@ -134,38 +207,48 @@ export class CmpecmComponent implements OnInit {
         break;
     }
   }
-
-  //Verification de l'evenement afin de le traite avec la bonne methode ..
-  //TODO
-  traintementEmitEvent(data_Event: EventModel) {
+  traintementEmitEvent(data_Event: EventModelObjBug) {
     switch (data_Event.type) {
+      case EventType.CHANGE_PAGINATE:
+        if (data_Event.data_paylode_String === 'ecm') {
+          this.page_Event = data_Event.data_paylode_Number;
+          this.verifyViewUserPaginate(data_Event.data_paylode_Number);
+          this.verifySignaleUserCommentairePaginate(
+            data_Event.data_paylode_Number
+          );
+          this.verifyViewSignaleUserCommentairePaginate(
+            data_Event.data_paylode_Number
+          );
+          break;
+        }
+        break;
       case EventType.VIEW_INFO_USER:
-        this.onViewInfoUser(data_Event.data_paylode_String);
+        this.onViewInfoUser(data_Event.data_paylode_obj_Bug);
         break;
       case EventType.NAVIGATBUG:
-        this.onNavigate(data_Event.data_paylode_String);
+        this.onNavigate(data_Event.data_paylode_obj_Bug);
         break;
       case EventType.CHANGEETATBUG:
         //on ecrit sur le variable memoires
         this.aQui = 'CHANGEETATBUG';
-        this.id_Event = data_Event.data_paylode_String;
+        this.obj_Event = data_Event.data_paylode_obj_Bug;
         //appelle de la methode de verification
         this.onVerifyUser();
         break;
       case EventType.NBR_REPONSE:
-        this.onViewNbrReponse(data_Event.data_paylode_String);
+        this.onViewNbrReponse(data_Event.data_paylode_obj_Bug);
         break;
       case EventType.UPDATEBUG:
         //on ecrit sur le variable memoires
         this.aQui = 'UPDATEBUG';
-        this.id_Event = data_Event.data_paylode_String;
+        this.obj_Event = data_Event.data_paylode_obj_Bug;
         //appelle de la methode de verification
         this.onVerifyUser();
         break;
       case EventType.DELETEBUG:
         //on ecrit sur le variable memoires
         this.aQui = 'DELETEBUG';
-        this.id_Event = data_Event.data_paylode_String;
+        this.obj_Event = data_Event.data_paylode_obj_Bug;
         //appelle de la methode de verification
         this.onVerifyUser();
         break;
@@ -174,19 +257,17 @@ export class CmpecmComponent implements OnInit {
   //Traitement de la reponse du event code de verification ...
   verifyReponseEvent(reponse: any) {
     if (reponse == 1) {
+      this.dialog.closeAll();
       //switcher aQui me permet de retrouver l'event et de pouvoir appeller la fonction concerné
       switch (this.aQui) {
         case 'CHANGEETATBUG':
-          this.dialog.closeAll();
-          this.onChangeEtatBug(this.id_Event);
+          this.onChangeEtatBug(this.obj_Event);
           break;
         case 'UPDATEBUG':
-          this.dialog.closeAll();
-          this.onUpdateBug(this.id_Event);
+          this.onUpdateBug(this.obj_Event);
           break;
         case 'DELETEBUG':
-          this.dialog.closeAll();
-          this.onDeletBug(this.id_Event);
+          this.onDeletBug(this.obj_Event);
           break;
       }
     } else {
@@ -206,29 +287,71 @@ export class CmpecmComponent implements OnInit {
       }
     }
   }
-
+  //Methode pour Verifier si le user a deja pas vu ce post
+  //TODO
+  verifyViewUserPaginate(pageIndex: number = 1) {
+    /*Bien ! avec la pagination les index vont changer exp si a la page 2..et autre
+     *les bug vont changer d'index pour resoudre ce probleme on redefini le tbView a
+     *l'aide de l'index
+     */
+    pageIndex = 4 * (pageIndex - 1);
+    this.tbViewUserCharged = false;
+    this.tbViewUser = [];
+    if (this.user_Id_Connect != '') {
+      this.tbCmpCh.forEach((element: { tbViewUser: string | string[] }) => {
+        const indexElement: number = this.tbCmpCh.indexOf(element);
+        if (indexElement >= pageIndex) {
+          if (element.tbViewUser.includes(this.user_Id_Connect)) {
+            this.tbViewUser.push(false);
+          } else {
+            this.tbViewUser.push(true);
+          }
+        }
+      });
+      this.tbViewUserCharged = true;
+    } else {
+      // const message = 'Veillez verifier votre connexion ou actualisé !';
+      //Affichage de l'alerte
+      //   this.openSnackBar(message, 'ECM');
+    }
+  }
   //Verification de l'evenement afin de le traite avec la bonne methode ..
   //TODO
   tabChanged(tabChangeEvent: MatTabChangeEvent): void {
     switch (tabChangeEvent.index) {
       case 0:
         this.getAll();
+        //Redefini les val du tb car les index vont changer
+        this.verifyViewUserPaginate(this.page_Event);
+        this.verifySignaleUserCommentairePaginate(this.page_Event);
+        this.verifyViewSignaleUserCommentairePaginate(this.page_Event);
         break;
       case 1:
         this.getMesPost();
+        this.verifyViewUserPaginate(this.page_Event);
+        this.verifySignaleUserCommentairePaginate(this.page_Event);
+        this.verifyViewSignaleUserCommentairePaginate(this.page_Event);
         break;
       case 2:
         this.getResolu();
+        this.verifyViewUserPaginate(this.page_Event);
+        this.verifySignaleUserCommentairePaginate(this.page_Event);
+        this.verifyViewSignaleUserCommentairePaginate(this.page_Event);
         break;
       case 3:
         this.getNonResolu();
+        this.verifyViewUserPaginate(this.page_Event);
+        this.verifySignaleUserCommentairePaginate(this.page_Event);
+        this.verifyViewSignaleUserCommentairePaginate(this.page_Event);
         break;
       case 4:
         this.getModify();
+        this.verifyViewUserPaginate(this.page_Event);
+        this.verifySignaleUserCommentairePaginate(this.page_Event);
+        this.verifyViewSignaleUserCommentairePaginate(this.page_Event);
         break;
     }
   }
-
   //Methode de getAll()
   //TODO
   getAll(): void {
@@ -283,6 +406,9 @@ export class CmpecmComponent implements OnInit {
           bug.language.toLocaleString().includes(query.toLowerCase())
         )
       : this.tbCmp;
+    this.verifyViewUserPaginate(this.page_Event);
+    this.verifySignaleUserCommentairePaginate(this.page_Event);
+    this.verifyViewSignaleUserCommentairePaginate(this.page_Event);
   }
 
   //Methode pour verifier la securiter du User cette methode declanche la procedure de securite...
@@ -296,24 +422,28 @@ export class CmpecmComponent implements OnInit {
       //switcher aQui me permet de retrouver l'event et de pouvoir appeller la fonction concerné
       switch (this.aQui) {
         case 'CHANGEETATBUG':
-          this.onChangeEtatBug(this.id_Event);
+          this.onChangeEtatBug(this.obj_Event);
           break;
         case 'UPDATEBUG':
-          this.onUpdateBug(this.id_Event);
+          this.onUpdateBug(this.obj_Event);
           break;
         case 'DELETEBUG':
-          this.onDeletBug(this.id_Event);
-          break;
+          let confirmationDelete: boolean = confirm(
+            'Confirmez-vous la suppression'
+          );
+          if (confirmationDelete) {
+            this.onDeletBug(this.obj_Event);
+            break;
+          }
       }
-    } else {
     }
   }
   //
   //......Voir les information du User
   //TODO
-  onViewInfoUser(user_Id: any = '') {
+  onViewInfoUser(objBug: BugModel) {
     this.userService
-      .getInfoUser(user_Id)
+      .getInfoUser(objBug.user_Id)
       .then((data_User) => {
         this.nomUser = data_User.nom;
         this.prenomUser = data_User.prenom;
@@ -321,7 +451,7 @@ export class CmpecmComponent implements OnInit {
         this.fantome = data_User.fantome;
       })
       .catch((error) => {
-        alert('Une erreur est survenue recup info User !');
+        this.errorAlertService.notifyAlertErrorDefault();
       });
     //Netoyage des donnes avant d'afficher un autre appelle de viewInfoUser
     this.nomUser = '';
@@ -331,32 +461,34 @@ export class CmpecmComponent implements OnInit {
   }
   //.....voir les details
   //TODO
-  onNavigate(id_Bug: string = '') {
-    this.serviceBug.onNavigate(id_Bug);
+  onNavigate(objBug: BugModel) {
+    this.serviceBug.onNavigate(objBug);
   }
 
   //Methode pour voir le nombre de reponses
   //TODO
-  onViewNbrReponse(id_Bug: string = '') {
-    this.nbrReponse = this.reponseBugService.verifyNbrReponse(id_Bug);
-    this.nbrReponseCoche = this.reponseBugService.verifyCheckedReponse(id_Bug);
+  onViewNbrReponse(objBug: BugModel) {
+    this.nbrReponse = this.reponseBugService.verifyNbrReponse(objBug.bug_Id);
+    this.nbrReponseCoche = this.reponseBugService.verifyCheckedReponse(
+      objBug.bug_Id
+    );
   }
   //Changer Etat
   //TODO
-  onChangeEtatBug(id_Bug: string = '') {
-    this.serviceBug.onChangeEtatBug(id_Bug);
+  onChangeEtatBug(objBug: BugModel) {
+    this.serviceBug.onChangeEtatBug(objBug);
   }
 
   //Methode Pour la modification du bug
   //TODO
-  onUpdateBug(id_Bug: string = '') {
-    this.serviceBug.navUpdateBug(id_Bug);
+  onUpdateBug(objBug: BugModel) {
+    this.serviceBug.navUpdateBug(objBug);
   }
 
   //Methode Pour la suppression du bug
   //TODO
-  onDeletBug(id_Bug: string = '') {
-    this.serviceBug.deleteBug(id_Bug);
+  onDeletBug(objBug: BugModel) {
+    this.serviceBug.deleteBug(objBug);
   }
 
   //Methode pour la demande de code
@@ -371,12 +503,8 @@ export class CmpecmComponent implements OnInit {
   }
   //......
   ngOnDestroy(): void {
-    alert('component ecm detruite....');
-    this.subscriptionTbCmp.unsubscribe();
-    this.subscriptionEvent.unsubscribe();
-    this.subscriptionVerificationCode.unsubscribe();
+    this.subscription.unsubscribe();
 
-    console.log('subscription detruite');
     //Emmission event pour fermer les parametres ecm
     //TODO
     this.eventService.emit_Event_Update_({

@@ -1,10 +1,9 @@
-import { NgModule } from '@angular/core';
+import {  NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AcceuilleComponent } from './MesComponents/acceuille/acceuille.component';
 import { RouterModule, Routes } from '@angular/router';
-
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -26,6 +25,11 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxUsefulSwiperModule } from 'ngx-useful-swiper';
 import { HttpClientModule } from '@angular/common/http';
 import { AppParentModule } from './app-parent/app-parent.module';
+import { NotFoundComponent } from './MesComponents/not-found/not-found.component';
+import { GardDetailGuard } from './Mes_Services/gard-detail.guard';
+import { GardUpdateGuardBug } from './Mes_Services/gard-update-bug.guard';
+import { GardDetailsPluginGuard } from './Mes_Services/gard-details-plugin.guard';
+import { GuardUpdatePluginGuard } from './Mes_Services/guard-update-plugin.guard';
 
 const routes: Routes = [
   { path: '', component: AcceuilleComponent },
@@ -50,13 +54,13 @@ const routes: Routes = [
   },
   {
     path: 'ecm/details/:indice',
-    canActivate: [GardGuard],
+    canActivate: [GardGuard, GardDetailGuard],
     loadChildren: () =>
       import('./posts/posts.module').then((mod) => mod.PostsModule),
   },
   {
-    path: 'ecm/modifier/:indice',
-    canActivate: [GardGuard],
+    path: 'ecm/:idUser/modifier/:indice',
+    canActivate: [GardGuard, GardUpdateGuardBug],
     loadChildren: () =>
       import('./posts/posts.module').then((mod) => mod.PostsModule),
   },
@@ -83,9 +87,24 @@ const routes: Routes = [
     canActivate: [GardGuard],
     component: ParametreComponent,
   },
-
+  {
+    path: 'appVideo',
+    canActivate: [GardGuard],
+    loadChildren: () =>
+      import('./app-parent/app-parent.module').then(
+        (mod) => mod.AppParentModule
+      ),
+  },
   {
     path: 'appPlugin',
+    canActivate: [GardGuard],
+    loadChildren: () =>
+      import('./app-parent/app-parent.module').then(
+        (mod) => mod.AppParentModule
+      ),
+  },
+  {
+    path: 'EnregistreVideo',
     canActivate: [GardGuard],
     loadChildren: () =>
       import('./app-parent/app-parent.module').then(
@@ -101,20 +120,25 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'detailsPluging/:idPlugin',
-    canActivate: [GardGuard],
+    path: 'details/Pluging/:idPlugin',
+    canActivate: [GardGuard, GardDetailsPluginGuard],
     loadChildren: () =>
       import('./app-parent/app-parent.module').then(
         (mod) => mod.AppParentModule
       ),
   },
   {
-    path: 'updatePluging/:idPlugin',
-    canActivate: [GardGuard],
+    path: 'update/:idUser/Pluging/:idPlugin',
+    canActivate: [GardGuard, GuardUpdatePluginGuard],
     loadChildren: () =>
       import('./app-parent/app-parent.module').then(
         (mod) => mod.AppParentModule
       ),
+  },
+  { path: 'not-found', component: NotFoundComponent },
+  {
+    path: '**',
+    redirectTo: '/not-found',
   },
 ];
 @NgModule({
@@ -122,13 +146,14 @@ const routes: Routes = [
     //  {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue:{appearance: 'fill'}},
     AppComponent,
     AcceuilleComponent,
-  //  ParametreComponent,
+    //  ParametreComponent,
     AvantInscriptionComponent,
     ProfilUserComponent,
     EditUserComponent,
     ParametreComponent,
     AlertDialogueCodeComponent,
     ModelReauthVueDialogComponent,
+    NotFoundComponent,
   ],
   imports: [
     BrowserModule,
@@ -143,7 +168,6 @@ const routes: Routes = [
     MatDialogModule,
     MatSidenavModule,
     NgxUsefulSwiperModule,
-
     ShearedModuleGeneralModule,
     PostsModule,
     CorpFilsModule,

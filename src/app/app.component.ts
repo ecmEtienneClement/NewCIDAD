@@ -17,6 +17,9 @@ import Draggable from 'gsap/Draggable';
 import { EmitEvent } from './Mes_Services/emitEvent.service';
 import { EventModel, EventType } from './Models/eventAction';
 import { Subscription } from 'rxjs';
+import { AppVideoService } from './Mes_Services/appVideo.Service';
+
+import { GardGuard } from './Mes_Services/gard.guard';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -24,15 +27,26 @@ import { Subscription } from 'rxjs';
 })
 export class AppComponent implements OnInit, OnDestroy {
   user_Connected: Boolean = false;
+
+  //Info de qui est actuelement connecte
+  nomUserConnected: string = '';
+  prenomUserConnected: string = '';
+  promoUserConnected: string = '';
+  modeNaveUserConnected: string = '';
+  securiteUser: string = '';
+  user_Id_Connect: string;
   //Variable pour les reglage d'annimation
 
   affichageParametreEcm: boolean = false;
   open_btn_details: boolean = false;
   open_btn: boolean = false;
   ligne_animation: boolean = true;
-  affichageParametrePlugin: boolean = false;
-  open_btn_Card_Plugin: boolean = false;
+  affichageParametregeneral: boolean = false;
+  open_btn_General: boolean = false;
   subscriptionEvent: Subscription = new Subscription();
+  etatConnexionUser: boolean = false;
+  //aQui me permet de savoir quel componnent a demandé l'affichage du paramtre open btn
+  aQui: string = '';
   constructor(
     private serviceAuth: AuthService,
     private route: Router,
@@ -40,7 +54,10 @@ export class AppComponent implements OnInit, OnDestroy {
     private serviceReponseBug: ReponseBugService,
     private notifyService: Notification,
     private appPluginService: AppPlugingService,
-    private eventService: EmitEvent
+    private appVideoService: AppVideoService,
+    private eventService: EmitEvent,
+
+    private authGard: GardGuard
   ) {
     // For Firebase JS SDK v7.20.0 and later, measurementId is optional
     const firebaseConfig = {
@@ -58,7 +75,20 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    //TODO
+    this.user_Id_Connect = this.authGard.user_Id_Connect;
     //gsap.to('.navbar-expand-sm', { y: 100, duration: 1 });
+    firebase
+      .database()
+      .ref('.info/connected')
+      .on('value', (data_Etat_Connexion) => {
+        if (data_Etat_Connexion.val()) {
+          this.etatConnexionUser = true;
+        } else {
+          this.etatConnexionUser = false;
+        }
+      });
+ 
 
     //Recuperation des bugs depuis la base de donnee
     //TODO
@@ -72,6 +102,9 @@ export class AppComponent implements OnInit, OnDestroy {
     //Recupration de la base de AppPluging
     //TODO
     this.appPluginService.getAllPlugin();
+    //Recupration de la base de AppVideo
+    //TODO
+    this.appVideoService.getAllVideo();
     //Verification du User s'il est connecter
     //TODO
     firebase.auth().onAuthStateChanged((data_User: any) => {
@@ -101,21 +134,34 @@ export class AppComponent implements OnInit, OnDestroy {
     switch (data_Event.type) {
       case EventType.AFFICHE_PARAMETRE_ECM:
         this.affichageParametreEcm = true;
-        this.affichageParametrePlugin = false;
+        this.affichageParametregeneral = false;
+        break;
+      case EventType.AFFICHE_PARAMETRE_DT_ECM:
+        this.aQui = 'detail ecm';
+        this.affichageParametregeneral = true;
+        this.affichageParametreEcm = false;
+        break;
+      case EventType.AFFICHE_PARAMETRE_VIDEO:
+        this.aQui = 'video';
+        this.affichageParametregeneral = true;
+        this.affichageParametreEcm = false;
         break;
       case EventType.AFFICHE_PARAMETRE_PLUGIN:
-        this.affichageParametrePlugin = true;
+        this.aQui = 'plugin';
+        this.affichageParametregeneral = true;
         this.affichageParametreEcm = false;
         break;
       case EventType.FERMER_PARAMETRE_ECM:
         this.affichageParametreEcm = false;
         break;
-      case EventType.FERMER_PARAMETRE_PLUGIN:
-        this.affichageParametrePlugin = false;
+      case EventType.CLOSE_BTN:
+        this.affichageParametregeneral = false;
+        this.open_btn_General = false;
         break;
     }
   }
   /** .................Emmission des events PARAMETRE D'AFFICHAGE .......... */
+
   //TODO
   onOpenBtnDetails() {
     this.open_btn_details = !this.open_btn_details;
@@ -138,12 +184,14 @@ export class AppComponent implements OnInit, OnDestroy {
     });
   }
   //TODO
-  openBtnCardPlugin() {
-    this.open_btn_Card_Plugin = !this.open_btn_Card_Plugin;
+  openBtn() {
+    this.open_btn_General = !this.open_btn_General;
     this.eventService.emit_Event_Update_({
-      type: EventType.OPEN_BTN_CARD_PLUGIN,
+      type: EventType.OPEN_BTN,
+      data_paylode_String: this.aQui,
     });
   }
+
   onsignOut() {
     this.user_Connected = false;
     this.serviceAuth.signOutUser();

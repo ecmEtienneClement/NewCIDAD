@@ -15,7 +15,7 @@ export class AuthService {
   //Creeation d'un nouveau user...
   //TODO
   createUser(user: UserModel) {
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<boolean | string>((resolve, reject) => {
       firebase
         .auth()
         .createUserWithEmailAndPassword(user.mail, user.mdp)
@@ -42,7 +42,7 @@ export class AuthService {
                 user_Id
               );
               this.notifyService.initNotify(newNotifyModel);
-              resolve();
+              resolve(true);
             })
             .catch((error) => {
               reject(error);

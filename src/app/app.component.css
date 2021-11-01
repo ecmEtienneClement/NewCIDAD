@@ -11,6 +11,9 @@ a {
   cursor: pointer;
 }
 li {
+  
+  list-style: none;
+  text-decoration: none;
   cursor: pointer;
 }
 .navbar-expand-sm {
@@ -23,6 +26,7 @@ li {
 }
 .general_Parent,
 .sid {
+  position: relative;
   width: 100%;
   height: 100%;
   border: none;
@@ -51,12 +55,15 @@ li {
 list-group {
   position: relative;
 }
-.deconnexion {
-  position: absolute;
-  bottom: 0px;
-}
+
 h1 {
   font-weight: bold;
   justify-content: center;
   align-items: center;
+}
+.userDesconnect {
+  color: rgb(250, 15, 15);
+}
+.userConnect {
+  color: rgb(62, 245, 102);
 }

@@ -12,10 +12,13 @@
             </span>
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <p>{{ nbrNewBug }} nouveau (x) Post (s)a etaient ajouter</p>
+        <p *ngIf="nbrNewBug == 1">Un nouveau Post à etait ajouté</p>
+        <p *ngIf="nbrNewBug > 1">
+          {{ nbrNewBug }} nouveaux Posts ont etaient ajoutés
+        </p>
       </mat-expansion-panel>
     </mat-accordion>
-
+ <!--PARTI reponse-->
     <mat-accordion>
       <mat-expansion-panel>
         <mat-expansion-panel-header>
@@ -39,7 +42,7 @@
         </p>
       </mat-expansion-panel>
     </mat-accordion>
-
+  <!--PARTI commentaire-->
     <mat-accordion>
       <mat-expansion-panel>
         <mat-expansion-panel-header>
@@ -53,6 +56,30 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
         <p *ngFor="let item of tbIdCommentaireReponse">
+          {{ item.titre }}
+          <span
+            style="background-color: rgb(255, 0, 242)"
+            class="badge badge-primary"
+          >
+            {{ item.nbr }}
+          </span>
+        </p>
+      </mat-expansion-panel>
+    </mat-accordion>
+    <!--PARTI VIDEO-->
+     <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <span class="voircommentaire">
+              URL Cour (s)
+              <span style="background-color: blue" class="badge badge-primary"
+                >{{ nbrtbURLCour }}
+              </span>
+            </span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <p *ngFor="let item of tbURLCour">
           {{ item.titre }}
           <span
             style="background-color: rgb(255, 0, 242)"

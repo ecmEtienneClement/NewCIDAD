@@ -119,10 +119,37 @@
             <button
               type="button"
               class="btn user"
-              (click)="onViewUser(item.user_Id, indice)"
+              (click)="onViewUser(item, indice)"
             >
               <i class="fas fa-user-edit"></i>
             </button>
+          </span>
+          <span *ngIf="tbSignalUserCharged && tbViewSignalUserCharged">
+            <span
+              *ngIf="
+                tbSignalUserCommentaire[indice] &&
+                !tbViewUserCommentaire[indice]
+              "
+              style="padding-right: 10px"
+              class="m-2 spinner-grow newCommentaire text-primary"
+              ><i class="fas fa-comment-dots"></i>
+            </span>
+          </span>
+
+          <span
+            *ngIf="item.newReponse && item.user_Id == user_Id_Connect"
+            class="m-2 spinner-grow newMessage text-primary"
+            ><i class="fas fa-envelope"></i
+          ></span>
+          <span *ngIf="tbViewUserCharged">
+            <span
+              [ngClass]="{
+                notViewUser: tbViewUser[indice],
+                viewUser: !tbViewUser[indice]
+              }"
+            >
+              <i class="fas fa-check-double"></i>
+            </span>
           </span>
         </div>
       </mat-card-subtitle>
@@ -155,7 +182,7 @@
               type="button"
               class="btn btn-outline-primary btn-details"
               [ngClass]="{ 'open-btn-details': open_btn_details }"
-              (click)="onNavigate(item.bug_Id)"
+              (click)="onNavigate(item)"
             >
               <i class="far fa-eye"></i>
               Détails
@@ -173,7 +200,7 @@
           <!--....................... btn Nbr Reponse ....................-->
 
           <button
-            (click)="onViewNbrReponse(item.bug_Id, indice)"
+            (click)="onViewNbrReponse(item, indice)"
             type="button"
             class="btn btn-outline-primary btn-nbr-reponse"
           >
@@ -182,7 +209,7 @@
 
           <!--....................... btn CHANGER_ETAT....................-->
           <button
-            (click)="onChangeEtatBug(item.bug_Id)"
+            (click)="onChangeEtatBug(item)"
             type="button"
             class="btn btn-outline-primary btn-changer-etat"
             [ngStyle]="{
@@ -195,7 +222,7 @@
           </button>
           <!--....................... btn Update....................-->
           <button
-            (click)="onUpdateBug(item.bug_Id)"
+            (click)="onUpdateBug(item)"
             type="button"
             class="btn btn-outline-primary btn-update"
             [disabled]="item.user_Id !== user_Id_Connect"
@@ -204,7 +231,7 @@
           </button>
           <!--....................... btn delete....................-->
           <button
-            (click)="onDeletBug(item.bug_Id)"
+            (click)="onDeletBug(item)"
             type="button"
             class="btn btn-outline-danger"
             [disabled]="item.user_Id !== user_Id_Connect"
@@ -216,14 +243,16 @@
       <mat-card-footer>
         <div
           *ngIf="item.etat == 'Non Résolu'"
-          class="m-2 spinner-grow text-warning"
+          class="m-2 spinner-grow alertNonResolu text-warning"
         ></div>
       </mat-card-footer>
     </mat-card>
   </div>
   <div class="row">
     <div class="col-12 paginate">
-      <pagination-controls (pageChange)="page = $event"></pagination-controls>
+      <pagination-controls
+        (pageChange)="pageChanged($event)"
+      ></pagination-controls>
     </div>
   </div>
 </div>

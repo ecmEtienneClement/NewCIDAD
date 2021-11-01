@@ -6,7 +6,7 @@
       <input
         required
         #langLength
-        [(ngModel)]="language"
+        [(ngModel)]="pluginCmp.language"
         maxlength="15"
         matInput
         type="text"
@@ -14,7 +14,7 @@
         formControlName="language"
       />
 
-      <mat-hint>Language</mat-hint>
+      <mat-hint>Nouveau Language</mat-hint>
       <mat-hint align="end">{{ langLength.value.length }}/15</mat-hint>
     </mat-form-field>
   </div>
@@ -24,32 +24,31 @@
       <mat-label>Entrez la documentation portant sur cet plugin</mat-label>
       <textarea
         #detailsLength
-        [(ngModel)]="documentation"
+        [(ngModel)]="pluginCmp.documentation"
         maxlength="500"
         rows="7"
         required
         matInput
-        placeholder="Entrez la documentation portant sur cet plugin"
+        placeholder="Entrez la nouvelle documentation portant sur cet plugin"
         formControlName="documentation"
       ></textarea>
-      <mat-hint>documentation</mat-hint>
+      <mat-hint>Nouvelle documentation</mat-hint>
       <mat-hint align="end">{{ detailsLength.value.length }}/500</mat-hint>
     </mat-form-field>
   </div>
   <!-- Partie du code plugin-->
   <div class="form-group mt-4">
     <mat-form-field appearance="outline">
-      <mat-label>coller le code portant sur cet plugin</mat-label>
+      <mat-label>coller le nouveau code portant sur cet plugin</mat-label>
       <textarea
-        maxlength="500"
-        [(ngModel)]="code"
+        [(ngModel)]="pluginCmp.code"
         rows="7"
         required
         matInput
-        placeholder="Coller le code ici"
+        placeholder="Coller le nouveau code ici"
         formControlName="code"
       ></textarea>
-      <mat-hint>code plugin</mat-hint>
+      <mat-hint>Nouveau code plugin</mat-hint>
     </mat-form-field>
   </div>
   <button
@@ -57,6 +56,6 @@
     class="btn btn-success mt-4"
     [disabled]="myForm.invalid"
   >
-    Enregistrer
+    Modifier
   </button>
 </form>

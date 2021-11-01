@@ -1,5 +1,5 @@
 <div
-  class="row rowParent mt-3"
+  class="row rowParent mt-3 card-cible"
   *ngFor="
     let reponseBug of tbReponseBug
       | paginate: { itemsPerPage: 10, currentPage: page };
@@ -7,66 +7,106 @@
   "
 >
   <div class="col-12">
-    <div class="row">
-      <div class="col-1">
-        <button
-          [matMenuTriggerFor]="aboveMenu"
-          type="button"
-          class="btn user btn-info"
-          (click)="onViewUser(reponseBug.user_Id)"
+    <div class="blcBtn">
+      <button
+        title="Déployer les boutons"
+        type="button"
+        class="btn btn-sm btn-nav btn-default"
+        (click)="deployerBtn(indice)"
+      >
+        <i class="fas fa-bars"></i>
+      </button>
+      <button
+        title="Fermer les boutons"
+        type="button"
+        class="btn btn-sm btn-closed btn-outline-danger"
+        (click)="closeBlcBtn()"
+      >
+        <i class="fas fa-times"></i>
+      </button>
+      <mat-menu #aboveMenu="matMenu" yPosition="above">
+        <b class="infoUser" mat-menu-item
+          >{{ prenom | uppercase }}{{ nom | uppercase }}</b
         >
-          <i class="fas fa-user-edit"></i>
-        </button>
-        <mat-menu #aboveMenu="matMenu" yPosition="above">
-          <b class="infoUser" mat-menu-item
-            >{{ prenom | uppercase }}{{ nom | uppercase }}</b
-          >
-          <p class="infoUser" mat-menu-item>{{ promo }}</p>
-        </mat-menu>
-      </div>
+        <p class="infoUser" mat-menu-item>{{ promo }}</p>
+      </mat-menu>
+      <button
+        [matMenuTriggerFor]="aboveMenu"
+        (click)="onViewUser(reponseBug)"
+        title="Voir l'auteur"
+        type="button"
+        class="btn btn-sm btn-user btn-outline-primary"
+      >
+        <i class="fas fa-user-edit"></i>
+      </button>
 
-      <div class="col-7">
-        <button
-          class="btn btn-outline-primary btnChek"
-          [disabled]="user_Id_Connect != user_Id_Bug"
-          (click)="onCheck(reponseBug.id_Reponse)"
-        >
-          <i style="color: green" class="fas fa-check" *ngIf="reponseBug.isGood"
-            ><strong>Merci</strong></i
-          >
-          <i class="fas fa-exclamation" *ngIf="!reponseBug.isGood"
-            ><strong>Merci</strong></i
-          >
-        </button>
-      </div>
-
-      <div class="col-4">
-        <button
-          class="btn btn-sm btn-outline-danger supprimer mt-4"
-          [disabled]="reponseBug.user_Id != user_Id_Connect"
-          (click)="onDelete(reponseBug.id_Reponse)"
-        >
-          <i class="far fa-trash-alt" style="color: red"></i>
-        </button>
-      </div>
+      <button
+        [disabled]="user_Id_Connect != user_Id_Bug"
+        (click)="onCheck(reponseBug)"
+        title="Identifier la bonne réponse"
+        type="button"
+        class="btn btn-sm btn-merci btn-outline-primary"
+      >
+        <strong>Merci </strong>
+        <i class="fas fa-exclamation" *ngIf="!reponseBug.isGood"></i>
+        <i
+          style="color: green"
+          class="fas fa-check"
+          *ngIf="reponseBug.isGood"
+        ></i>
+      </button>
+      <button
+        title="Copier la réponse"
+        type="button"
+        class="btn btn-sm btn-copy btn-outline-primary"
+        (click)="copyUrlAppVideo(reponseBug.reponse)"
+      >
+        <i class="fas fa-copy"></i>
+      </button>
+      <button
+        title="Supprimer la réponse"
+        class="btn btn-sm btn-outline-danger btn-delete"
+        [disabled]="reponseBug.user_Id != user_Id_Connect"
+        (click)="onDelete(reponseBug)"
+      >
+        <i class="far fa-trash-alt" style="color: red"></i>
+      </button>
     </div>
   </div>
   <!-- ............................EXTENSION DE LA REPONSE ....................................-->
   <div class="col-12">
     <mat-accordion>
       <mat-expansion-panel hideToggle>
-        <mat-expansion-panel-header class="mt-2">
+        <mat-expansion-panel-header
+          (click)="viewUserReponse(reponseBug)"
+          class="mt-2"
+        >
           <mat-panel-title>
-            <span class="cliquerPourDeplier">
-              CLIQUER POUR DEPLIER ...</span
-            >
+            <div class="row">
+              <div class="col-12">
+                <span *ngIf="tbViewUserCharged">
+                  <span
+                    [ngClass]="{
+                      viewUser: tbViewUser[indice]
+                    }"
+                  >
+                    <i class="fas fa-check-double"></i>
+                  </span>
+                </span>
+
+                <span class="cliquerPourDeplier">
+                  CLIQUER POUR DEPLIER ...</span
+                >
+              </div>
+            </div>
           </mat-panel-title>
+
           <p class="date">{{ reponseBug.dateReponse | date: "short" }}</p>
         </mat-expansion-panel-header>
 
         <pre
           class="mb-3 overflow-auto p-2 mr-3"
-          style="width: 100%; height: 500px"
+          style="width: 100%; min-height: auto; max-height: 500px"
         >
          {{ reponseBug.reponse }}</pre
         >
@@ -95,13 +135,19 @@
           </div>
 
           <button
-            (click)="onSubmitForm(reponseBug.id_Reponse)"
+            (click)="onSubmitForm(reponseBug)"
             [disabled]="commentaire.length < 2"
-            class="btn btn-sm"
+            class="btn btn-sm btn-commentaire"
           >
             Enregistrer
           </button>
-          <button (click)="onResetForm()" class="btn btn-sm">Annulez</button>
+          <button
+            style="color: red"
+            (click)="onResetForm()"
+            class="btn btn-sm btn-commentaire"
+          >
+            Annulez
+          </button>
         </mat-expansion-panel>
       </mat-accordion>
     </div>
@@ -109,21 +155,76 @@
     <div class="col-12">
       <mat-accordion>
         <mat-expansion-panel>
-          <mat-expansion-panel-header>
+          <mat-expansion-panel-header (click)="viewUserCommentaire(reponseBug)">
             <mat-panel-title> </mat-panel-title>
             <span class="voircommentaire">
+              <span *ngIf="tbSignalUserCharged && tbViewSignalUserCharged">
+                <span
+                  *ngIf="
+                    tbSignalUserCommentaire[indice] &&
+                    !tbViewUserCommentaire[indice]
+                  "
+                  style="padding-right: 10px"
+                  class="m-2 spinner-grow newCommentaire text-primary"
+                  ><i class="fas fa-comment-dots"></i>
+                </span>
+              </span>
               Voir Commentaire (s)
-              <span style="background-color: blue" class="badge badge-primary"
+              <span
+                *ngIf="reponseBug.commentaire[0].commentaire == ''"
+                style="background-color: blue"
+                class="badge badge-primary"
                 >{{ reponseBug.commentaire.length - 1 }}
+              </span>
+              <span
+                *ngIf="reponseBug.commentaire[0].commentaire !== ''"
+                style="background-color: blue"
+                class="badge badge-primary"
+                >{{ reponseBug.commentaire.length }}
               </span>
             </span>
           </mat-expansion-panel-header>
-          <p
-            class="textecommentaire"
-            *ngFor="let commentaire of reponseBug.commentaire"
+
+          <div
+            class="container mb-3 overflow-auto p-2 mr-3"
+            style="width: 100%; min-height: auto; max-height: 500px"
+            *ngIf="reponseBug.commentaire[0].commentaire !== ''"
           >
-            {{ commentaire }}
-          </p>
+            <div
+              class="row"
+              *ngFor="let commentaire of reponseBug.commentaire.reverse()"
+            >
+              <div class="col-12">
+                <p class="txtdateCommentaire mt-3">
+                  {{ commentaire.dateCommentaire | date: "short" }}
+                </p>
+              </div>
+              <div class="col-12 blcInfUserCommentaire">
+                <span class="iconUser">
+                  <i class="fas fa-user-edit"></i>
+                </span>
+                <span class="infoUser">{{ commentaire.nomUser }} </span>
+                <span class="infoUser">{{ commentaire.prenomUser }} </span>
+                <span class="infoUser">{{ commentaire.promoUser }} </span>
+              </div>
+              <div class="col-12">
+                <p class="textecommentaire">
+                  {{ commentaire.commentaire }}
+                </p>
+              </div>
+              <div class="col-12">
+                <button
+                  [disabled]="commentaire.Id_User != user_Id_Connect"
+                  class="btnDeleleCommentaire btn btn-sm"
+                  (click)="
+                    deleteCommentaire(reponseBug, commentaire.dateCommentaire)
+                  "
+                >
+                  <span>Supprimer</span>
+                </button>
+              </div>
+            </div>
+          </div>
         </mat-expansion-panel>
       </mat-accordion>
     </div>
@@ -133,6 +234,8 @@
 
 <div class="row">
   <div class="col-12 paginate mt-4">
-    <pagination-controls (pageChange)="page = $event"></pagination-controls>
+    <pagination-controls
+      (pageChange)="pageChanged($event)"
+    ></pagination-controls>
   </div>
 </div>

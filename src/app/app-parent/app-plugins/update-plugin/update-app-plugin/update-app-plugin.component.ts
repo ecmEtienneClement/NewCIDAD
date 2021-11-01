@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AppPlugingService } from 'src/app/Mes_Services/appPlugin.Service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppPlugin } from 'src/app/Models/modelApi';
+import { CommentaireModel } from 'src/app/Models/commentaire';
 
 @Component({
   selector: 'app-update-app-plugin',
@@ -12,21 +13,21 @@ import { AppPlugin } from 'src/app/Models/modelApi';
 })
 export class UpdateAppPluginComponent implements OnInit {
   myForm: FormGroup;
-
-  idPlugin?: number ;
+  idPlugin?: number;
   pluginCmp: AppPlugin = {
     _id: 0,
     language: '',
     documentation: '',
     code: '',
-    tbCommentaire: [],
+    tbCommentaire: [new CommentaireModel('', '', '', '', '', 0)],
     userId: '',
     date: 0,
+    update: 0,
+    tbViewUser: [],
+    tbViewCommentaire: [],
+    tbSignalCommentaire: [],
   };
 
-  language: string = this.pluginCmp.language;
-  documentation: string = this.pluginCmp.documentation;
-  code: string = this.pluginCmp.code;
   constructor(
     private formBuilder: FormBuilder,
     private appPluginService: AppPlugingService,
@@ -48,9 +49,6 @@ export class UpdateAppPluginComponent implements OnInit {
       .then((data_App_Plugin: AppPlugin) => {
         if (data_App_Plugin) {
           this.pluginCmp = data_App_Plugin;
-          this.language = this.pluginCmp.language;
-          this.documentation = this.pluginCmp.documentation;
-          this.code = this.pluginCmp.code;
         }
       })
       .catch((error) => {
@@ -84,6 +82,10 @@ export class UpdateAppPluginComponent implements OnInit {
         this.pluginCmp.tbCommentaire,
         this.pluginCmp.userId,
         Date.now(),
+        /*valeur update */ 1,
+        this.pluginCmp.tbViewUser,
+        this.pluginCmp.tbSignalCommentaire,
+        this.pluginCmp.tbViewCommentaire,
         this.idPlugin
       )
       .then((good: boolean) => {

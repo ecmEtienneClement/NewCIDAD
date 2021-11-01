@@ -211,6 +211,25 @@ ul li:hover {
   list-style: none;
   background: linear-gradient(0deg, #fff, #ddd);
 }
+
+.viewUser,
+.newCommentaire {
+  float: right;
+  color: whitesmoke;
+}
+.newCommentaire {
+  margin: -6px 15px 0 0;
+}
+.spinner-grow {
+  width: 0;
+  height: 0;
+}
+.fa-comment-dots {
+  color: whitesmoke;
+}
+.default {
+  float: right;
+}
 ul li a {
   position: absolute;
   display: flex;
@@ -272,4 +291,15 @@ ul li a {
   visibility: visible;
   transition-delay: 0.75s;
   transform: translateY(0px);
+}
+.paginate {
+  color: white;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-weight: bold;
+}
+pagination-controls {
+  color: white;
 }

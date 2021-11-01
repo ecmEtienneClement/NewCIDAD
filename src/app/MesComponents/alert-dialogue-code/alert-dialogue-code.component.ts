@@ -13,10 +13,6 @@ export class AlertDialogueCodeComponent implements OnInit {
   //Desactive le btn valider avant le chargement des donnees pour eviter le user le click
   data_Charger: boolean = false;
 
-  container_verify: boolean = false;
-  container_true: boolean = false;
-  container_false: boolean = false;
-
   Id_User_Connected: string = '';
   //La valeur du code qui a etait saisis dans le champs il est initailiser car je desactive le
   //btn valider avec codeUserSaisi.length
@@ -50,37 +46,28 @@ export class AlertDialogueCodeComponent implements OnInit {
   //TODO
   valider() {
     //Activation de l'animation du cercle
-    this.container_verify = true;
+  
     //Verification..
     if (this.codeUserSaisi == this.codeUserbd) {
-      //Attentre l'annimation l'animation des lignes
-      setTimeout(() => {
-        this.container_true = true;
-      }, 2500);
-      //Attentre l'annimation .avant d'emmettre
-      setTimeout(() => {
+  
         this.emitService.emit_Event_Update_({
           type: EventType.VERIFICATION_CODE,
           data_paylode_Number: 1,
         });
-      }, 3000);
+    
     } else {
-      //Attentre l'annimation avant d'emmettre
-      setTimeout(() => {
-        this.container_verify = false;
-        this.container_false = true;
+    
         this.emitService.emit_Event_Update_({
           type: EventType.VERIFICATION_CODE,
           data_paylode_Number: 0,
         });
-      }, 2500);
+ 
     }
   }
   //Methode pour reinitialiser les valeures..
   //TODO
   reset() {
     this.codeUserSaisi = '';
-    this.container_true = false;
-    this.container_false = false;
+  
   }
 }

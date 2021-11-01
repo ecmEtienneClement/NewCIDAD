@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { GardGuard } from 'src/app/Mes_Services/gard.guard';
 import { UserService } from 'src/app/Mes_Services/user.Service';
 
-
-
 @Component({
   selector: 'app-profil-user',
   templateUrl: './profil-user.component.html',
@@ -11,14 +9,13 @@ import { UserService } from 'src/app/Mes_Services/user.Service';
 })
 export class ProfilUserComponent implements OnInit {
   nomUser: string = '';
-
   prenomUser: string = '';
   emailUser: null | string = '';
   promoUser: string = '';
   modeNavUser: string = 'false';
   Id_User_Connected: string = '';
   constructor(private user: UserService, private gard: GardGuard) {}
- 
+
   ngOnInit(): void {
     ///Recuperation de l'ID du User Connecter et son email
     //TODO
@@ -39,7 +36,9 @@ export class ProfilUserComponent implements OnInit {
         this.emailUser = this.gard.user_Email_Connect;
       })
       .catch((error) => {
-        alert("Une erreur s'est produite ...");
+        alert(
+          "Une erreur s'est produite ! Veillez actualiser ou vérifier votre connexion ..."
+        );
       });
   }
 }

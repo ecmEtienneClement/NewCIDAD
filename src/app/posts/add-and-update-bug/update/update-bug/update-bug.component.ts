@@ -10,7 +10,7 @@ import { BugModel } from 'src/app/Models/bug';
   styleUrls: ['./update-bug.component.css'],
 })
 export class UpdateBugComponent implements OnInit {
-  bugCmp: any = new BugModel('', '', '', '', '', '', 0, Date.now(),['']);
+  bugCmp: any = new BugModel('', '', '', '', '', '', 0, Date.now(), ['']);
   myForm: FormGroup;
   indice: number;
   //Valeure des champs par defaut ...
@@ -37,11 +37,16 @@ export class UpdateBugComponent implements OnInit {
     this.serviceBug
       .recupbaseSoloBug(this.indice)
       .then((data_value) => {
-        this.bugCmp = data_value;
-        this.language = this.bugCmp.language;
-        this.titre = this.bugCmp.titre;
-        this.details = this.bugCmp.details;
-        this.etat = this.bugCmp.etat;
+        if (data_value == null) {
+          alert("Cet post n'existe pas !");
+          this.route.navigate(['/ecm']);
+        } else {
+          this.bugCmp = data_value;
+          this.language = this.bugCmp.language;
+          this.titre = this.bugCmp.titre;
+          this.details = this.bugCmp.details;
+          this.etat = this.bugCmp.etat;
+        }
       })
       .catch((error) => {
         alert('Une erreur est survenue update Bug ...!');

@@ -11,7 +11,6 @@ import { EmitEvent } from 'src/app/Mes_Services/emitEvent.service';
 import { EventModel, EventType } from 'src/app/Models/eventAction';
 import { Router } from '@angular/router';
 
-
 @Component({
   selector: 'app-edit-user',
   templateUrl: './edit-user.component.html',
@@ -31,7 +30,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
   //Variable pour le nombre de tentative
   nbrTentative: number = 3;
   constructor(
-    private user: UserService,
+    private userService: UserService,
     private gard: GardGuard,
     private _snackBar: MatSnackBar,
     public dialog: MatDialog,
@@ -45,21 +44,14 @@ export class EditUserComponent implements OnInit, OnDestroy {
     this.Id_User_Connected = this.gard.user_Id_Connect;
     //recuperation des information du User Connected
     //TODO
-    this.user
-      .getInfoUser(this.Id_User_Connected)
-      .then((data_User) => {
-        //Valeur des champs ...
-        this.newNom = data_User.nom;
-        this.newPrenom = data_User.prenom;
-        this.newPromo = data_User.promotion;
-        this.newModeNav = data_User.fantome;
-        //...
-        this.securiteUser = data_User.securite;
-        this.data_Charger = true;
-      })
-      .catch((error) => {
-        alert("Une erreur s'est produite ...");
-      });
+    this.userService.VerifyLocaleStorage().then((data_ObjUser) => {
+      this.newNom = data_ObjUser.nom;
+      this.newPrenom = data_ObjUser.prenom;
+      this.newPromo = data_ObjUser.promotion;
+      this.newModeNav = data_ObjUser.fantome;
+      this.securiteUser = data_ObjUser.securite;
+      this.data_Charger = true;
+    });
 
     //Subsciption Pour la verification du code
     //TODO
@@ -72,7 +64,6 @@ export class EditUserComponent implements OnInit, OnDestroy {
       );
   }
 
- 
   /* .............................................................................*/
 
   //Methode pour verifier la securiter du User cette methode declanche la procedure de securite...
@@ -134,11 +125,26 @@ export class EditUserComponent implements OnInit, OnDestroy {
         promotion: this.newPromo,
         fantome: this.newModeNav,
       })
-
       .then(() => {
-        const message = 'Modification (s) enregistrée (s) !';
-        //Affichage de l'alerte
-        this.openSnackBar(message, 'ECM');
+        //TODO
+        this.userService
+          .getInfoUser(this.Id_User_Connected)
+          .then((data_User) => {
+            localStorage.setItem('nomUserConnected', data_User.nom);
+            localStorage.setItem('prenomUserConnected', data_User.prenom);
+            localStorage.setItem('promoUserConnected', data_User.promotion);
+            localStorage.setItem('modeNaveUserConnected', data_User.fantome);
+            localStorage.setItem('securiteUserConnected', data_User.securite);
+            const message = 'Modification (s) enregistrée (s) !';
+            //Affichage de l'alerte
+            this.openSnackBar(message, 'ECM');
+          })
+
+          .catch((error) => {
+            alert(
+              "Une erreur s'est produite recup info User veillez actualisé ..."
+            );
+          });
       })
       .catch((error) => {
         alert("une erreur s'est produite ...");

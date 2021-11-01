@@ -1,9 +1,8 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { BugService } from 'src/app/Mes_Services/bug.Service';
+import { AppVideoService } from 'src/app/Mes_Services/appVideo.Service';
 import { GardGuard } from 'src/app/Mes_Services/gard.guard';
 import { Notification } from 'src/app/Mes_Services/notification.service';
-import { BugModel } from 'src/app/Models/bug';
 import { NotifyModel } from 'src/app/Models/eventAction';
 import { NotificationModel } from 'src/app/Models/notification';
 
@@ -15,33 +14,24 @@ import { NotificationModel } from 'src/app/Models/notification';
 export class NotificationEcmComponent implements OnInit, OnDestroy {
   //Variable pour les notifications...
   tbNotify: NotificationModel[] = [];
-  tbFilterDoublonSubjectCmp: string[] = [];
-  tbNbrReponseSubjectCmp: number[] = [];
-
-  tbNbrReponse: number[] = [];
-  tbFilterDoublon: string[] = [];
   user_Id_Connect: string;
   //Variable de subcription
   subscriptionDbNotify: Subscription = new Subscription();
-  subscriptiontbFilterDoublonSubject: Subscription = new Subscription();
-  subscriptiontbNbrReponseSubject: Subscription = new Subscription();
-  subscriptionTbCmp: Subscription = new Subscription();
-
   nbrNewBug: number = 0;
   tbTitreBug: NotifyModel[] = [];
   nbrtbIdBug: number = 0;
   tbIdCommentaireReponse: NotifyModel[] = [];
+  tbURLCour: NotifyModel[] = [];
+  nbrtbURLCour: number = this.tbURLCour.length;
   nbrtbIdCommentaireReponse: number = 0;
   nbrTotalNotify: number = 0;
   @Input() nomUserNotify: string;
 
-  ///Ces variables sont des variable de communication qui permet l'appelle des methodes avec les fonctions async
-  appellerecupObjById: boolean = false;
-
   constructor(
     private notifyService: Notification,
     
-    private authService: GardGuard
+    private authService: GardGuard,
+    private appVideoService: AppVideoService
   ) {}
 
   ngOnInit(): void {
@@ -56,6 +46,7 @@ export class NotificationEcmComponent implements OnInit, OnDestroy {
         //Des que les tbDbNotify arriver je lance la methode de filtre
         if (data_db_Notify.length > 0) {
           this.tbNotify = data_db_Notify;
+          //Marque immediatement vue a une reponse ou commentaire si le user est en ligne
 
           //Filtrage du tbNotify pour acceder a la collection du user..
           //Premierement on recupere la collection du user dans la tbNotify aveson ID
@@ -69,16 +60,16 @@ export class NotificationEcmComponent implements OnInit, OnDestroy {
           //todo
           this.nbrNewBug = tbFilterByIdNotify[0].length_Tb_Bug;
 
-          //Recuperation du tbBud
+          //Recuperation du tbreponseBug
           //todo
           if (tbFilterByIdNotify[0].tbIdReponseBug[0].nbr != 0) {
+            //recuperation du tb titreReponse
             this.tbTitreBug = tbFilterByIdNotify[0].tbIdReponseBug;
             //Comptage de nbr reponse total
             this.nbrtbIdBug = 0;
             this.tbTitreBug.forEach((item) => {
               this.nbrtbIdBug += item.nbr;
             });
-         
           }
           //Recuperation du tbIdCommentaireReponse
           //todo
@@ -91,6 +82,14 @@ export class NotificationEcmComponent implements OnInit, OnDestroy {
               this.nbrtbIdCommentaireReponse += item.nbr;
             });
           }
+          //Recuperation du tbVideo
+          //todo
+          if (tbFilterByIdNotify[0].tbNotifyVideo[0].nbr != 0) {
+            this.tbURLCour = tbFilterByIdNotify[0].tbNotifyVideo;
+            this.nbrtbURLCour = this.tbURLCour.length;
+            //Appelle de getAllVideo pour remettre a jour la vue du component appVideo
+            this.appVideoService.getAllVideo();
+          }
 
           //Recuperation des notifications total
           //todo
@@ -102,16 +101,11 @@ export class NotificationEcmComponent implements OnInit, OnDestroy {
       }
     );
     this.notifyService.emitUpdateTbNotify();
- 
   }
   /**.................................................................................. */
- 
 
   ngOnDestroy(): void {
     this.subscriptionDbNotify.unsubscribe();
-    this.subscriptiontbFilterDoublonSubject.unsubscribe();
-    this.subscriptiontbNbrReponseSubject.unsubscribe();
-    this.subscriptionTbCmp.unsubscribe();
     this.notifyService.onResetCollectionNotifyUser();
   }
 }

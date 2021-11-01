@@ -1,11 +1,27 @@
-//Model AppVideo
+//Model USER MONGO
+
+import { CommentaireModel } from './commentaire';
+import { NotifyModel } from './eventAction';
+
+//TODO
+export interface UserMongo {
+  _id: any;
+  email: string;
+  password: string;
+}
+//Model AppPlugin
 //TODO
 export interface AppVideo {
-  language: string;
-  description: string;
-  urlVideo: string;
+  _id: any;
   userId: string;
+  cour: string;
+  titre: string;
+  url: string;
+  signaler: string[];
+  viewUser: string[];
+  date: number;
 }
+
 //Model AppPlugin
 //TODO
 export interface AppPlugin {
@@ -13,14 +29,20 @@ export interface AppPlugin {
   language: string;
   documentation: string;
   code: string;
-  tbCommentaire: Array<string>;
+  tbCommentaire: CommentaireModel[];
   userId: string;
   date: number;
+  update: number;
+  tbViewUser: string[];
+  tbSignalCommentaire: string[] ;
+  tbViewCommentaire: string[];
 }
-//Model USER MONGO
+//Model AppPlugin
 //TODO
-export interface UserMongo {
+export interface NotifyMongo {
   _id?: any;
-  email: string;
-  password: string;
+  idUser: string;
+  tbAppPlugins: number;
+  tbCommentairePlugins: NotifyModel[];
+  updateMany: string;
 }

@@ -1,4 +1,9 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 
 import { EmitEvent } from 'src/app/Mes_Services/emitEvent.service';
 import { BugModel } from 'src/app/Models/bug';
@@ -6,8 +11,7 @@ import { EventModel, EventType } from 'src/app/Models/eventAction';
 // typical import
 import gsap from 'gsap';
 // or get other plugins:
-import ScrollTrigger from 'gsap/ScrollTrigger';
-import Draggable from 'gsap/Draggable';
+
 import { Subscription } from 'rxjs';
 export interface instanceGsap {
   indice: number;
@@ -19,6 +23,12 @@ export interface instanceGsap {
   styleUrls: ['./viewecm.component.css'],
 })
 export class ViewecmComponent implements OnInit, OnDestroy {
+  @Input() tbSignalUserCommentaire: boolean[];
+  @Input() tbViewUserCommentaire: boolean[];
+  @Input() tbViewSignalUserCharged: boolean;
+  @Input() tbSignalUserCharged: boolean;
+  @Input() tbViewUser: boolean[];
+  @Input() tbViewUserCharged: boolean;
   @Input() prenom: string;
   @Input() nom: string;
   @Input() promo: string;
@@ -26,13 +36,12 @@ export class ViewecmComponent implements OnInit, OnDestroy {
   @Input() nbrReponse: number;
   @Input() nbrReponseCoche: number;
   @Input() tbCmpCh: BugModel[];
-  @Input() user_Id_Connect?: string;
-  @Input() totalPage: number;
+  @Input() user_Id_Connect: string;
+  page: number = 1;
   /*Cet tb nous permet de gerer les intances de gsap*/
   tbInstanceGsap: instanceGsap[] = [];
   tbInstanceGsapNbrReponse: instanceGsap[] = [];
 
-  page: number = 1;
   image: number = 1;
   subscriptionEvent: Subscription = new Subscription();
   //Variable pour les reglage d'annimation
@@ -72,6 +81,7 @@ export class ViewecmComponent implements OnInit, OnDestroy {
   /*   
  ...............................PARTIE POUR ANIMATION CARD ................ .........
  */
+
   //AFFICHAGE DE LA CARD INFO USER
   //TODO
   animCardUser(indice: number) {
@@ -275,62 +285,71 @@ export class ViewecmComponent implements OnInit, OnDestroy {
 */
   //Methode Pour Voir Les Informations du User
   //TODO
-  onViewUser(user_Id: any, indice: number) {
+  onViewUser(objBug: BugModel, indice: number) {
     this.animCardUser(indice);
     //Je patient 1s pour eviter d'afficher l'autre info du user dans le card qui entraint
     //d'etre ferme raison pour la qu'elle on patient 1s
     setTimeout(() => {
-      this.eventService.emit_Event_Update_({
+      this.eventService.emit_Event_Obj_Bug_({
         type: EventType.VIEW_INFO_USER,
-        data_paylode_String: user_Id,
+        data_paylode_obj_Bug: objBug,
       });
     }, 1000);
   }
   //Methode Pour la Navigation vers la page details avec event indice et la page
   //TODO
-  onNavigate(idBug: string) {
-    this.eventService.emit_Event_Update_({
+  onNavigate(objBug: BugModel) {
+    this.eventService.emit_Event_Obj_Bug_({
       type: EventType.NAVIGATBUG,
-      data_paylode_String: idBug,
+      data_paylode_obj_Bug: objBug,
     });
   }
   //Methode pour voir le nombre de reponses
   //TODO
-  onViewNbrReponse(idBug: string, indice: number) {
+  onViewNbrReponse(objBug: BugModel, indice: number) {
     this.image = Math.floor(Math.random() * 10);
     this.animCardNbrReponse(indice);
     setTimeout(() => {
-      this.eventService.emit_Event_Update_({
+      this.eventService.emit_Event_Obj_Bug_({
         type: EventType.NBR_REPONSE,
-        data_paylode_String: idBug,
+        data_paylode_obj_Bug: objBug,
       });
     }, 2000);
   }
-
   //Methode Pour la Modifirer le Bug avec eventBug
   //TODO
-  onUpdateBug(idBug: string) {
-    this.eventService.emit_Event_Update_({
+  onUpdateBug(objBug: BugModel) {
+    this.eventService.emit_Event_Obj_Bug_({
       type: EventType.UPDATEBUG,
-      data_paylode_String: idBug,
+      data_paylode_obj_Bug: objBug,
     });
   }
 
   //Methode Pour la Modifirer l'etat du Bug eventBug
   //TODO
-  onChangeEtatBug(idBug: string) {
-    this.eventService.emit_Event_Update_({
+  onChangeEtatBug(objBug: BugModel) {
+    this.eventService.emit_Event_Obj_Bug_({
       type: EventType.CHANGEETATBUG,
-      data_paylode_String: idBug,
+      data_paylode_obj_Bug: objBug,
     });
   }
   //Methode Pour la sauppression du Bug eventBug
   //TODO
-  onDeletBug(idBug: string) {
-    this.eventService.emit_Event_Update_({
+  onDeletBug(objBug: BugModel) {
+    this.eventService.emit_Event_Obj_Bug_({
       type: EventType.DELETEBUG,
-      data_paylode_String: idBug,
+      data_paylode_obj_Bug: objBug,
     });
+  }
+  //Methode pour emmettre le changemant de la page afin de recalculer les valeurs du tbViewUser
+  //TODO
+  pageChanged(event: any) {
+    this.eventService.emit_Event_Update_({
+      type: EventType.CHANGE_PAGINATE,
+      data_paylode_String: 'ecm',
+      data_paylode_Number: event,
+    });
+    this.page = event;
   }
   ngOnDestroy(): void {
     this.subscriptionEvent.unsubscribe();

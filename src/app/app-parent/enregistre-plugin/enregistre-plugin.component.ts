@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 
 import { AppPlugingService } from 'src/app/Mes_Services/appPlugin.Service';
 import { GardGuard } from 'src/app/Mes_Services/gard.guard';
+import { CommentaireModel } from 'src/app/Models/commentaire';
 
 @Component({
   selector: 'app-enregistre-plugin',
@@ -13,25 +14,7 @@ import { GardGuard } from 'src/app/Mes_Services/gard.guard';
 })
 export class EnregistrePluginComponent implements OnInit {
   myForm: FormGroup;
-  user_Id_Connect?: string = '';
-  options: string[] = [
-    'Java',
-    'JavaScript',
-    'Python',
-    'C',
-    'C++',
-    'C#',
-    'Ruby',
-    'PHP',
-    'Objective-C',
-    'CSS',
-    'CSS 3',
-    'ECMAScript',
-    'JSP',
-    'VBA',
-    'HTML',
-    'TypeScript',
-  ];
+  user_Id_Connect: string = '';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -45,8 +28,6 @@ export class EnregistrePluginComponent implements OnInit {
     //TODO
     this.user_Id_Connect = this.authService.user_Id_Connect;
     this.initForm();
-
-   
   }
 
   initForm() {
@@ -67,7 +48,7 @@ export class EnregistrePluginComponent implements OnInit {
         language,
         documentation,
         code,
-        new Array<string>(),
+        [],
         this.user_Id_Connect,
         Date.now()
       )

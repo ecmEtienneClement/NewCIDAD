@@ -1,31 +1,222 @@
 <div class="container">
+  <!-- .......................... Partie Recherche ........................................-->
+
   <div class="row">
-    <div class="col-12 col-lg-4">
-      <div class="ratio ratio-4x3 mt-4">
-        <iframe
-          width="640"
-          height="360"
-          src="https://www.youtube.com/embed/4rqRTLscLNY"
-          title="YouTube video player"
-          frameborder="0"
-          allow="accelerometer;  clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
-        ></iframe>
+    <div class="col-12 parent-search form-group">
+      <input
+        type="text"
+        class="form-control"
+        #datalangLength
+        (keyup)="search(datalangLength.value)"
+        maxlength="15"
+        placeholder=" Entrez le cour a recherché ... Java Php ect ..."
+      />
+    </div>
+  </div>
+  <!-- ..................... Partie Chargement .............................-->
+  <div class="row" *ngIf="chargement">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    <div class="m-2 spinner-grow text-warning">
+      <span class="initiale">E</span>
+    </div>
+    <div class="m-2 spinner-grow text-success">
+      <span class="initiale">C</span>
+    </div>
+    <div class="m-2 spinner-grow text-primary">
+      <span class="initiale">M</span>
+    </div>
+  </div>
+  <!-- ..................... Partie AFFICHE INFO DE CHARGEMENT .............................-->
+  <div class="row" *ngIf="chargementSuccess">
+    <div class="col-12">
+      <div class="alert alert-success">
+        <strong>Chargement terminer ... </strong><i class="fas fa-check"></i>
       </div>
     </div>
-    <div class="col-12 col-lg-4 mt-4">
-      <div class="ratio ratio-4x3">
-        <iframe
-          width="640"
-          height="360"
-          src="https://www.youtube.com/embed/4rqRTLscLNY"
-          title="YouTube video player"
-          frameborder="0"
-          allow="accelerometer;  clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
-        ></iframe>
+  </div>
+  <div class="row" *ngIf="chargementError">
+    <div class="col-12">
+      <div class="alert alert-danger">
+        <strong
+          >Une erreur s'est produite l'or du Chargement ! Veillez actualisé ou
+          vérifié votre connexion ...
+        </strong>
+        <i class="fas fa-times"></i>
       </div>
     </div>
-    
+  </div>
+  <!-- ..................... Partie menu de Nav .............................-->
+  <div class="row">
+    <div class="col-12 menurecherche">
+      <mat-tab-group
+        animationDuration="2000ms"
+        (selectedTabChange)="tabChanged($event)"
+      >
+        <mat-tab label="ALL"
+          ><h3>
+            Tout les Cours IDA
+            <span style="background-color: blue" class="badge badge-secondary"
+              >{{ tbAppVideoSearh.length }}
+            </span>
+          </h3></mat-tab
+        >
+        <mat-tab label="COURS L1-S1">
+          <h3>
+            les Cours du License 1 Semestre 1
+            <span style="background-color: blue" class="badge badge-primary"
+              >{{ tbAppVideoSearh.length }}
+            </span>
+          </h3></mat-tab
+        >
+        <mat-tab label="COURS L1-S2">
+          <h3>
+            les Cours du License 1 Semestre 2
+            <span style="background-color: blue" class="badge badge-primary"
+              >{{ tbAppVideoSearh.length }}
+            </span>
+          </h3></mat-tab
+        >
+        <mat-tab label="COURS L2-S1">
+          <h3>
+            les Cours du License 2 Semestre 1
+            <span style="background-color: blue" class="badge badge-primary"
+              >{{ tbAppVideoSearh.length }}
+            </span>
+          </h3></mat-tab
+        >
+        <mat-tab label="COURS L2-S2">
+          <h3>
+            les Cours du License 2 Semestre 2
+            <span style="background-color: blue" class="badge badge-primary"
+              >{{ tbAppVideoSearh.length }}
+            </span>
+          </h3></mat-tab
+        >
+        <mat-tab label="COURS L3-S1">
+          <h3>
+            les Cours du License 3 Semestre 1
+            <span style="background-color: blue" class="badge badge-primary"
+              >{{ tbAppVideoSearh.length }}
+            </span>
+          </h3></mat-tab
+        >
+        <mat-tab label="COURS L3-S2">
+          <h3>
+            les Cours du License 3 Semestre 2
+            <span style="background-color: blue" class="badge badge-primary"
+              >{{ tbAppVideoSearh.length }}
+            </span>
+          </h3></mat-tab
+        >
+      </mat-tab-group>
+    </div>
+  </div>
+  <!-- ..................... Partie APPVideo .............................-->
+  <div class="row">
+    <div
+      class="col-12 col-lg-6 card-cible"
+      *ngFor="
+        let video of tbAppVideoSearh.reverse()
+          | paginate: { itemsPerPage: 10, currentPage: page };
+        let indice = index
+      "
+    >
+      <div class="container mb-3">
+        <div class="row">
+          <div class="col-12">
+            <p class="txtdateCommentaire mt-3">
+              {{ video.date | date: "short" }}
+            </p>
+          </div>
+          <div class="col-12">
+            <p class="textecour">{{ video.cour | uppercase }}</p>
+          </div>
+          <div class="col-12 container-parent-txtCopy">
+            <p class="textecommentaire">
+              <b class="titre">{{ video.titre | uppercase }}</b>
+              <b class="textecopy">Lien copier</b>
+              <span *ngIf="tbViewUserCharged">
+                <span
+                  *ngIf="tbViewUser[indice]"
+                  class="m-2 spinner-grow viewUser text-primary"
+                >
+                </span>
+              </span>
+            </p>
+          </div>
+          <!--............................PARTIE BLOC BTN...................................-->
+          <div class="col-12">
+            <div class="blcBtn">
+              <button
+                title="Déployer les boutons"
+                (click)="deployerBtn(indice)"
+                type="button"
+                class="btn btn-sm btn-nav btn-default"
+              >
+                <i class="fas fa-bars"></i>
+              </button>
+              <button
+                title="Fermer les boutons"
+                (click)="closeBlcBtn()"
+                type="button"
+                class="btn btn-sm btn-closed btn-outline-danger"
+              >
+                <i class="fas fa-times"></i>
+              </button>
+
+              <a
+                title="Ouvrir l'URL"
+                (click)="addViewUser(video._id)"
+                type="button"
+                class="btn btn-sm btn-link btn-outline-primary"
+                href="{{ video.url }}"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <i class="fas fa-external-link-alt"></i
+              ></a>
+
+              <button
+                title="Copier l'URL"
+                (click)="copyUrlAppVideo(indice, video.url)"
+                type="button"
+                class="btn btn-sm btn-copy btn-outline-primary"
+              >
+                <i class="fas fa-copy"></i>
+              </button>
+              <button
+                title="Signaler l'URL"
+                *ngIf="tbSignalUserCharged"
+                [disabled]="tbSignalUser[indice]"
+                (click)="onVerifySignalappVideo(video)"
+                type="button"
+                class="btn btn-sm btn-signaler btn-outline-warning"
+              >
+                <i class="fas fa-exclamation-triangle"></i>
+              </button>
+              <button
+                title="Suprimer l'URL"
+                [disabled]="video.userId != user_Id_Connect"
+                (click)="onVerifydeleteappVideo(video)"
+                type="button"
+                class="btn btn-sm btn-delete btn-outline-danger"
+              >
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ......................................PAGINATION ....................................-->
+
+  <div class="row">
+    <div class="col-12 paginate mt-4">
+      <pagination-controls
+        (pageChange)="pageChanged($event)"
+      ></pagination-controls>
+    </div>
   </div>
 </div>

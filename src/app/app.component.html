@@ -56,11 +56,21 @@
                     <a
                       class="nav-link active"
                       aria-current="page"
+                      [routerLink]="['/appVideo']"
+                      routerLinkActive="router-link-active"
+                      >AppVideo</a
+                    >
+                  </li>
+                  <li class="nav-item" *ngIf="user_Connected">
+                    <a
+                      class="nav-link active"
+                      aria-current="page"
                       [routerLink]="['/appPlugin']"
                       routerLinkActive="router-link-active"
                       >AppPlugin</a
                     >
                   </li>
+
                   <li class="nav-item" *ngIf="user_Connected">
                     <a
                       class="nav-link active"
@@ -68,6 +78,15 @@
                       [routerLink]="['/enregistre']"
                       routerLinkActive="router-link-active"
                       >Enregistrer Post</a
+                    >
+                  </li>
+                  <li class="nav-item" *ngIf="user_Connected">
+                    <a
+                      class="nav-link active"
+                      aria-current="page"
+                      [routerLink]="['/EnregistreVideo']"
+                      routerLinkActive="router-link-active"
+                      >Partager Video</a
                     >
                   </li>
                   <li class="nav-item" *ngIf="user_Connected">
@@ -124,21 +143,25 @@
                           >Arreter Animation Pallettes</a
                         >
                       </li>
-                      <li
-                        *ngIf="affichageParametrePlugin"
-                        (click)="openBtnCardPlugin()"
-                      >
-                        <a class="dropdown-item" *ngIf="!open_btn_Card_Plugin"
+                      <li *ngIf="affichageParametregeneral" (click)="openBtn()">
+                        <a class="dropdown-item" *ngIf="!open_btn_General"
                           >Déployer Boutons</a
                         >
-                        <a class="dropdown-item" *ngIf="open_btn_Card_Plugin"
+                        <a class="dropdown-item" *ngIf="open_btn_General"
                           >Ranger Boutons</a
                         >
                       </li>
                     </ul>
                   </li>
                 </ul>
-
+                <li class="nav-item">
+                  <span *ngIf="etatConnexionUser">
+                    <i class="userConnect fas fa-wifi"></i>
+                  </span>
+                  <span *ngIf="!etatConnexionUser">
+                    <i class="userDesconnect fas fa-wifi"></i>
+                  </span>
+                </li>
                 <li class="nav-item" *ngIf="!user_Connected">
                   <a
                     class="nav-link active"

@@ -1,25 +1,31 @@
 import firebase from 'firebase/app';
 import 'firebase/database';
 import 'firebase/auth';
-
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { ReponseBugModel } from '../Models/reponseBug';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Notification } from './notification.service';
+import { GardGuard } from './gard.guard';
+import { CommentaireModel } from '../Models/commentaire';
+import { ErrorService } from './error.Service';
 
 @Injectable()
 export class ReponseBugService {
+  user_Id_Connect: string;
+
+  subscriptionEvent: Subscription = new Subscription();
   private tbReponseBug: ReponseBugModel[];
   public tbsubjectReponse: Subject<ReponseBugModel[]> = new Subject<
     ReponseBugModel[]
   >();
   constructor(
+    private authService: GardGuard,
     private _snackBar: MatSnackBar,
-    private notifyService: Notification
+    private notifyService: Notification,
+    private alertErrorService: ErrorService
   ) {}
 
-  //....................
   //Methode Pour Les Notifications ...C'est un service..
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action);
@@ -40,7 +46,9 @@ export class ReponseBugService {
     titre_Bug: string
   ) {
     //Recuperation de l' Id du user qui reponde ...
-    const user_Id = firebase.auth().currentUser?.uid;
+    //Recuperation du User_Id
+    //todo
+    this.user_Id_Connect = this.authService.user_Id_Connect;
     //Mise en place de ID de la reponse
     //Id de la reponse nous permet de bien identifier ,recuperé son index dans le tbReponse
     const id_Reponse = Date.now() + reponse.split(' ').join('%').substr(0, 5);
@@ -48,141 +56,322 @@ export class ReponseBugService {
     const newReponseBug = new ReponseBugModel(
       id_Reponse,
       bug_Id,
-      user_Id,
+      this.user_Id_Connect,
       reponse,
       false,
-      [''],
+      [new CommentaireModel('', '', '', '', '')],
       Date.now()
     );
     this.tbReponseBug.unshift(newReponseBug);
     this.sauvegardeBaseReponse();
     //Appelle du service de notification
     this.notifyService.notifyReponseBug(user_Id_Bug, titre_Bug);
+
     //this.updateTbReponseBug();
     const message = 'Merci ! Votre réponse a été bien enregistrée ...';
     //Affichage de l'alerte
     this.openSnackBar(message, 'ECM');
   }
+  //Methode pour marquer la reponse Vu
+  //TODO
+  onViewReponse(Obj_Reponse: ReponseBugModel): boolean {
+    let userIdRepondant = this.authService.user_Id_Connect;
+    let userView: boolean = false;
+    if (
+      //verifi si le user n'a pas déja vue le post
+      !Obj_Reponse.tbViewUser.includes(userIdRepondant)
+    ) {
+      userView = true;
+      Obj_Reponse.tbViewUser.unshift(userIdRepondant);
+      this.sauvegardeBaseReponse();
+      this.updateTbReponseBug();
+    }
+
+    return userView;
+  }
+  //Methode pour marquer le commentiare Vu
+  //TODO
+  onViewUserCommentaire(Obj_Reponse: ReponseBugModel): boolean {
+    this.user_Id_Connect = this.authService.user_Id_Connect;
+    let userView: boolean = false;
+    //On verifie si ne la pas en vue
+    if (!Obj_Reponse.tbViewcommentaireUser.includes(this.user_Id_Connect)) {
+      userView = true;
+      Obj_Reponse.tbViewcommentaireUser.unshift(this.user_Id_Connect);
+      this.sauvegardeBaseReponse();
+      this.updateTbReponseBug();
+    }
+    return userView;
+  }
+
   //Check d'un Commentaire a la  Reponse Bug
   //TODO
-  onCheckReponseBug(id_Reponse: string): boolean {
+  onCheckReponseBug(obj_Reponse: ReponseBugModel): boolean {
     let isCheked: boolean = false;
-    //Voir commentaire dessous
-    this.tbReponseBug.forEach((element) => {
-      if (element.id_Reponse == id_Reponse) {
-        const index: number = this.tbReponseBug.indexOf(element);
-        if (this.tbReponseBug[index].isGood == false) {
-          this.tbReponseBug[index].isGood = true;
-          this.sauvegardeBaseReponse();
-          this.updateTbReponseBug();
-          const message = 'Ravie ! que votre bug soit résolu ...';
-          //Affichage de l'alerte
-          this.openSnackBar(message, 'ECM');
-          isCheked = true;
-        } else {
-          this.tbReponseBug[index].isGood = false;
-          this.sauvegardeBaseReponse();
-          this.updateTbReponseBug();
-          const message =
-            "Désolé ! que cette réponse n'a pas pu résoudre votre Bug ...";
-          //Affichage de l'alerte
-          this.openSnackBar(message, 'ECM');
-          isCheked = false;
-        }
-      }
-    });
+    if (!obj_Reponse.isGood) {
+      obj_Reponse.isGood = true;
+      const message = 'Ravie ! que votre bug soit résolu ...';
+      this.openSnackBar(message, 'ECM');
+      isCheked = true;
+    } else {
+      obj_Reponse.isGood = false;
+      const message =
+        "Désolé ! que cette réponse n'a pas pu résoudre votre Bug ...";
+      this.openSnackBar(message, 'ECM');
+      isCheked = false;
+    }
+    this.sauvegardeBaseReponse();
+    this.updateTbReponseBug();
     return isCheked;
   }
   //Ajout d'un Commentaire a la  Reponse Bug
   //TODO
-  addCommentaireReponseBug(id_Reponse: string, commentaire: string = '') {
-    //Mise en place de la boucle foreach
-    /*
-  La boucle foreach nous permet de selectionne l'element suivant par Id pour de qu'il soit
-  identifier qu'on puisse recupere sont index afin qu'on puisse ajouter le commentaire
-  ................Pourquoi tout cela .............
-  parce notre tb au niveau de la vue elle a etait filtre donc leurs indice on etaient
-  changer alors on poura plus nous base de ce indice pour faire les modification
-  
-  */
-
-    this.tbReponseBug.forEach((element) => {
-      if (element.id_Reponse == id_Reponse) {
-        const index: number = this.tbReponseBug.indexOf(element);
-        this.tbReponseBug[index].commentaire.unshift(commentaire);
+  addCommentaireReponseBug(
+    objReponse: ReponseBugModel,
+    commentaire: string = '',
+    nomUser: string | null,
+    prenomUser: string | null,
+    promoUser: string | null,
+    fantomUser: string | null,
+    id_User_Bug: string
+  ): Promise<ReponseBugModel> {
+    this.user_Id_Connect = this.authService.user_Id_Connect;
+    return new Promise((resolve) => {
+      //Verification si c'est donnee sont en locale av d'aller les cherché ds la Bd
+      const objReponseReturn: ReponseBugModel = this.addCommentaireAfterVerify(
+        objReponse,
+        commentaire,
+        nomUser,
+        prenomUser,
+        promoUser,
+        fantomUser,
+        id_User_Bug
+      );
+      // apres traitement on fait remonte l'objReponse dans le component a fin de le passer au service
+      //component pour copier le tbCommentaire et savoir les concern3
+      resolve(objReponseReturn);
+    });
+  }
+  addCommentaireAfterVerify(
+    objReponse: ReponseBugModel,
+    commentaire: string,
+    nomUser: string | null,
+    prenomUser: string | null,
+    promoUser: string | null,
+    fantomUser: string | null,
+    id_User_Bug: string
+  ): ReponseBugModel {
+    this.user_Id_Connect = this.authService.user_Id_Connect;
+    if (
+      nomUser != '' &&
+      prenomUser != '' &&
+      promoUser != '' &&
+      fantomUser != '' &&
+      this.user_Id_Connect
+    ) {
+      let userCommentaire: CommentaireModel;
+      if (fantomUser == 'false') {
+        userCommentaire = new CommentaireModel(
+          commentaire,
+          this.user_Id_Connect,
+          nomUser,
+          prenomUser,
+          promoUser,
+          Date.now()
+        );
+      } else {
+        userCommentaire = new CommentaireModel(
+          commentaire,
+          this.user_Id_Connect
+        );
+      }
+      objReponse.commentaire.unshift(userCommentaire);
+      //Suppression de la valeure par defaut
+      if (objReponse.commentaire[1].commentaire == '') {
+        objReponse.commentaire.splice(1, 1);
+      }
+      //Appelle de notify pour notifier le user
+      //recuperation des 10 premieres lettres de la reponse
+      let debut_Reponse = objReponse.reponse.trim().substr(0, 10);
+      //On verifi d'abord si ce user n'a deja pas commenter avant de l'ajouter
+      //et id_User_Reponse proprietaire de la reponse est deja injecter par defaut
+      if (!objReponse.tbcommentaireUser.includes(this.user_Id_Connect)) {
+        objReponse.tbcommentaireUser.unshift(this.user_Id_Connect);
+      }
+      if (!objReponse.tbcommentaireUser.includes(id_User_Bug)) {
+        objReponse.tbcommentaireUser.unshift(id_User_Bug);
+      }
+      //netoyage du tbView pour ReAlerté les concerné a nouveau
+      objReponse.tbViewcommentaireUser = [''];
+      //ajout du user qui a commenté car il ne sera op notifier de son commentaire
+      objReponse.tbViewcommentaireUser.unshift(this.user_Id_Connect);
+      this.sauvegardeBaseReponse();
+      this.updateTbReponseBug();
+      const message = 'Votre commentaire a été bien ajouté ...';
+      this.openSnackBar(message, 'ECM');
+      this.notifyService.notifyCommentaireReponseBug(
+        debut_Reponse,
+        objReponse.tbcommentaireUser
+      );
+    } else {
+      this.alertErrorService.notifyAlertErrorDefault();
+    }
+    return objReponse;
+  }
+  //Suppression Commentaire
+  //TODO
+  deleteCommentaire(
+    objReponse: ReponseBugModel,
+    dateCommentaireDelete?: number
+  ): boolean {
+    //On verifier si cette action est bien declancher par le proprietaire du post
+    let userIdRepondant = this.authService.user_Id_Connect;
+    //on Verifie si c'est le dernier commentaire avant de le supprimer on ajout le commentaire par defaut
+    if (objReponse.commentaire.length == 1) {
+      objReponse.commentaire.unshift(
+        new CommentaireModel('', '', '', '', '', Date.now())
+      );
+    }
+    //On recherche l'index du commentaire a supprimer
+    //todo
+    objReponse.commentaire.forEach((element) => {
+      if (
+        element.dateCommentaire == dateCommentaireDelete &&
+        userIdRepondant == element.Id_User
+      ) {
+        const indexCommentaire = objReponse.commentaire.indexOf(element);
+        objReponse.commentaire.splice(indexCommentaire, 1);
+        const message = 'Votre commentaire a été bien supprimée ...';
+        this.openSnackBar(message, 'ECM');
         this.sauvegardeBaseReponse();
         this.updateTbReponseBug();
-        //Appelle de notify pour notifier le user
-        //recuperation de l'Id du user a qui appartient la reponse
-        let id_User_Reponse = this.tbReponseBug[index].user_Id;
-        //recuperation des 10 premieres lettres de la reponse
-        let debut_Reponse = this.tbReponseBug[index].reponse
-          .trim()
-          .substr(0, 10);
-        this.notifyService.notifyCommentaireReponseBug(
-          debut_Reponse,
-          id_User_Reponse
-        );
-        const message = 'Votre commentaire a été bien ajouté ...';
-        //Affichage de l'alerte
-        this.openSnackBar(message, 'ECM');
+      } else {
+        this.alertErrorService.notifyActionNonPermise('cet commentaire');
       }
     });
+    return true;
   }
   //Suppression Reponse Bug
   //TODO
-  DeleteReponseBug(id_Reponse: string) {
+  DeleteReponseBug(objReponse: ReponseBugModel): boolean {
+    //On verifier si cette action est bien declancher par le proprietaire de reponse
+    let userIdRepondant = this.authService.user_Id_Connect;
+    if (userIdRepondant !== objReponse.user_Id) {
+      this.alertErrorService.notifyActionNonPermise('cette réponse');
+      return false;
+    }
+    let trouver: boolean = false;
     //Voir commentaire dessus
     this.tbReponseBug.forEach((element) => {
-      if (element.id_Reponse == id_Reponse) {
+      if (element.id_Reponse == objReponse.id_Reponse) {
         const index: number = this.tbReponseBug.indexOf(element);
         this.tbReponseBug.splice(index, 1);
         this.sauvegardeBaseReponse();
         this.updateTbReponseBug();
+        trouver = true;
         const message = 'Votre réponse a été bien supprimée ...';
         //Affichage de l'alerte
         this.openSnackBar(message, 'ECM');
-      } else {
+      }
+    });
+    if (!trouver) {
+      const message =
+        "Une erreur inattendu ! l'or de la suppréssion de la réponse ! Veillez le signaler à ECM...";
+      //Affichage de l'alerte
+      this.openSnackBar(message, 'ECM');
+    }
+    return true;
+  }
+  //Suppression Reponse Bug l'or de la suppression d'un bug
+  //TODO
+  DeleteReponseBugDeleteBug(id_Bug: string): Promise<boolean> {
+    //Voir commentaire dessus
+    return new Promise((resolve, reject) => {
+      try {
+        let tbfilterReponse =
+          this.tbReponseBug.filter(
+            (ReponseBug: { bug_Id: string }) => ReponseBug.bug_Id !== id_Bug
+          ).length !== 0
+            ? this.tbReponseBug.filter(
+                (ReponseBug: { bug_Id: string }) => ReponseBug.bug_Id !== id_Bug
+              )
+            : [];
+
+        this.tbReponseBug = tbfilterReponse;
+        resolve(true);
+        this.sauvegardeBaseReponse();
+        this.updateTbReponseBug();
+      } catch (error) {
+        reject(false);
       }
     });
   }
   //...Partie de la suppression compte du User
   //TODO
-  DeleteReponseBugUserDeleteCompte(id_User: string) {
-    let nbrPoste: number = 0;
+  DeleteReponseBugUserDeleteCompte(id_User: string): Promise<number> {
+    let nbrReponse: number = 0;
     return new Promise((resolve, rejects) => {
       try {
-        //Voir commentaire dessus
-        this.tbReponseBug.forEach((element) => {
-          if (element.user_Id == id_User) {
-            nbrPoste += 1;
-            const index: number = this.tbReponseBug.indexOf(element);
-            this.tbReponseBug.splice(index, 1);
-          }
-        });
-        if (nbrPoste == 0) {
-          const message =
-            'Nous constatons que avez aucune reponse a supprimée !';
-          //Affichage de l'alerte
-          this.openSnackBar(message, 'ECM');
-        } else if (nbrPoste == 1) {
-          const message = 'Vous avez une seule reponse supprimée !';
-          //Affichage de l'alerte
-          this.openSnackBar(message, 'ECM');
-        } else {
-          const message = `Vous avez ${nbrPoste} reponses qui sont supprimées !`;
-          //Affichage de l'alerte
-          this.openSnackBar(message, 'ECM');
-        }
+        let tbfilterReponse =
+          this.tbReponseBug.filter(
+            (ReponseBug: { user_Id: string | undefined }) =>
+              ReponseBug.user_Id !== id_User
+          ).length !== 0
+            ? this.tbReponseBug.filter(
+                (ReponseBug: { user_Id: string | undefined }) =>
+                  ReponseBug.user_Id !== id_User
+              )
+            : [];
+        nbrReponse = this.tbReponseBug.length - tbfilterReponse.length;
+        this.tbReponseBug = tbfilterReponse;
         this.sauvegardeBaseReponse();
         this.updateTbReponseBug();
-        resolve(true);
+        resolve(nbrReponse);
       } catch (error) {
-        rejects(error);
+        rejects(0);
       }
     });
   }
+  //...Partie de la suppression ou reinitialisation compte du User
+  //TODO
+  DeleteCommentaireBugUserDeleteAndReiniCompte(
+    id_User: string
+  ): Promise<number> {
+    let nbrCommentaire: number = 0;
+    let tbFilterCommentaire: CommentaireModel[] = [];
+    return new Promise((resolve, rejects) => {
+      try {
+        this.tbReponseBug.forEach((element) => {
+          tbFilterCommentaire =
+            element.commentaire.filter((element) => element.Id_User != id_User)
+              .length != 0
+              ? element.commentaire.filter(
+                  (element) => element.Id_User != id_User
+                )
+              : [new CommentaireModel('', '', '', '', '', Date.now())];
 
+          if (
+            tbFilterCommentaire.length == 1 &&
+            tbFilterCommentaire[0].Id_User == ''
+          ) {
+            nbrCommentaire += element.commentaire.length;
+          } else {
+            nbrCommentaire +=
+              element.commentaire.length - tbFilterCommentaire.length;
+          }
+          element.commentaire = tbFilterCommentaire;
+          //Netoyage du tb avant de passer a un autre element
+          tbFilterCommentaire = [];
+        });
+
+        this.sauvegardeBaseReponse();
+        this.updateTbReponseBug();
+        resolve(nbrCommentaire);
+      } catch (error) {
+        rejects(0);
+      }
+    });
+  }
   //Verification du nombre de reponse
   //TODO
   verifyNbrReponse(id_Bug: string): number {

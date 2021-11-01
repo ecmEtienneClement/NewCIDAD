@@ -1,3 +1,14 @@
+/*.container {
+  margin: 0;
+  padding: 0;
+  outline: 0;
+  position: relative;
+  width: 100%;
+  height: 100px;
+  background-color: black;
+  z-index: 2;
+}
+
 .form-modif-code,
 .form-reini-code,
 .form-modif-Email,
@@ -15,6 +26,414 @@
   width: 70%;
   z-index: 2;
 }
-.btn-outline-success {
+
+.container-parametre {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+}
+.container-parent,
+.container-suppression {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.container-suppression {
+  position: absolute;
+  width: 300px;
+  height: 140px;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  overflow: hidden;
+}
+.container-parent {
+  background: red;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+}
+.titre-suppression,
+.animation-suppression,
+.notify-suppression {
+  position: absolute;
+  width: 100%;
+  left: 0;
+}
+.notify-suppression,
+.titre-suppression {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.proces,
+.noty {
+  margin-top: 15px;
+}
+.titre-suppression {
+  height: 40px;
+  top: 5px;
+  border-bottom: 1px solid black;
+}
+.titre-suppression h3 {
+  font-weight: bold;
+}
+.animation-suppression {
+  height: 60px;
+  top: 45px;
+}
+.icone,
+.fil {
+  height: 100%;
+}
+.icone {
+  background-color: rgb(201, 59, 59);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  float: left;
+  width: 50px;
+}
+.fil {
+  position: relative;
+  float: right;
+  width: 250px;
+  overflow: hidden;
+}
+.iconParent,
+.fil,
+.titre-suppression {
+  display: flex;
+  align-items: center;
+}
+.iconParent {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 5px;
+  right: 0;
+  animation: anidelet 1s linear infinite;
+}
+.fa-calendar-times {
+  font-size: 45px;
+}
+@keyframes anidelet {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.filParent {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  width: 1000px;
+  height: 100%;
+  left: 100%;
+  margin-left: 20px;
+}
+.fa-file-excel {
+  font-size: 45px;
+  margin-left: 80px;
+}
+.notify-suppression {
+  border-top: 1px solid black;
+  height: 30px;
+  top: 105px;
+}
+*/
+swiper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+}
+swiper::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(#f00, #f0f);
+  clip-path: circle(40% at right 80%);
+  animation: animeAfterBefor 5s linear infinite;
+}
+swiper::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(#2196f3, #e91e63);
+  clip-path: circle(40% at 25% 10%);
+  animation: animeAfterBefor 5s linear infinite;
+}
+@keyframes animeAfterBefor {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+  }
+}
+swiper,
+.swiper-item,
+.iconexit,
+.notify-suppression,
+.titre-suppression,
+.animation-suppression,
+.container-suppression {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.swiper-slide,
+.swiper-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.swiper-item {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+.numero {
+  color: #f0f;
+  position: absolute;
+  font-weight: bold;
+  right: 10px;
+  bottom: 30px;
+  font-size: 70px;
+  -webkit-text-stroke: 1px white;
+}
+
+.form-modif-code,
+.form-reini-code,
+.form-modif-Email,
+.form-modif-securite,
+.form-modifmdp,
+.form-reini-compte,
+.form-delete-compte,
+.form-Reini-Partiel-Compte {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+  box-shadow: 0 5px 35px rgba(0, 0, 0, 0.2);
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  width: 70%;
+  z-index: 2;
+  overflow: hidden;
+}
+.btn-outline-success,
+.btn-outline-danger {
   margin: 30px 0 40px 0;
 }
+.btnInfo {
+  text-shadow: 0 20px 25px #2e2e31, 0 40px 60px #2e2e31;
+  letter-spacing: 3px;
+  font-size: 25px;
+  font-weight: bold;
+  z-index: 5;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+}
+.description {
+  position: absolute;
+  left: 0;
+  top: -100%;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  visibility: hidden;
+  background: #0e1538;
+}
+.description::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: -2;
+  opacity: 0;
+  background: linear-gradient(#2196f3, #e91e63);
+  animation: aniinfo 2s linear infinite;
+}
+@keyframes aniinfo {
+  0%,
+  25% {
+    opacity: 0;
+  }
+  25%,
+  50% {
+    opacity: 0.25;
+  }
+  50%,
+  75% {
+    opacity: 0.5;
+  }
+  75%,
+  90% {
+    opacity: 0.75;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.description::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  inset: 4px;
+  background: #0e1538;
+}
+.description h1 {
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 2px;
+  border-bottom: solid 1px white;
+  opacity: 0;
+  color: white;
+}
+.description h3 {
+  color: white;
+  text-align: center;
+  padding: 2px;
+  opacity: 0;
+}
+.description .iconexit a {
+  opacity: 0;
+}
+.iconexit {
+  font-size: 25px;
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  cursor: pointer;
+}
+.container-suppression {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: -100%;
+  z-index: 1;
+  overflow: hidden;
+  background-color: #fff;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.titre-suppression {
+  position: absolute;
+  top: 0;
+  left: 0%;
+  width: 100%;
+  height: 30%;
+}
+.animation-suppression {
+  background: #0e1538;
+  position: absolute;
+  top: 30%;
+  left: 0%;
+  width: 100%;
+  height: 40%;
+}
+
+.succesicone,
+.fa-file-excel {
+  font-size: 45px;
+  visibility: hidden;
+  opacity: 0;
+}
+.succesicone {
+  color: rgb(85, 216, 85);
+}
+.fa-file-excel {
+  color: rgb(235, 101, 101);
+}
+
+.notify-suppression {
+  position: absolute;
+  bottom: 0;
+  left: 0%;
+  width: 100%;
+  height: 30%;
+}
+@keyframes tipsy {
+  0% {
+    transform: translateX(-50%) translateY(-50%) rotate(0deg);
+  }
+  100% {
+    transform: translateX(-50%) translateY(-50%) rotate(360deg);
+  }
+}
+
+body {
+  font-family: helvetica, arial, sans-serif;
+  background-color: #2e2e31;
+}
+/*
+a {
+  color: #fffbf1;
+  text-shadow: 0 20px 25px #2e2e31, 0 40px 60px #2e2e31;
+  font-size: 80px;
+  font-weight: bold;
+  text-decoration: none;
+  letter-spacing: -3px;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+
+a:before,
+a:after {
+  content: "";
+  padding: 0.9em 0.4em;
+  position: absolute;
+  left: 50%;
+  width: 100%;
+  top: 50%;
+  display: block;
+  border: 15px solid red;
+  transform: translateX(-50%) translateY(-50%) rotate(0deg);
+  animation: 10s infinite alternate ease-in-out tipsy;
+}
+
+a:before {
+  border-color: #d9524a #d9524a rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+  z-index: -1;
+}
+
+a:after {
+  border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) #d9524a #d9524a;
+  box-shadow: 25px 25px 25px rgba(46, 46, 49, 0.8);
+}
+*/

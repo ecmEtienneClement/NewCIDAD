@@ -2,34 +2,93 @@
   <div class="alert alert-info mt-3">
     <div class="row cadre">
       <div class="blocNom col-12 col-md-8 col-lg-8">
-        <p class="nomUser">{{ nomUserBug</p>
-        <p class="nomUser">{{ prenomUserBug</p>
-        <p class="nomUser">{{ promoUserBug</p>
+        <p class="nomUser">{{ nomUserPlugin }}</p>
+        <p class="nomUser">{{ prenomUserPlugin }}</p>
+        <p class="nomUser">{{ promoUserPlugin }}</p>
       </div>
       <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
         <div class="row">
           <div class="col- 12">
             <strong>language</strong><br />
-            {{ language }}
+            {{ pluginCmp.language }}
           </div>
         </div>
         <div class="row">
           <div class="col- 12">
             <strong>Date de la Poste</strong><br />
-            {{ date | date: "short" }}
+            {{ pluginCmp.date | date: "short" }}
           </div>
         </div>
 
         <div class="row">
           <div class="col- 12">
             <strong>Nombres de réponse (s)</strong><br />
-            {{ tbCommentaire.length }}
+            {{ pluginCmp.tbCommentaire.length }}
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <p>{{ documentation }}</p>
-  <p>{{ code }}</p>
+  <p>{{ pluginCmp.documentation }}</p>
+  <p>{{ pluginCmp.code }}</p>
+  <div class="form-group">
+    <textarea
+      class="form-control"
+      [(ngModel)]="commentaire"
+      minlength="2"
+      maxlength="500"
+      placeholder="Votre commentaire ici max 500 caractères..."
+      cols="5"
+    ></textarea>
+  </div>
+
+  <button
+    (click)="onSubmitForm()"
+    [disabled]="commentaire.length < 2"
+    class="btn btn-sm"
+  >
+    Commenter
+  </button>
+  <button style="color: red" (click)="onResetForm()" class="btn btn-sm">
+    Annulez
+  </button>
+
+  <div
+    class="container mb-3 overflow-auto p-2 mr-3"
+    style="width: 100%; min-height: auto; max-height: 800px"
+    *ngIf="pluginCmp.tbCommentaire.length !== 0"
+  >
+    <div class="row" *ngFor="let commentaire of pluginCmp.tbCommentaire">
+      <div class="col-12">
+        <p class="txtdateCommentaire mt-3">
+          {{ commentaire.dateCommentaire | date: "short" }}
+        </p>
+      </div>
+      <div class="col-12 blcInfUserCommentaire">
+        <span class="iconUser">
+          <i class="fas fa-user-edit"></i>
+        </span>
+        <span class="infoUser">{{ commentaire.nomUser }} </span>
+        <span class="infoUser">{{ commentaire.prenomUser }} </span>
+        <span class="infoUser">{{ commentaire.promoUser }} </span>
+      </div>
+      <div class="col-12">
+        <p class="textecommentaire">
+          {{ commentaire.commentaire }}
+        </p>
+      </div>
+      <div class="col-12">
+        <button
+          [disabled]="commentaire.Id_User != user_Id_Connect"
+          class="btnDeleleCommentaire btn btn-sm"
+          (click)="
+            onVerifyUser(commentaire.Id_User, commentaire.dateCommentaire)
+          "
+        >
+          <span>Supprimer</span>
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
