@@ -63,6 +63,7 @@ export class AuthService {
         .signInWithEmailAndPassword(mail, mdp)
         .then(() => {
           resolve();
+          
         })
         .catch((error) => {
           reject(error);

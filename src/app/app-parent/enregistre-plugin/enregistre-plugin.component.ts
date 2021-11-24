@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 
 import { AppPlugingService } from 'src/app/Mes_Services/appPlugin.Service';
 import { GardGuard } from 'src/app/Mes_Services/gard.guard';
-import { CommentaireModel } from 'src/app/Models/commentaire';
 
 @Component({
   selector: 'app-enregistre-plugin',
@@ -13,6 +12,9 @@ import { CommentaireModel } from 'src/app/Models/commentaire';
   styleUrls: ['./enregistre-plugin.component.css'],
 })
 export class EnregistrePluginComponent implements OnInit {
+  //Variable pour le btn d'enregistrement desactiver le btn enregistrer d'est k'il click une fw
+  diseableBtnEnregistre: boolean = false;
+
   myForm: FormGroup;
   user_Id_Connect: string = '';
 
@@ -39,6 +41,7 @@ export class EnregistrePluginComponent implements OnInit {
   }
 
   onSubmitForm() {
+    this.diseableBtnEnregistre = true;
     const valueForm = this.myForm.value;
     let language = valueForm['language'];
     let documentation = valueForm['documentation'];
@@ -59,15 +62,12 @@ export class EnregistrePluginComponent implements OnInit {
           this.openSnackBar(message, 'ECM');
           this.route.navigate(['appPlugin']);
         }
-      })
-      .catch((noGood) => {
-        if (!noGood) {
-          const message =
-            "Une erreur s'est produite l'or de la publication du Plugin !";
-          //Affichage de l'alerte
-          this.openSnackBar(message, 'ECM');
+      }).catch(
+        ()=>{
+          this.diseableBtnEnregistre = false;
         }
-      });
+      );
+      
   }
 
   //Methode Pour Les Notifications ...C'est un service..

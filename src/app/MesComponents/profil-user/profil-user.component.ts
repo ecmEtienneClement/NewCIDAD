@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { GardGuard } from 'src/app/Mes_Services/gard.guard';
+
 import { UserService } from 'src/app/Mes_Services/user.Service';
 
 @Component({
@@ -14,7 +15,11 @@ export class ProfilUserComponent implements OnInit {
   promoUser: string = '';
   modeNavUser: string = 'false';
   Id_User_Connected: string = '';
-  constructor(private user: UserService, private gard: GardGuard) {}
+  constructor(
+    private user: UserService,
+    private gard: GardGuard,
+ 
+  ) {}
 
   ngOnInit(): void {
     ///Recuperation de l'ID du User Connecter et son email

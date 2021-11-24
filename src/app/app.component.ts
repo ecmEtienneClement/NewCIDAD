@@ -20,6 +20,7 @@ import { Subscription } from 'rxjs';
 import { AppVideoService } from './Mes_Services/appVideo.Service';
 
 import { GardGuard } from './Mes_Services/gard.guard';
+import { LocalService } from './Mes_Services/local.Service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -56,7 +57,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private appPluginService: AppPlugingService,
     private appVideoService: AppVideoService,
     private eventService: EmitEvent,
-
+    private localService: LocalService,
     private authGard: GardGuard
   ) {
     // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -75,6 +76,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+   
     //TODO
     this.user_Id_Connect = this.authGard.user_Id_Connect;
     //gsap.to('.navbar-expand-sm', { y: 100, duration: 1 });
@@ -84,37 +86,42 @@ export class AppComponent implements OnInit, OnDestroy {
       .on('value', (data_Etat_Connexion) => {
         if (data_Etat_Connexion.val()) {
           this.etatConnexionUser = true;
+          //Recuperation des bugs depuis la base de donnee
+          //TODO
+          this.serviceBug.recupbase();
+          //Recuperation des Reponses bugs depuis la base de donnee
+          //TODO
+          this.serviceReponseBug.recupeBaseReponse();
+          //Recupration de la base de notification
+          //TODO
+          this.notifyService.recupbaseNotify();
+          //Recupration de la base de AppPluging
+          //TODO
+          this.appPluginService.getAllPlugin();
+          //Recupration de la base de AppVideo
+          //TODO
+          this.appVideoService.getAllVideo();
+          //Initialisation du locale
+          //TODO
+          this.localService.initECM_Local();
+          //Verification du User s'il est connecter
+          //TODO
+
+          firebase.auth().onAuthStateChanged((data_User: any) => {
+            if (data_User) {
+              this.user_Connected = true;
+              localStorage.setItem('ECM_UI_FB', data_User.uid);
+              localStorage.setItem('ECM_UM', data_User.email);
+            } else {
+              this.user_Connected = false;
+              this.route.navigate(['/connexion']);
+            }
+          });
         } else {
           this.etatConnexionUser = false;
         }
       });
- 
 
-    //Recuperation des bugs depuis la base de donnee
-    //TODO
-    this.serviceBug.recupbase();
-    //Recuperation des Reponses bugs depuis la base de donnee
-    //TODO
-    this.serviceReponseBug.recupeBaseReponse();
-    //Recupration de la base de notification
-    //TODO
-    this.notifyService.recupbaseNotify();
-    //Recupration de la base de AppPluging
-    //TODO
-    this.appPluginService.getAllPlugin();
-    //Recupration de la base de AppVideo
-    //TODO
-    this.appVideoService.getAllVideo();
-    //Verification du User s'il est connecter
-    //TODO
-    firebase.auth().onAuthStateChanged((data_User: any) => {
-      if (data_User) {
-        this.user_Connected = true;
-      } else {
-        this.user_Connected = false;
-        this.route.navigate(['/connexion']);
-      }
-    });
     //Abonnement pour EventEmit de recupere les evennements d'affichage...
     //TODO
 
@@ -130,6 +137,11 @@ export class AppComponent implements OnInit, OnDestroy {
       }
     );
   }
+  /******************************/
+  genereTokent() {
+    alert('token');
+  }
+ 
   traintementEmitEventAffichageParametre(data_Event: EventModel) {
     switch (data_Event.type) {
       case EventType.AFFICHE_PARAMETRE_ECM:

@@ -400,10 +400,7 @@ export class AppVideoCmpComponent implements OnInit {
               id_video
             )
             .then(() => {
-              console.log('suucess view User appVideo ECM ... ');
-            })
-            .catch(() => {
-              console.log('Error view User appVideo ECM ... ');
+              console.log('success view User appVideo ECM ... ');
             });
         }
       }
@@ -480,11 +477,6 @@ export class AppVideoCmpComponent implements OnInit {
                   //Affichage de l'alerte
                   this.openSnackBar(message, 'ECM');
                 }
-              })
-              .catch((noGood) => {
-                if (!noGood) {
-                  this.errorAlertService.notifyAlertErrorDefault();
-                }
               });
           }
         } else {
@@ -517,18 +509,13 @@ export class AppVideoCmpComponent implements OnInit {
     this.onVerifyUser();
   }
   deleteAppVideo(objAppVideo: AppVideo) {
-    this.appVideoService
-      .deleteVideo(objAppVideo)
-      .then((good) => {
-        if (good) {
-          const message = 'Le lien a été bien supprimer !';
-          //Affichage de l'alerte
-          this.openSnackBar(message, 'ECM');
-        }
-      })
-      .catch((error) => {
-        this.errorAlertService.notifyAlertErrorDefault();
-      });
+    this.appVideoService.deleteVideo(objAppVideo).then((good) => {
+      if (good) {
+        const message = 'Le lien a été bien supprimer !';
+        //Affichage de l'alerte
+        this.openSnackBar(message, 'ECM');
+      }
+    });
   }
   //Methode pour Verifier si le user a deja visioner le url
   //TODO

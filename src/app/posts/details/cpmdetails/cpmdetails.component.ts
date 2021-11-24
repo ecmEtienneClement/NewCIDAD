@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component,  OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -19,13 +19,109 @@ import {
 } from 'src/app/Models/eventAction';
 import { NotificationModel } from 'src/app/Models/notification';
 import { ReponseBugModel } from 'src/app/Models/reponseBug';
-
+import gsap from 'gsap';
 @Component({
   selector: 'app-cpmdetails',
   templateUrl: './cpmdetails.component.html',
   styleUrls: ['./cpmdetails.component.css'],
 })
 export class CpmdetailsComponent implements OnInit {
+  tbBlocks: string[] = [
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+
+  ];
+ 
+  //Variable pour le btn d'enregistrement desactiver le btn enregistrer d'est k'il click une fw
+  diseableBtnRepondre: boolean = false;
   tbViewUser: boolean[] = [];
   tbSignalUserCommentaire: boolean[] = [];
   tbViewUserCommentaire: boolean[] = [];
@@ -37,17 +133,18 @@ export class CpmdetailsComponent implements OnInit {
   nomUserBug: string = '';
   prenomUserBug: string = '';
   promoUserBug: string = '';
+  fantomeUserBug: string = '';
   //Info de qui est actuelement connecte
   nomUserConnected: string | null = '';
   prenomUserConnected: string | null = '';
   promoUserConnected: string | null = '';
   fantomeUserConnected: string | null = '';
   securiteUserConnected: string | null = '';
-  //Info du user qui a reponde a cette poste
+  //Info du user qui a repondu a cette poste
   nomUserReponse: string = '';
   prenomUserReponse: string = '';
   promoUserReponse: string = '';
-  fantomeReponse: boolean = true;
+  fantomeReponse: string = '';
   //stocker des donnees dans le champs saisi
   reponse: string = '';
   //Intialisation des info du bug
@@ -68,6 +165,9 @@ export class CpmdetailsComponent implements OnInit {
   id_Event?: string = '';
   obj_Event: ReponseBugModel;
   number_Event?: number;
+  // cette variable nous permert d'arrete la boucle de l'anim gsap entete user cas ou le user qui
+  // la page sans que la boucle n'est achever
+  continu: boolean = true;
   constructor(
     private extra: ActivatedRoute,
     private eventEmit: EmitEvent,
@@ -83,6 +183,10 @@ export class CpmdetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    setTimeout(() => {
+      this.animCardUser();
+    }, 2000);
+
     //Recuperation du User_Id Qui est connecter pour le texte UNE SOLUTION {{nomuser}}et pour les commentaires passage de ses informations
     //TODO
     this.user_Id_Connect = this.authService.user_Id_Connect;
@@ -101,7 +205,7 @@ export class CpmdetailsComponent implements OnInit {
       this.notifyService.tbNotifySubject.subscribe(
         (data_db_Notify: NotificationModel[]) => {
           //Des que les tbDbNotify arriver je lance la methode de filtre
-          if (data_db_Notify.length > 0) {
+          if (data_db_Notify) {
             //on marque immediatement vue au message et commentaire si le user est en ligne
             if (this.bugCmp.bug_Id != '') {
               this.serviceBug.onViewNewReponseAndCommentaireOnlyne(this.bugCmp);
@@ -110,7 +214,7 @@ export class CpmdetailsComponent implements OnInit {
             //  this.nbrTotalNotify = tbFilterByIdNotify[0].nbrTotalNotify;
           }
         },
-        (error) => {
+        () => {
           alert('Erreur recup Notify Veiller actualisée');
         }
       )
@@ -143,8 +247,9 @@ export class CpmdetailsComponent implements OnInit {
                 this.nomUserBug = data_User.nom;
                 this.prenomUserBug = data_User.prenom;
                 this.promoUserBug = data_User.promotion;
+                this.fantomeUserBug = data_User.fantome;
               })
-              .catch((error) => {
+              .catch(() => {
                 alert(
                   'Une erreur est survenue ! Veiller vérifier votre connexion  ...!'
                 );
@@ -152,10 +257,8 @@ export class CpmdetailsComponent implements OnInit {
           }
         }
       })
-      .catch((error) => {
-        alert(
-          'Une erreur est survenue ! Veiller vérifier votre connexion  ...!'
-        );
+      .catch(() => {
+        this.alertErrorDefaultService.notifyAlertErrorDefault();
       });
     ///Recuperation du tbReponsesBug dans base de donnee ..
     //TODO
@@ -164,18 +267,20 @@ export class CpmdetailsComponent implements OnInit {
     this.subscription.add(
       this.serviceReponseBug.tbsubjectReponse.subscribe(
         (data_Value) => {
-          //Recuperation du tbGeneral de la base de donnee
-          //  this.tbGeneralDBReponseBug = data_Value ? data_Value : [];
-          this.tbGeneralDBReponseBug = this.tbReponseBug = data_Value
-            ? data_Value
-            : [];
+          if (data_Value) {
+            //Recuperation du tbGeneral de la base de donnee
+            //  this.tbGeneralDBReponseBug = data_Value ? data_Value : [];
+            this.tbGeneralDBReponseBug = this.tbReponseBug = data_Value
+              ? data_Value
+              : [];
 
-          this.totalPage = this.tbReponseBug.length;
-          //   console.log('call by substbReponse .....');
-          //Apelle de la methode filtre suite a l'arrivees des donnees ...
-          this.filterTbReponse();
+            this.totalPage = this.tbReponseBug.length;
+            //   console.log('call by substbReponse .....');
+            //Apelle de la methode filtre suite a l'arrivees des donnees ...
+            this.filterTbReponse();
+          }
         },
-        (error) => {
+        () => {
           alert('Une erreur est survenue recup base reponse !');
         }
       )
@@ -201,6 +306,7 @@ export class CpmdetailsComponent implements OnInit {
       })
     );
   }
+
   traintementEmit(data_Event: EventModelObjReponse) {
     this.onCheckReponseBug(data_Event.data_paylode_obj_Reponse);
   }
@@ -244,6 +350,7 @@ export class CpmdetailsComponent implements OnInit {
   //...Enregistrement de la reponse Bug ...
   //TODO
   onSubmitForm() {
+    this.diseableBtnRepondre = true;
     this.serviceReponseBug.creatNewReponseBug(
       this.bugCmp.bug_Id,
       this.reponse,
@@ -256,6 +363,7 @@ export class CpmdetailsComponent implements OnInit {
     if (this.user_Id_Connect != this.bugCmp.user_Id) {
       this.serviceBug.notifyNewReponseAlert(this.bugCmp.bug_Id);
     }
+    this.diseableBtnRepondre = false;
   }
   //...Suppression de la reponse Bug ...
   //TODO
@@ -466,6 +574,19 @@ export class CpmdetailsComponent implements OnInit {
    .............................TRAITEMENT DES METHODES ................. ..................
   */
 
+  //Methode pour copier le code du bug
+  //TODO
+  onCopyCodeBug(txtCodeBug: string) {
+    navigator.clipboard.writeText(txtCodeBug);
+    let instanceT = gsap.timeline();
+    instanceT.to(`.txtCopyCodeBug`, {
+      opacity: 1,
+      duration: 1,
+    });
+    setTimeout(() => {
+      instanceT.reversed(true);
+    }, 2000);
+  }
   //......Voir les information du User
   //TODO
   onViewInfoUser(objReponse: ReponseBugModel) {
@@ -573,8 +694,21 @@ export class CpmdetailsComponent implements OnInit {
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action);
   }
+  //Methode pour l'animation de l'entete initiale
+  //TODO
+  animCardUser() {
+    let instanceT = gsap.timeline();
+    instanceT.to(`.container .alert .banner`, {
+      backgroundColor: 'transparent',
+      duration: 1,
+    });
+    instanceT.to(`.container .alert .banner .blocks`, {
+      backgroundColor: 'transparent',
+      duration: 0.5,
+      stagger: 0.1,
+    });
+  }
   ngOnDestroy(): void {
-    console.log('details destroyed');
     this.subscription.unsubscribe();
   }
 }

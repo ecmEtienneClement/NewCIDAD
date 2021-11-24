@@ -19,12 +19,18 @@ import { GardUpdateGuardBug } from '../Mes_Services/gard-update-bug.guard';
 import { GardDetailsPluginGuard } from '../Mes_Services/gard-details-plugin.guard';
 import { GuardUpdatePluginGuard } from '../Mes_Services/guard-update-plugin.guard';
 import { InterceptorReqService } from '../Mes_Services/interceptor-req.service';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { LocalService } from '../Mes_Services/local.Service';
 
 @NgModule({
   declarations: [],
   imports: [CommonModule, CorpFilsRoutingModule],
   providers: [
-    InterceptorReqService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: InterceptorReqService,
+      multi: true,
+    },
     AuthService,
     GardDetailGuard,
     GardDetailsPluginGuard,
@@ -41,6 +47,8 @@ import { InterceptorReqService } from '../Mes_Services/interceptor-req.service';
     AppVideoService,
     AppPlugingService,
     ErrorService,
+    LocalService,
+  
   ],
 })
 export class CorpFilsModule {}

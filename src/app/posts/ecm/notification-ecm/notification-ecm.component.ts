@@ -29,7 +29,7 @@ export class NotificationEcmComponent implements OnInit, OnDestroy {
 
   constructor(
     private notifyService: Notification,
-    
+
     private authService: GardGuard,
     private appVideoService: AppVideoService
   ) {}
@@ -44,14 +44,15 @@ export class NotificationEcmComponent implements OnInit, OnDestroy {
     this.subscriptionDbNotify = this.notifyService.tbNotifySubject.subscribe(
       (data_db_Notify: NotificationModel[]) => {
         //Des que les tbDbNotify arriver je lance la methode de filtre
-        if (data_db_Notify.length > 0) {
+
+        if (data_db_Notify != undefined) {
           this.tbNotify = data_db_Notify;
           //Marque immediatement vue a une reponse ou commentaire si le user est en ligne
 
           //Filtrage du tbNotify pour acceder a la collection du user..
           //Premierement on recupere la collection du user dans la tbNotify aveson ID
           //TODO
-          let tbFilterByIdNotify: NotificationModel[];
+          let tbFilterByIdNotify: NotificationModel[] = [];
           tbFilterByIdNotify = this.tbNotify.filter(
             (reponse) => reponse.id_User == this.user_Id_Connect
           );

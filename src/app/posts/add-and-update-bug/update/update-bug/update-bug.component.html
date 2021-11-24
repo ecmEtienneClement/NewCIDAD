@@ -1,94 +1,126 @@
-<div class="container">
-  <div class="jumbotron jumbotron-fluid mt-3">
-    <div class="alert alert-success">
-      <strong>
-        <h1 class="display-4">
-          Enregistrez ! Partager ! Vos Problèmes Avec CIDAD
-        </h1></strong
-      >
+<div class="img01"></div>
+
+<div class="container-form">
+  <div class="row">
+    <!-- Partie du Language-->
+
+    <div class="col-12 col-md-4">
+      <div class="form-group mt-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Java Php JavaScript Nodejs SQL Python ect</mat-label>
+          <input
+            required
+            #langLength
+            [(ngModel)]="language"
+            maxlength="15"
+            matInput
+            type="text"
+            placeholder="Java  ect ..."
+          />
+          <mat-hint>Language</mat-hint>
+          <mat-hint align="end">{{ langLength.value.length }}/15</mat-hint>
+        </mat-form-field>
+      </div>
     </div>
 
-    <hr class="my-4" />
+    <!-- Partie du Titre-->
+
+    <div class="col-12 col-md-4">
+      <div class="form-group mt-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Entrez un titre pour le problème</mat-label>
+          <input
+            required
+            #titreLength
+            maxlength="25"
+            [(ngModel)]="titre"
+            matInput
+            type="text"
+            placeholder="Votre titre"
+          />
+          <mat-hint>Titre</mat-hint>
+          <mat-hint align="end">{{ titreLength.value.length }}/25</mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Partie des details-->
+
+    <div class="col-12 col-md-4">
+      <div class="form-group mt-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Entrez les détails portant sur ce problème</mat-label>
+          <textarea
+            #detailsLength
+            maxlength="500"
+            [(ngModel)]="details"
+            rows="7"
+            required
+            matInput
+            placeholder="Entrez les détails portant sur ce problème"
+          ></textarea>
+          <mat-hint>Details</mat-hint>
+          <mat-hint align="end">{{ detailsLength.value.length }}/500</mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
+    <!-- Partie des Ajouter Code Post-->
+
+    <div *ngIf="tbCode.length < 3" class="col-12 col-md-4">
+      <div class="form-group mt-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Coller un nouveau code post</mat-label>
+          <textarea
+            rows="7"
+            matInput
+            placeholder="Ajouter un nouveau code post"
+            [(ngModel)]="newCodePost"
+          ></textarea>
+          <mat-hint>Nouveau code</mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
+    <!-- Partie des Suprimer code post-->
+    <div *ngIf="tbCode.length > 1" class="col-12 col-md-4">
+      <div class="form-group mt-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Selectionner le code post a supprimé</mat-label>
+          <mat-select [(ngModel)]="codePostDelete">
+            <mat-optgroup>
+              CODE POST
+              <mat-option *ngIf="tbCode.length > 0" value="1"
+                >Code post : 1</mat-option
+              >
+              <mat-option *ngIf="tbCode.length > 1" value="2"
+                >Code post : 2</mat-option
+              >
+              <mat-option *ngIf="tbCode.length > 2" value="3"
+                >Code post : 3</mat-option
+              >
+            </mat-optgroup>
+          </mat-select>
+          <mat-hint>Code Post</mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
   </div>
 
-  <form [formGroup]="myForm" (ngSubmit)="onSubmitForm()">
-    <!-- Partie du Language-->
-    <div class="form-group mt-4">
-      <mat-form-field appearance="outline">
-        <mat-label>Java Php JavaScript Nodejs SQL Python ect</mat-label>
-        <input
-          required
-          #langLength
-          [(ngModel)]="language"
-          maxlength="15"
-          matInput
-          type="text"
-          placeholder="Java  ect ..."
-          formControlName="language"
-        />
-        <mat-hint>Language</mat-hint>
-        <mat-hint align="end">{{ langLength.value.length }}/15</mat-hint>
-      </mat-form-field>
+  <div class="row">
+    <div class="col-12">
+      <button
+        (click)="onSubmitForm()"
+        class="btn btn-success mt-4"
+        [disabled]="!dataCharger || diseableBtnEnregistre"
+      >
+        Enregistrer
+      </button>
+      <button
+        (click)="reset()"
+        class="btn btn-danger mt-4"
+        [disabled]="diseableBtnEnregistre"
+      >
+        Tout effacer
+      </button>
     </div>
-    <!-- Partie du Titre-->
-    <div class="form-group mt-4">
-      <mat-form-field appearance="outline">
-        <mat-label>Entrez un titre pour le problème</mat-label>
-        <input
-          required
-          #titreLength
-          maxlength="25"
-          [(ngModel)]="titre"
-          matInput
-          type="text"
-          placeholder="Votre titre"
-          formControlName="titre"
-        />
-        <mat-hint>Titre</mat-hint>
-        <mat-hint align="end">{{ titreLength.value.length }}/25</mat-hint>
-      </mat-form-field>
-    </div>
-    <!-- Partie des details-->
-    <div class="form-group mt-4">
-      <mat-form-field appearance="outline">
-        <mat-label>Entrez les détails portant sur ce problème</mat-label>
-        <textarea
-          #detailsLength
-          maxlength="500"
-          [(ngModel)]="details"
-          rows="7"
-          required
-          matInput
-          placeholder="Entrez les détails portant sur ce problème"
-          formControlName="details"
-        ></textarea>
-        <mat-hint>Details</mat-hint>
-        <mat-hint align="end">{{ detailsLength.value.length }}/500</mat-hint>
-      </mat-form-field>
-    </div>
-
-    <!-- Partie de la photo-->
-    <div class="form-group mt-4">
-      <mat-form-field appearance="outline">
-        <mat-label>Importez une image de ce problème</mat-label>
-        <input matInput type="text" required />
-        <mat-hint>Image</mat-hint>
-      </mat-form-field>
-    </div>
-
-    <button
-      type="submit"
-      class="btn btn-success mt-4"
-      [disabled]="myForm.invalid"
-    >
-      Enregistrer
-    </button>
-    <button
-      type="reset"
-      class="btn btn-danger mt-4"
-      [disabled]="myForm.invalid"
-    >
-      Annuler
-    </button>
-  </form>
+  </div>
 </div>

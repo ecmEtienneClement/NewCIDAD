@@ -5,7 +5,7 @@ import { ShearedModuleGeneralRoutingModule } from './sheared-module-general-rout
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { MatSelectModule } from '@angular/material/select';
 import { MatMenuModule } from '@angular/material/menu';
 @NgModule({
   declarations: [],
@@ -16,6 +16,7 @@ import { MatMenuModule } from '@angular/material/menu';
     MatFormFieldModule,
     ReactiveFormsModule,
     MatMenuModule,
+    MatSelectModule,
   ],
 })
 export class ShearedModuleGeneralModule {}

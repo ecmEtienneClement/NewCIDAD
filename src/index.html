@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
   <head>
     <meta charset="utf-8" />
-    <title>Cidad</title>
+    <title>CIDAD :</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
@@ -19,4 +19,11 @@
   <body class="mat-typography">
     <app-root></app-root>
   </body>
+  <script>
+    const nameUser = localStorage.getItem("nomUserConnected");
+    const promo = localStorage.getItem("promoUserConnected");
+
+    document.title = `CIDAD : ${nameUser} ${promo}`;
+   
+  </script>
 </html>

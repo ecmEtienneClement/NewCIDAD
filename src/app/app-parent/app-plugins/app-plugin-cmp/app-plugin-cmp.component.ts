@@ -19,6 +19,7 @@ import { AppPlugin } from 'src/app/Models/modelApi';
   styleUrls: ['./app-plugin-cmp.component.css'],
 })
 export class AppPluginCmpComponent implements OnInit, OnDestroy {
+
   //Variables pour le deployement
   deployerbtnUser: boolean = false;
   deployerbtnView: boolean = false;
@@ -71,7 +72,6 @@ export class AppPluginCmpComponent implements OnInit, OnDestroy {
     //Recuperation du User_Id
     //TODO
     this.user_Id_Connect = this.authService.user_Id_Connect;
-
     //recuperation des information du User Connected pour voir si son compte est securisé ou pas
     //TODO
     this.userService.VerifyLocaleStorage().then((data_ObjUser) => {
@@ -91,6 +91,7 @@ export class AppPluginCmpComponent implements OnInit, OnDestroy {
             this.verifyViewUserPaginate(this.page);
             this.verifySignalUserPaginate(this.page);
             this.verifyViewCommentaireUserPaginate(this.page);
+            localStorage.setItem('tbPlugin', JSON.stringify(this.tbAppPlugin));
           }
         },
         (error) => {}
@@ -322,7 +323,7 @@ export class AppPluginCmpComponent implements OnInit, OnDestroy {
 
   //Methode pour verifier la securiter du User cette methode declanche la procedure de securite...
   //TODO
-  onVerifyUser(objPlugin: AppPlugin) {
+  onVerifyUser(objPlugin: AppPlugin): boolean {
     if (this.securiteUser == 'true') {
       //ecrit sur la variable memoire
       this.obj_Event = objPlugin;
@@ -345,6 +346,10 @@ export class AppPluginCmpComponent implements OnInit, OnDestroy {
             'Confirmez-vous la suppression'
           );
           if (confirmationDelete) {
+            if (this.user_Id_Connect !== objPlugin.userId) {
+              this.errorAlertService.notifyActionNonPermise('cet plugin');
+              return false;
+            }
             this.appPluginService
               .deletePlugin(objPlugin)
               .then((good) => {
@@ -354,21 +359,18 @@ export class AppPluginCmpComponent implements OnInit, OnDestroy {
                   this.openSnackBar(message, 'ECM');
                 }
               })
-              .catch((error) => {
-                const message =
-                  'Veillez verifier votre connexion ou actualisé !';
-                //Affichage de l'alerte
-                this.openSnackBar(message, 'ECM');
+              .catch(() => {
+                this.errorAlertService.notifyAlertErrorDefault();
               });
             break;
           }
       }
-    } else {
     }
+    return true;
   }
   //Traitement de la reponse du event code de verification ...
   //TODO
-  verifyReponseEvent(reponse: any) {
+  verifyReponseEvent(reponse: any): boolean {
     if (reponse == 1) {
       this.dialog.closeAll();
       //switcher aQui me permet de retrouver l'event et de pouvoir appeller la fonction concerné
@@ -382,6 +384,10 @@ export class AppPluginCmpComponent implements OnInit, OnDestroy {
           ]);
           break;
         case 'DeletePlugin':
+          if (this.user_Id_Connect !== this.obj_Event.userId) {
+            this.errorAlertService.notifyActionNonPermise('cet plugin');
+            return false;
+          }
           this.appPluginService
             .deletePlugin(this.obj_Event)
             .then((good) => {
@@ -391,10 +397,8 @@ export class AppPluginCmpComponent implements OnInit, OnDestroy {
                 this.openSnackBar(message, 'ECM');
               }
             })
-            .catch((error) => {
-              const message = 'Veillez verifier votre connexion ou actualisé !';
-              //Affichage de l'alerte
-              this.openSnackBar(message, 'ECM');
+            .catch(() => {
+              this.errorAlertService.notifyAlertErrorDefault();
             });
           break;
       }
@@ -414,6 +418,7 @@ export class AppPluginCmpComponent implements OnInit, OnDestroy {
         this.router.navigate(['/parametre']);
       }
     }
+    return true;
   }
   //Methode Pour Les Notifications ...C'est un service..
   //TODO

@@ -9,6 +9,8 @@ import { BugService } from 'src/app/Mes_Services/bug.Service';
   styleUrls: ['./add-bug.component.css'],
 })
 export class AddBugComponent implements OnInit {
+  //Variable pour le btn d'enregistrement desactiver le btn enregistrer d'est k'il click une fw
+  diseableBtnEnregistre: boolean = false;
   myForm: FormGroup;
 
   constructor(
@@ -37,6 +39,7 @@ export class AddBugComponent implements OnInit {
     this.getCodeBug().push(newCodeBug);
   }
   onSubmitForm() {
+    this.diseableBtnEnregistre =true
     const valueForm = this.myForm.value;
     let language = valueForm['language'];
     let titre = valueForm['titre'];

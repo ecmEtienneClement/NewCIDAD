@@ -3,7 +3,7 @@ export class CommentaireModel {
   constructor(
     public commentaire: string,
     public Id_User: string,
-    public nomUser: string | null = 'fantome',
+    public nomUser: string | null = 'fantôme',
     public prenomUser: string | null = '',
     public promoUser: string | null = '',
     public dateCommentaire: number = Date.now()

@@ -1,12 +1,17 @@
-<div class="row container-card">
-  <div
+<div #card class="row container-card">
+  <div 
     class="col-12 card-cible col-lg-4 mt-4"
     *ngFor="
-      let item of tbCmpCh | paginate: { itemsPerPage: 4, currentPage: page };
+      let item of tbCmpCh | paginate: { itemsPerPage: 12, currentPage: page };
       let indice = index
     "
   >
-    <mat-card class="example-card">
+    <mat-card
+      [ngClass]="{
+        'example-card': animCard,
+        'example-card-no-Anime': !animCard
+      }"
+    >
       <div class="user_profil">
         <span (click)="resetCarUser()" class="retourUser"
           ><i class="fas fa-chevron-left"></i
@@ -121,7 +126,7 @@
               class="btn user"
               (click)="onViewUser(item, indice)"
             >
-              <i class="fas fa-user-edit"></i>
+              <i style="color: white" class="fas fa-user-edit"></i>
             </button>
           </span>
           <span *ngIf="tbSignalUserCharged && tbViewSignalUserCharged">

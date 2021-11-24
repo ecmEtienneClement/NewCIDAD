@@ -15,6 +15,7 @@ export class ConnexionComponent implements OnInit {
   erreur: string | any;
   hide = true;
   token: string = '';
+  userId: string = '';
   constructor(
     private formBuilder: FormBuilder,
     private serviceAuth: AuthService,
@@ -37,23 +38,26 @@ export class ConnexionComponent implements OnInit {
   onSubmitMyForm() {
     //Stockage des donnees du champs ...
     const valueForm = this.myForm.value;
-    const mail = valueForm['mail'];
-    const mdp = valueForm['mdp'];
+    const mail: string = valueForm['mail'];
+    const mdp: string = valueForm['mdp'];
 
     //Appelle de la methode du service ...
     this.serviceAuth
-      .authUser(mail, mdp)
+      .authUser(mail.trim(), mdp.trim())
       .then(() => {
         //Connection du user a mongodb
         this.userMongoService
-          .connectUserMoogo(mail, mdp)
-          .then((data_Token: string) => {
-            this.token = data_Token;
+          .connectUserMoogo(mail.trim(), mdp.trim())
+          .then((data: { token: string; userId: string }) => {
+            this.userId = data.userId;
+            this.token = data.token;
             this.route.navigate(['/ecm']);
           })
-          .catch((error) => {
+          .catch(() => {
             this.afficheErreur = true;
-            this.erreur = 'Erreur Mongo' + error;
+            this.erreur =
+              "Erreur d'authentification c'est produite vous serez déconnecté du premier serveur ! Réessayer la connexion";
+            this.serviceAuth.signOutUser();
           });
       })
       .catch((error) => {

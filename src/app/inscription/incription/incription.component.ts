@@ -21,6 +21,8 @@ export class IncriptionComponent implements OnInit {
   erreur: string | any;
   isLinear = true;
   hide: Boolean = true;
+  token: string;
+  userId: string;
   constructor(
     private formBuilder: FormBuilder,
     private serviceAuth: AuthService,
@@ -98,22 +100,30 @@ export class IncriptionComponent implements OnInit {
                   //auth mongo
                   this.userMongoService
                     .connectUserMoogo(user.mail, user.mdp)
-                    .then(() => {
+                    .then((data: { token: string; userId: string }) => {
+                      this.userId = data.userId;
+                      this.token = data.token;
+                      localStorage.setItem('ECM_TK', this.token);
+                      localStorage.setItem('ECM_UI', this.userId);
                       this.route.navigate(['/ecm']);
                     })
-                    .catch((error) => {
+                    .catch(() => {
                       this.afficheErreur = true;
-                      this.erreur = 'Erreur mongo fir !' + error;
+                      this.erreur =
+                        "Erreur d'authentification c'est produite vous serez déconnecté du premier serveur ! ";
+                      this.serviceAuth.signOutUser();
                     });
                 })
                 .catch((error) => {
                   this.afficheErreur = true;
-                  this.erreur = 'Erreur auth fir !' + error;
+                  this.erreur =
+                    "Erreur d'authentification c'est produite : " + error;
                 });
             })
             .catch((error) => {
               this.afficheErreur = true;
-              this.erreur = 'Erreur Mongo !' + error;
+              this.erreur =
+                'Erreur inattendue ! Veillez reprendre le processus';
             });
         })
         .catch((error) => {

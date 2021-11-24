@@ -1,0 +1,107 @@
+<div *ngIf="!localIsActivated" class="container-fluid">
+  <div class="titre">
+    <ul #itemTitre class="list-inline">
+      <li>Vos</li>
+      <li class="left">Données</li>
+      <li class="left">à</li>
+      <li class="left">Proximitées</li>
+    </ul>
+  </div>
+  <div #menu class="menu">
+    <div class="item-menu mt-4">
+      Vos données à proximitées ... Les requêtes, réponses, base de donnée,
+      serveur ect... tout le bons fonctionnement des échanges de données de ces
+      entités repose principalement du réseau
+      <i class="good fas fa-wifi"></i>. Vous avez un bons débit de connexion
+      super <i class="good far fa-grin-beam"></i> du tic au tac les données
+      arrivent, mais vous conviendrez avec moi que c'est pas tout le temps que
+      la connexion sera fluide <i class="nogood far fa-frown"></i> du coup le
+      chargement des données prennent du temps ! Et si l'on préconiser une
+      solution à cela.
+    </div>
+    <div class="item-menu mt-4">
+      Et bien oui ! Bon nous mettrons une alternative aux attentes de données
+      qui souvent peuvent etre une galère oui et énervante car vous attendez des
+      données de la BD <i class="good fas fa-database"></i> distant, comme
+      attendre le DDD (Dakar Dem Dik) à l'arrêt mdr
+      <i class="good far fa-grin-beam-sweat"></i> ... Le principe consiste a
+      vous créer une BD <i class="good fas fa-database"></i> en local
+      Weyyy...ECM <i class="good far fa-grin-beam"></i> vient de vous donnez une
+      voiture particulière si vous voyer pas DDD vous prennez la vôtre et le
+      tour est fait. Mais bon cette BD <i class="good fas fa-database"></i> en
+      local humm . <i class="good far fa-flushed"></i>
+    </div>
+    <div class="item-menu mt-4">
+      Cette BD <i class="good fas fa-database"></i> sera chiffrée
+      <i class="good far fa-grin-tongue-wink"></i>
+      et sauvegardée <i class="good fas fa-cloud-upload-alt"></i> dans votre
+      Storage. Cette sauvegarde ce fera par poucentage, vous allez définir le
+      poucentage à sauvegardé en local pour la BD ou les BD (s)
+      <i class="good fas fa-database"></i>. Abn! Oui j'ai bien dit la ou les BD
+      (s) <i class="good fas fa-database"></i> bon pour l'explication pouff
+      c'est toute autre chose, ce pourcentage sera défini sur toute les BD (s)
+      <i class="good fas fa-database"></i> choisis. Attention veiller ne surtout
+      pas toucher a aucune de ces données chiffrées ou une action de nettoyage
+      sera exécutée par les Services de Vérification Sécurité des Données
+      ECM_SVSD ! <i class="good far fa-meh-rolling-eyes"></i>. Bien maintenant
+      cliquer le sur bouton Activé Local pour commencer la configuration.
+    </div>
+    <div class="blcbtn">
+      <button
+        title="Activé mode local"
+        (click)="gotoSelectBdPour()"
+        type="button"
+        class="mt-4 btn btn-success"
+      >
+        Activé <i class="good fas fa-database"></i> Local
+      </button>
+    </div>
+  </div>
+</div>
+<div *ngIf="localIsActivated" class="container-fluid">
+  <div class="row row-titre-local">
+    <div class="col-12 colTitre">
+      <p class="titreLocal" #itemTitreLocalActiver>.............</p>
+    </div>
+  </div>
+  <div #menuActiver class="menu">
+    <div class="item-menu mt-4">
+      Votre BD <i class="good fas fa-database"></i> local est activée ! Vous
+      pouvez désactivé le mode local, les données seront toujour sauvegardées
+      mais ne seront plus présentées l'or du chargement, vous allez donc
+      attendre les données de la BD
+      <i class="good fas fa-database"></i> distante
+      <i class="good far fa-meh-rolling-eyes"></i>. Si vous ne voulez plus
+      sauvegardées des données en local, ou modifier certaines configurations
+      cliquer sur le bouton
+      <span class="btn-details-txt">
+        Détails <i class="good fas fa-database"></i> Local.</span
+      >
+    </div>
+
+    <div class="row blcbtn">
+      <div class="col-12 col-md-6">
+        <button
+          ngbTooltip="Will disappear in 10s"
+          title="Détails mode local"
+          (click)="detailsModeLocal()"
+          type="button"
+          class="mt-4 btn btn-success"
+        >
+          Détails <i class="good fas fa-database"></i> Local
+        </button>
+      </div>
+      <div class="col-12 col-md-6">
+        <button
+          title="Désactivé mode local"
+          (click)="DesactiveModeLocal()"
+          type="button"
+          class="mt-4 btn btn-danger"
+        >
+          Désactivé <i class="good fas fa-database"></i> Local
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>

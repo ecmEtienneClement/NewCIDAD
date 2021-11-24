@@ -22,7 +22,7 @@ export class NotifyAppPluginComponent implements OnInit {
   tbTitreCommentairePlugins: NotifyModel[] = [];
   nbrtbCommentairePlugins: number = 0;
   nbrTotalNotify: number = 0;
-  @Input() nomUserNotify: string|null;
+  @Input() nomUserNotify: string | null;
 
   constructor(
     private notifyService: Notification,
@@ -40,7 +40,7 @@ export class NotifyAppPluginComponent implements OnInit {
     this.subscriptionDbNotify = this.notifyService.tbNotifySubject.subscribe(
       (data_db_Notify: NotificationModel[]) => {
         //Des que les tbDbNotify arriver je lance la methode de filtre
-        if (data_db_Notify.length > 0) {
+        if (data_db_Notify) {
           //Recuperation de tbAppPlugin
           this.appPluginService.getAllPlugin();
           this.tbNotify = data_db_Notify;

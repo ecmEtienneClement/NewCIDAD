@@ -1,12 +1,10 @@
-.notification {
-  background: linear-gradient(
-    -30deg,
-    #03a9f4 0%,
-    #3a78b7 50%,
-    #262626 50%,
-    #607d8b 100%
-  );
-  overflow: hidden;
+
+.alert-success,
+.alert-danger {
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
 }
 
 .date,
@@ -50,4 +48,17 @@ button {
 }
 .btn-search {
   font-size: 10px;
+}
+.container-bug {
+  background-image: url("src/app/images/pexels-photo-952670.jpeg");
+  animation: annim 10s linear infinite;
+}
+@keyframes anim {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 0 333px;
+  }
 }

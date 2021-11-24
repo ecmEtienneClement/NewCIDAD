@@ -1,20 +1,27 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { CommentaireModel } from '../Models/commentaire';
-import { AppPlugin } from '../Models/modelApi';
+import { AppPlugin, UserECM } from '../Models/modelApi';
 import { ErrorService } from './error.Service';
 import { GardGuard } from './gard.guard';
+import { LocalService } from './local.Service';
 import { Notification } from './notification.service';
+import { UserService } from './user.Service';
 
 @Injectable()
 export class AppPlugingService implements OnInit {
   user_Id_Connect: string = '';
   nbrPluginUser: number = 0;
-
-  private tbAppPlugin: AppPlugin[] = [];
+  userEcmCmp: UserECM = {
+    TK: '',
+    userIdFB: '',
+    userIdMG: '',
+  };
+  private tbAppPlugin: AppPlugin[];
   tbAppPluginSubject: Subject<AppPlugin[]> = new Subject<AppPlugin[]>();
 
   //Methode pour l'emmision du  tbAppPlugin
@@ -26,7 +33,10 @@ export class AppPlugingService implements OnInit {
     private authService: GardGuard,
     private _snackBar: MatSnackBar,
     private notify: Notification,
-    private errorNotifyService: ErrorService
+    private errorNotifyService: ErrorService,
+    private router: Router,
+    private userService: UserService,
+    private localService: LocalService
   ) {}
 
   ngOnInit(): void {
@@ -44,11 +54,10 @@ export class AppPlugingService implements OnInit {
     tbCommentaire: CommentaireModel[],
     userId: string | undefined = this.user_Id_Connect,
     date: number = Date.now(),
-    update: number = 0,
-    tbViewUser: string[] = [],
-    tbSignalCommentaire: string[] = [userId],
-    tbViewCommentaire: string[] = []
+    update: number = 0
   ): Promise<boolean> {
+    this.userEcmCmp.userIdMG =
+      this.userService.VerifyTokenAndUserIdLocaleStorage().userIdMG;
     return new Promise((resolve, reject) => {
       if (userId != '') {
         this.http
@@ -63,6 +72,7 @@ export class AppPlugingService implements OnInit {
             tbViewUser: [],
             tbSignalCommentaire: [this.user_Id_Connect],
             tbViewCommentaire: [],
+            userIdTK: this.userEcmCmp.userIdMG,
           })
           .subscribe(
             () => {
@@ -71,6 +81,13 @@ export class AppPlugingService implements OnInit {
               resolve(true);
             },
             (error) => {
+              const messageError =
+                "Une erreur s'est produite l'or de la publication du Plugin ! Veillez vérifier votre connexion ";
+              this.errorNotifyService.notySwitchErrorStatus(
+                error.status,
+                '',
+                messageError
+              );
               reject(false);
             }
           );
@@ -81,7 +98,6 @@ export class AppPlugingService implements OnInit {
       }
     });
   }
-
   //Methode pour recuperé tout les appPlugins
   //TODO
   getAllPlugin() {
@@ -89,20 +105,17 @@ export class AppPlugingService implements OnInit {
       (data_App_Plugin: AppPlugin[]) => {
         this.tbAppPlugin = data_App_Plugin;
         this.emitUpdateTbAppPlugin();
-        console.log('recup db AppPluging success ...');
+        this.sauvegardeDbPluginCryptLocal();
       },
       (error) => {
-        alert(
-          "Une erreur s'est produite l'or de recup ....TbAppPlugin Veiller actualisé"
-        );
+        this.errorNotifyService.notySwitchErrorStatus(error.status);
       }
     );
   }
-
   //Methode pour voir les details appPlugins d'un user
   //TODO
   getDetailsPlugin(id?: number | string): Promise<AppPlugin> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       this.http
         .get<AppPlugin>(environment.URL_API + '/app/plugin/details/' + id)
         .subscribe(
@@ -110,12 +123,16 @@ export class AppPlugingService implements OnInit {
             resolve(data_App_Plugin);
           },
           (error) => {
-            reject(error);
+            //Traitement des erreurs
+            this.errorNotifyService.notySwitchErrorStatus(
+              error.status,
+              'Plugin'
+            );
+            this.router.navigate(['/appPlugin']);
           }
         );
     });
   }
-
   //Methode pour modifier appPlugins d'un user
   //TODO
   updatePlugin(
@@ -131,7 +148,9 @@ export class AppPlugingService implements OnInit {
     tbViewCommentaire: string[],
     id?: string | number
   ): Promise<boolean> {
-    return new Promise((resolve, reject) => {
+    this.userEcmCmp.userIdMG =
+      this.userService.VerifyTokenAndUserIdLocaleStorage().userIdMG;
+    return new Promise((resolve) => {
       if (userId != '') {
         this.http
           .put(environment.URL_API + '/app/plugin/' + id, {
@@ -145,6 +164,7 @@ export class AppPlugingService implements OnInit {
             tbViewUser: tbViewUser,
             tbSignalCommentaire: tbSignalCommentaire,
             tbViewCommentaire: tbViewCommentaire,
+            userIdTK: this.userEcmCmp.userIdMG,
           })
           .subscribe(
             () => {
@@ -152,7 +172,8 @@ export class AppPlugingService implements OnInit {
               resolve(true);
             },
             (error) => {
-              reject(false);
+              this.errorNotifyService.notySwitchErrorStatus(error.status);
+              resolve(false);
             }
           );
       } else {
@@ -164,6 +185,8 @@ export class AppPlugingService implements OnInit {
   }
   //TODO
   updatePluginDeleteCommentaire(objPlugin: AppPlugin): Promise<boolean> {
+    this.userEcmCmp.userIdMG =
+      this.userService.VerifyTokenAndUserIdLocaleStorage().userIdMG;
     return new Promise((resolve, reject) => {
       this.http
         .put(environment.URL_API + '/app/plugin/' + objPlugin._id, {
@@ -177,6 +200,7 @@ export class AppPlugingService implements OnInit {
           tbViewUser: objPlugin.tbViewUser,
           tbSignalCommentaire: objPlugin.tbSignalCommentaire,
           tbViewCommentaire: objPlugin.tbViewCommentaire,
+          userIdTK: this.userEcmCmp.userIdMG,
         })
         .subscribe(
           () => {
@@ -186,6 +210,63 @@ export class AppPlugingService implements OnInit {
             reject(false);
           }
         );
+    });
+  }
+  //Methode pour la verification si le user est l'auteur de cet plugin
+  //TODO
+  async verifyUserUpdatePlugin(
+    id_Plugin: any,
+    id_User_Plugin: string
+  ): Promise<boolean> {
+    return await new Promise((resolve, reject) => {
+      if (this.tbAppPlugin) {
+        let trouver: boolean = false;
+        let valide: boolean = false;
+        for (let index = 0; index < this.tbAppPlugin.length; index++) {
+          const element = this.tbAppPlugin[index];
+          if (element._id == id_Plugin) {
+            trouver = true;
+            if (element.userId == id_User_Plugin) {
+              valide = true;
+              return resolve(true);
+            } else {
+              alert(
+                'Attention ! Cet plugin que vous tentez de modifié ne vous appartient pas !'
+              );
+              this.router.navigate(['/appPlugin']);
+              return reject(false);
+            }
+          }
+        }
+
+        if (!trouver) {
+          this.errorNotifyService.notifyAlertErrorDefault(
+            "Cet plugin n'existe pas !"
+          );
+
+          this.router.navigate(['/appPlugin']);
+          return reject(false);
+        }
+        if (!valide) {
+          return reject(false);
+        }
+        return;
+      } else {
+        this.getDetailsPlugin(id_Plugin)
+          .then((dataPlugin) => {
+            if (dataPlugin.userId != id_User_Plugin) {
+              alert(
+                'Attention ! Cet plugin que vous tentez de modifié ne vous appartient pas !'
+              );
+              return reject(false);
+            }
+            resolve(true);
+          })
+          .catch(() => {
+            this.errorNotifyService.notifyAlertErrorDefault();
+            return reject(false);
+          });
+      }
     });
   }
   //...Partie de la suppression ou reinitialisation compte du User
@@ -233,8 +314,9 @@ export class AppPlugingService implements OnInit {
       return 0;
     } else {
       objPlugin.tbViewUser.push(user_Id_Connect);
-
-      return new Promise((resolve, reject) => {
+      this.userEcmCmp.userIdMG =
+        this.userService.VerifyTokenAndUserIdLocaleStorage().userIdMG;
+      return new Promise((resolve) => {
         if (objPlugin.userId != '') {
           this.http
             .put(environment.URL_API + '/app/plugin/' + objPlugin._id, {
@@ -248,6 +330,7 @@ export class AppPlugingService implements OnInit {
               tbViewUser: objPlugin.tbViewUser,
               tbSignalCommentaire: objPlugin.tbSignalCommentaire,
               tbViewCommentaire: objPlugin.tbViewCommentaire,
+              userIdTk: this.userEcmCmp.userIdMG,
             })
             .subscribe(
               () => {
@@ -255,7 +338,7 @@ export class AppPlugingService implements OnInit {
                 resolve(true);
               },
               (error) => {
-                reject(false);
+                this.errorNotifyService.notySwitchErrorStatus(error.status);
               }
             );
         } else {
@@ -279,7 +362,10 @@ export class AppPlugingService implements OnInit {
       return 0;
     } else {
       objPlugin.tbViewCommentaire.push(user_Id_Connect);
-      return new Promise((resolve, reject) => {
+      objPlugin.tbViewUser.push(user_Id_Connect);
+      this.userEcmCmp.userIdMG =
+        this.userService.VerifyTokenAndUserIdLocaleStorage().userIdMG;
+      return new Promise((resolve) => {
         if (objPlugin.userId != '') {
           this.http
             .put(environment.URL_API + '/app/plugin/' + objPlugin._id, {
@@ -293,6 +379,7 @@ export class AppPlugingService implements OnInit {
               tbViewUser: objPlugin.tbViewUser,
               tbSignalCommentaire: objPlugin.tbSignalCommentaire,
               tbViewCommentaire: objPlugin.tbViewCommentaire,
+              userIdTk: this.userEcmCmp.userIdMG,
             })
             .subscribe(
               () => {
@@ -300,7 +387,7 @@ export class AppPlugingService implements OnInit {
                 resolve(true);
               },
               (error) => {
-                reject(false);
+                this.errorNotifyService.notySwitchErrorStatus(error.status);
               }
             );
         } else {
@@ -314,14 +401,7 @@ export class AppPlugingService implements OnInit {
   //Methode pour supprimer plusieurs appPlugins d'un user
   //TODO
   deletePlugin(objPlugin: AppPlugin): Promise<boolean> {
-    return new Promise((resolve, reject) => {
-      //On verifier si cette action est bien declancher par le proprietaire du post
-      let userIdRepondant = this.authService.user_Id_Connect;
-      if (userIdRepondant !== objPlugin._id) {
-        this.errorNotifyService.notifyActionNonPermise('cet plugin');
-
-        reject(false);
-      }
+    return new Promise((resolve) => {
       this.http
         .delete(environment.URL_API + '/app/plugin/' + objPlugin._id)
         .subscribe(
@@ -330,7 +410,7 @@ export class AppPlugingService implements OnInit {
             resolve(true);
           },
           (error) => {
-            reject(false);
+            this.errorNotifyService.notySwitchErrorStatus(error.status);
           }
         );
     });
@@ -362,6 +442,124 @@ export class AppPlugingService implements OnInit {
         );
     });
   }
+
+  //Methode pour crypter et sauvegarder les donnees en local
+  //TODO
+  sauvegardeDbPluginCryptLocal(): boolean {
+    let pourcentageTb: number = 0;
+    //Verification du modeLocal du User
+    const modeLocalUserConnected: boolean | number =
+      this.localService.verifyModeLocal();
+    if (modeLocalUserConnected == true) {
+      //Verification si la BD AppPlugin est activer
+      const chekedBdPlugin: boolean | number =
+        this.localService.VerifyAppPlugin();
+      if (chekedBdPlugin == true) {
+        //Verifie si le tb est different de undifi
+        if (this.tbAppPlugin) {
+          //recuperation du pourcentage
+          let pourcentage = this.localService.getPoucentageDonneLocal();
+          //arret du processus si le pourcentage est egal a 0
+          if (pourcentage == 0) {
+            this.errorNotifyService.notifyAlertErrorDefault(
+              "Mode local activer, mais pourcentage de sauvegarde de base non défini ! Veiller reconfiguré l'environnement local "
+            );
+            return false;
+          }
+          //cas ou le pourcentage est de 75%
+          if (pourcentage == 3) {
+            pourcentageTb = Math.floor(this.tbAppPlugin.length / 4) * 3;
+          } else {
+            //Arrondi la valeur pour ne op avoir des virgules
+            pourcentageTb = Math.floor(this.tbAppPlugin.length / pourcentage);
+          }
+
+          let i: number = 0;
+          //Debut de la sauvegarde
+          for (let index = 0; index < pourcentageTb; index++) {
+            const elementBug = this.tbAppPlugin[index];
+            //ECM_Local
+            let name: string = 'ECM_BP_' + i;
+            localStorage.setItem(name, window.btoa(JSON.stringify(elementBug)));
+            ++i;
+          }
+          return true;
+        } else {
+          this.errorNotifyService.notifyAlertErrorDefault(
+            "Bd App-Plugin n'est pas chargée ! Veillez actualiser pour recharger la BD distante ou vérifier votre connexion ..."
+          );
+        }
+      }
+    }
+    return false;
+  }
+  //Methode pour recuperer les donnees en local
+  //TODO
+  recupDbPluginCryptLocal(): boolean {
+    //Verification du modeLocal du User
+    const mode_Local_User_Connected = this.localService.verifyModeLocal();
+    if (mode_Local_User_Connected == true) {
+      //Verification si la BD AppPlugin est activer
+      const chekedBdPlugin: boolean | number =
+        this.localService.VerifyAppPlugin();
+      if (chekedBdPlugin == true) {
+        //Verification preliminaire de l'existance de la bd
+        const bdBugCrypt: any = localStorage.getItem('ECM_BP_0');
+        if (bdBugCrypt == null) {
+          this.errorNotifyService.notifyAlertErrorDefault(
+            "Désoler ! Nous n'avons pas trouvé de données local sur les Plugins ! Veiller reconfiguré l'environnement local "
+          );
+          return false;
+        }
+        //Recuperation de la base
+        let tbPostLocal: AppPlugin[] = [];
+        for (let i = 0; i < 0; ++i) {
+          let name: string = 'ECM_BP_' + i;
+          let element: any = localStorage.getItem(name);
+          if (element == null) {
+            this.tbAppPlugin = tbPostLocal;
+            this.emitUpdateTbAppPlugin();
+            return true;
+          }
+          const elementDecrypt: string = window.atob(element);
+          const elementDecryptParseJson: any = JSON.parse(elementDecrypt);
+          tbPostLocal.push(elementDecryptParseJson);
+        }
+      }
+    }
+    return false;
+  }
+  //Methode pour supprimer les donnees en local
+  //TODO
+  deleteDbPluginCryptLocal(): boolean {
+    //Verification preliminaire de l'existance de la bd
+    if (
+      localStorage.getItem('ECM_BP_0') == null &&
+      localStorage.getItem('ECM_BP_1') == null
+    ) {
+      this.errorNotifyService.notifyAlertErrorDefault(
+        "Nous n'avons pas trouvé de données local a supprimées sur les Plugins ! "
+      );
+      return false;
+    }
+
+    for (let i = 0; i > -1; ++i) {
+      let name: string = 'ECM_BP_' + i;
+      let element: any = localStorage.getItem(name);
+      if (element != null) {
+        localStorage.removeItem(name);
+      }
+      if (element == null) {
+        this.errorNotifyService.notifyAlertErrorDefault(
+          'Données local des Plugins supprimées ! '
+        );
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   //Methode Pour Les Notifications ...C'est un service..
   //TODO
   openSnackBar(message: string, action: string) {

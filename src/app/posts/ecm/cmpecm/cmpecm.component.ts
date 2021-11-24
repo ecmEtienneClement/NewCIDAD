@@ -33,12 +33,12 @@ export class CmpecmComponent implements OnInit {
   tbViewUser: boolean[] = [];
   tbViewUserCharged: boolean = false;
   nomUserNotify: string = '';
-  tbCmp: BugModel[] | any;
-  tbCmpMesPostes: BugModel[] | any;
-  tbCmpResolu: BugModel[] | any;
-  tbCmpNonResolu: BugModel[] | any;
-  tbCmpCh: BugModel[] | any;
+  tbCmp: BugModel[] | any = [];
+
+  tbCmpCh: BugModel[] | any = [];
   chargement: boolean = true;
+  chargementSuccess: boolean = false;
+  chargementError: boolean = false;
   user_Id_Connect: string;
   nomUser: string = '';
   prenomUser: string = '';
@@ -61,6 +61,10 @@ export class CmpecmComponent implements OnInit {
 */
   aQui: string = '';
   obj_Event: BugModel;
+  //variable pour anim cardTotal
+  animCardEnCour: boolean = false;
+  //variable pour me permetre de savoir dans quel parti du tab le user se trouve
+  indiceTabChange: number = 0;
   constructor(
     private serviceBug: BugService,
     private authService: GardGuard,
@@ -75,6 +79,7 @@ export class CmpecmComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    localStorage.removeItem('ECM_UI');
     //Recuperation du User_Id
     //TODO
     this.user_Id_Connect = this.authService.user_Id_Connect;
@@ -87,22 +92,34 @@ export class CmpecmComponent implements OnInit {
         this.nomUserNotify = data_User.nom;
         this.securiteUser = data_User.securite;
       })
-      .catch((error) => {
+      .catch(() => {
         const message =
           "Une erreur inattendu ! l'or de la recupération de vos données ! Veillez actualiser ou vérifier votre connexion ...";
         this.openSnackBar(message, 'ECM');
       });
-    //.....Initialisation, recuperation de la base de donne distant
-    //this.serviceBug.recupbase();
-
     //...Subscription pour la recuperation du tbServiceBug
     this.subscription.add(
       this.serviceBug.tbSubjectBugService.subscribe(
-        (valuetb) => {
-          this.tbCmpCh = this.tbCmp = valuetb ? valuetb : [];
+        (valuetb: any[]) => {
           if (valuetb) {
+            this.tbCmpCh = this.tbCmp = valuetb ? valuetb : [];
+            //retraitement de tabChanger pour represent les mm post au user selon ou il etait au tab
+            this.traitementTabChanged(this.indiceTabChange);
+            //Emmission pour no animation des cards
+            /*
+            this.eventService.emit_Event_Update_({
+              type: EventType.NO_ANIM_TOTAL_CARD,
+            });
+*/
             this.chargement = false;
+            this.chargementError = false;
+            this.chargementSuccess = true;
+
+            setTimeout(() => {
+              this.chargementSuccess = false;
+            }, 5000);
           }
+
           this.verifyViewUserPaginate(this.page_Event);
           this.verifySignaleUserCommentairePaginate(this.page_Event);
           this.verifyViewSignaleUserCommentairePaginate(this.page_Event);
@@ -115,7 +132,13 @@ export class CmpecmComponent implements OnInit {
       )
     );
     this.serviceBug.updatetbBugService();
-
+    //temps pour le delais de recuperation de la base de donnee
+    setTimeout(() => {
+      if (this.chargement) {
+        this.chargement = false;
+        this.chargementError = true;
+      }
+    }, 45000);
     //Emmission event pour affiche parametre ecm
     //TODO
     this.eventService.emit_Event_Update_({
@@ -144,11 +167,14 @@ export class CmpecmComponent implements OnInit {
 
   /*.....................................................................................*/
 
+  local() {
+    this.serviceBug.recupDbBugCryptLocal();
+  }
   //Methode pour Verifier si le user a deja pas vu ce message
   //TODO
   verifySignaleUserCommentairePaginate(pageIndex: number = 1) {
     //Lire le commentaire dessus de VerifyViewUserPaginate...
-    pageIndex = 10 * (pageIndex - 1);
+    pageIndex = 12 * (pageIndex - 1);
     this.tbSignalUserCharged = false;
     this.tbSignalUserCommentaire = [];
 
@@ -175,7 +201,7 @@ export class CmpecmComponent implements OnInit {
   //TODO
   verifyViewSignaleUserCommentairePaginate(pageIndex: number = 1) {
     //Lire le commentaire dessus de VerifyViewUserPaginate...
-    pageIndex = 10 * (pageIndex - 1);
+    pageIndex = 12 * (pageIndex - 1);
     this.tbViewSignalUserCharged = false;
     this.tbViewUserCommentaire = [];
     if (this.user_Id_Connect != '') {
@@ -201,6 +227,10 @@ export class CmpecmComponent implements OnInit {
   //TODO
   traintementEmitEventVeifyCode(data_Event: EventModel) {
     switch (data_Event.type) {
+      //la vue va signaler la fin de lanimation des cards
+      case EventType.FIN_ANIM_CARD:
+        this.animCardEnCour = false;
+        break;
       case EventType.VERIFICATION_CODE:
         //appelle pour la verification
         this.verifyReponseEvent(data_Event.data_paylode_Number);
@@ -213,6 +243,9 @@ export class CmpecmComponent implements OnInit {
         if (data_Event.data_paylode_String === 'ecm') {
           this.page_Event = data_Event.data_paylode_Number;
           this.verifyViewUserPaginate(data_Event.data_paylode_Number);
+          this.eventService.emit_Event_Update_({
+            type: EventType.ANIM_TOTAL_CARD,
+          });
           this.verifySignaleUserCommentairePaginate(
             data_Event.data_paylode_Number
           );
@@ -294,7 +327,7 @@ export class CmpecmComponent implements OnInit {
      *les bug vont changer d'index pour resoudre ce probleme on redefini le tbView a
      *l'aide de l'index
      */
-    pageIndex = 4 * (pageIndex - 1);
+    pageIndex = 12 * (pageIndex - 1);
     this.tbViewUserCharged = false;
     this.tbViewUser = [];
     if (this.user_Id_Connect != '') {
@@ -318,39 +351,72 @@ export class CmpecmComponent implements OnInit {
   //Verification de l'evenement afin de le traite avec la bonne methode ..
   //TODO
   tabChanged(tabChangeEvent: MatTabChangeEvent): void {
-    switch (tabChangeEvent.index) {
+    this.traitementTabChanged(tabChangeEvent.index);
+  }
+  //TODO
+  traitementTabChanged(indiceTabChange: number) {
+    switch (indiceTabChange) {
       case 0:
+        this.indiceTabChange = 0;
         this.getAll();
+        this.AnimCardTotal();
         //Redefini les val du tb car les index vont changer
         this.verifyViewUserPaginate(this.page_Event);
         this.verifySignaleUserCommentairePaginate(this.page_Event);
         this.verifyViewSignaleUserCommentairePaginate(this.page_Event);
         break;
       case 1:
+        this.indiceTabChange = 1;
         this.getMesPost();
+        this.AnimCardTotal();
         this.verifyViewUserPaginate(this.page_Event);
         this.verifySignaleUserCommentairePaginate(this.page_Event);
         this.verifyViewSignaleUserCommentairePaginate(this.page_Event);
         break;
       case 2:
+        this.indiceTabChange = 2;
         this.getResolu();
+        this.AnimCardTotal();
         this.verifyViewUserPaginate(this.page_Event);
         this.verifySignaleUserCommentairePaginate(this.page_Event);
         this.verifyViewSignaleUserCommentairePaginate(this.page_Event);
         break;
       case 3:
+        this.indiceTabChange = 3;
         this.getNonResolu();
+        this.AnimCardTotal();
         this.verifyViewUserPaginate(this.page_Event);
         this.verifySignaleUserCommentairePaginate(this.page_Event);
         this.verifyViewSignaleUserCommentairePaginate(this.page_Event);
         break;
       case 4:
+        this.indiceTabChange = 4;
         this.getModify();
+        this.AnimCardTotal();
         this.verifyViewUserPaginate(this.page_Event);
         this.verifySignaleUserCommentairePaginate(this.page_Event);
         this.verifyViewSignaleUserCommentairePaginate(this.page_Event);
         break;
     }
+  }
+
+  //Mehode pour gerer l'animCardTotal
+  //TODO
+  AnimCardTotal() {
+    /*
+    if (!this.animCardEnCour) {
+      this.animCardEnCour = true;
+      this.eventService.emit_Event_Update_({
+        type: EventType.ANIM_TOTAL_CARD,
+        data_paylode_Number:
+          this.tbCmpCh.length > 12 ? 12 : this.tbCmpCh.length,
+      });
+    } else {
+      this.errorAlertService.notifyAlertErrorDefault(
+        'Veillez ne pas cliquer les boutons simultanément ! Une action est en cour ...'
+      );
+    }
+    */
   }
   //Methode de getAll()
   //TODO
@@ -406,6 +472,11 @@ export class CmpecmComponent implements OnInit {
           bug.language.toLocaleString().includes(query.toLowerCase())
         )
       : this.tbCmp;
+    /*
+    this.eventService.emit_Event_Update_({
+      type: EventType.NO_ANIM_TOTAL_CARD,
+    });
+    */
     this.verifyViewUserPaginate(this.page_Event);
     this.verifySignaleUserCommentairePaginate(this.page_Event);
     this.verifyViewSignaleUserCommentairePaginate(this.page_Event);

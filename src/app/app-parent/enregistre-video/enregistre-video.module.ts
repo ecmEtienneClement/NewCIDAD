@@ -14,6 +14,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     ShearmoduleEnregistreVieoPluginModule,
     MatSelectModule,
     MatTabsModule,
+  
   ],
 })
 export class EnregistreVideoModule {}

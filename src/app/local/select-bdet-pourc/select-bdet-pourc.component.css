@@ -1,0 +1,72 @@
+.bd {
+  opacity: 1;
+}
+label:hover,
+.form-check-input:hover {
+  cursor: pointer;
+}
+.good {
+  color: rgb(62, 245, 102);
+  font-size: 175px;
+}
+.col-md-4 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  animation: animeAfterBefor 5s linear infinite;
+}
+@keyframes animeAfterBefor {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+  }
+}
+label {
+  color: white;
+  letter-spacing: 1px;
+  font-size: 15px;
+  font-weight: bold;
+}
+circle-progress:hover {
+  cursor: progress;
+}
+.row-progress {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  background: #333;
+  opacity: 1;
+}
+.form-switch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.form-check-label {
+  text-align: center;
+  align-items: center;
+}
+.col-progress,
+.col-select,
+.col-btn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+mat-label,
+mat-hint {
+  color: white;
+  font-weight: bold;
+}
+
+.col-btn {
+  margin-bottom: 45px;
+  font-weight: bold;
+  animation: animeAfterBefor 5s linear infinite;
+}

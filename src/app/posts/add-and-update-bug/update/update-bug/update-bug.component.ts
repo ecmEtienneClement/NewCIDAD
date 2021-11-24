@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BugService } from 'src/app/Mes_Services/bug.Service';
+import { ErrorService } from 'src/app/Mes_Services/error.Service';
 import { BugModel } from 'src/app/Models/bug';
 
 @Component({
@@ -10,6 +11,9 @@ import { BugModel } from 'src/app/Models/bug';
   styleUrls: ['./update-bug.component.css'],
 })
 export class UpdateBugComponent implements OnInit {
+  //Variable pour le btn d'enregistrement desactiver le btn enregistrer d'est k'il click une fw
+  diseableBtnEnregistre: boolean = false;
+  dataCharger: boolean = false;
   bugCmp: any = new BugModel('', '', '', '', '', '', 0, Date.now(), ['']);
   myForm: FormGroup;
   indice: number;
@@ -18,18 +22,18 @@ export class UpdateBugComponent implements OnInit {
   titre = this.bugCmp.titre;
   details = this.bugCmp.details;
   etat = this.bugCmp.etat;
+  codePostDelete: string = '';
+  newCodePost: string = '';
+  tbCode: string[] = this.bugCmp.codeBug;
 
   constructor(
     private extra: ActivatedRoute,
-    private formBuilder: FormBuilder,
     private serviceBug: BugService,
-    private route: Router
+    private route: Router,
+    private alerterrorService: ErrorService
   ) {}
 
   ngOnInit(): void {
-    //Initialisation du Formulaire
-    //TODO
-    this.initForm();
     //Recuperation de l'indice
     //TODO
     this.indice = this.extra.snapshot.params['indice'];
@@ -41,42 +45,77 @@ export class UpdateBugComponent implements OnInit {
           alert("Cet post n'existe pas !");
           this.route.navigate(['/ecm']);
         } else {
+          this.dataCharger = true;
           this.bugCmp = data_value;
           this.language = this.bugCmp.language;
           this.titre = this.bugCmp.titre;
           this.details = this.bugCmp.details;
           this.etat = this.bugCmp.etat;
+          this.tbCode = this.bugCmp.codeBug;
         }
       })
-      .catch((error) => {
-        alert('Une erreur est survenue update Bug ...!');
-        //console.log('Une erreur est survenue update Bug ==>' + error);
+      .catch(() => {
+        this.alerterrorService.notifyAlertErrorDefault();
       });
     //Modifcation du Bug ....
   }
 
-  initForm() {
-    this.myForm = this.formBuilder.group({
-      language: ['', Validators.required],
-      titre: ['', Validators.required],
-      details: ['', Validators.required],
-    });
-  }
-  onSubmitForm() {
-    const valueForm = this.myForm.value;
-    let language = valueForm['language'];
-    let titre = valueForm['titre'];
-    let details = valueForm['details'];
-
+  onSubmitForm(): boolean {
+    if (this.language == '' || this.titre == '' || this.details == '') {
+      this.alerterrorService.notifyAlertErrorDefault(
+        'Veillez remplire tout les champs !'
+      );
+      return false;
+    }
+    this.diseableBtnEnregistre = true;
+    if (this.tbCode.length < 3) {
+      this.traitementAddCodePost(this.newCodePost);
+    }
+    if (this.tbCode.length > 1) {
+      this.traitementDeleteCodePost(this.codePostDelete);
+    }
     this.serviceBug.updatBug(
       this.bugCmp,
       this.indice,
-      language,
-      titre,
-      details,
+      this.language,
+      this.titre,
+      this.details,
       this.etat,
-      ['']
+      this.tbCode
     );
     this.route.navigate(['/ecm']);
+    return true;
+  }
+  //Methode pour ajouter un nouveau code du post
+  //TODO
+  traitementAddCodePost(code: string) {
+    if (code.length > 0 || code != '') {
+      this.tbCode.push(code);
+    }
+  }
+  //Methode pour supprimer un code du post
+  //TODO
+  traitementDeleteCodePost(code: string) {
+    switch (code) {
+      case '1':
+        this.tbCode.splice(0, 1);
+        break;
+      case '2':
+        this.tbCode.splice(1, 1);
+        break;
+      case '3':
+        this.tbCode.splice(2, 1);
+        break;
+    }
+  }
+
+  //Methode pour netoyer le formulaire
+  //TODO
+  reset() {
+    this.language = '';
+    this.titre = '';
+    this.details = '';
+    this.codePostDelete = '';
+    this.newCodePost = '';
   }
 }

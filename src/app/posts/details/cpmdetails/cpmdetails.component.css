@@ -1,24 +1,58 @@
+.banner {
+  transform-style: preserve-3d;
+  perspective: 500px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+}
+.banner .blocks {
+  position: relative;
+  display: block;
+  width: 70px;
+  height: 50px;
+  background-color: white;
+  animation: animNotify 3s ease-in-out forwards;
+}
+@keyframes animNotify {
+  0% {
+    transform: translateZ(2000px);
+  }
+  100% {
+    transform: translateZ(0px);
+  }
+}
+
 strong,
 button,
 legend,
 label {
   font-weight: bold;
 }
-.alert {
+.alert-info {
+  position: relative;
   color: white;
-  background: #780206; /* fallback for old browsers */
-  background: -webkit-linear-gradient(
-    to right,
-    #061161,
-    #780206
-  ); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(
-    to right,
-    #061161,
-    #780206
-  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background-image: url("src/app/images/pexels-photo-2387819.jpeg");
+  background-repeat: round;
+  animation: anim 10s linear infinite;
 }
+@keyframes anim {
+  0% {
+    background-position: 0 0;
+  }
 
+  100% {
+    background-position: 0 333px;
+  }
+}
+.card {
+  position: relative;
+}
 pre {
   background: #0f2027; /* fallback for old browsers */
   background: -webkit-linear-gradient(
@@ -37,6 +71,21 @@ pre {
 
   color: rgb(255, 255, 255);
 }
+.txtCopyCodeBug {
+  color: black;
+  letter-spacing: 4px;
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 45px;
+  left: 0;
+  top: 460px;
+  background-color: aquamarine;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
 .btn-info,
 .btn-primary,
 .btn-danger {
@@ -54,10 +103,21 @@ pre {
   justify-content: center;
   align-items: center;
 }
-.nomUser {
-  font-weight: bolder;
-  font-size: 25px;
-  margin-bottom: 15px;
+.nomUser,
+.txtFantome {
+  margin-bottom: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: center;
+  color: white;
+  letter-spacing: 5px;
+  width: 100%;
+  height: auto;
+  font-size: 3vw;
+}
+
+.txtsolution {
+  font-size: 3vw;
 }
 .containerParent {
   margin-bottom: 25px;

@@ -17,7 +17,7 @@ const routes: Routes = [
       import('./details/details.module').then((mod) => mod.DetailsModule),
   },
   {
-    path: 'ecm/:idUser/modifier/:indice',
+    path: 'ecm/:idUser/modifier/:indice/:idBug',
     canActivate: [GardGuard, GardUpdateGuardBug],
     loadChildren: () =>
       import('./add-and-update-bug/update/update.module').then(

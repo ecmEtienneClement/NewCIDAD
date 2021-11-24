@@ -3,9 +3,15 @@ import { Injectable } from '@angular/core';
 
 import { environment } from 'src/environments/environment';
 import { UserMongo } from '../Models/modelApi';
+import { ErrorService } from './error.Service';
 @Injectable()
 export class UserMoogoService {
-  constructor(private http: HttpClient) {}
+  token: string = '';
+  userId: string = '';
+  constructor(
+    private http: HttpClient,
+    private alertErrorService: ErrorService
+  ) {}
 
   //Methode pour creer un new user Moogo
   //TODO
@@ -29,34 +35,43 @@ export class UserMoogoService {
   //Methode pour connecter un user Moogo
   //TODO
   connectUserMoogo(email: string, password: string): Promise<any> {
-    return new Promise((resolve, rejects) => {
+  
+    return new Promise((resolve, reject) => {
       this.http
         .post(environment.URL_API + '/user/login/', {
           email: email,
           password: password,
         })
         .subscribe(
-          (data_Token) => {
-            resolve(data_Token);
+          (data_Token_And_UserId: any) => {
+            this.userId = data_Token_And_UserId.userId;
+            this.token = data_Token_And_UserId.token;
+            localStorage.setItem('ECM_TK', this.token);
+            localStorage.setItem('ECM_UI_MG', this.userId);
+            resolve(data_Token_And_UserId);
           },
           (error) => {
-            rejects(false);
+            this.alertErrorService.notySwitchErrorStatus(
+              error.status,
+              'Utilisateur'
+            );
+            reject(false);
           }
         );
     });
   }
   //Methode pour chercher un user Moogo
   //TODO
-  getUserMongo(email: string | null): Promise<UserMongo> {
-    return new Promise((resolve, rejects) => {
+  getUserMongo(email: any): Promise<UserMongo> {
+    return new Promise((resolve) => {
       this.http
         .get<UserMongo>(environment.URL_API + '/user/getuser/' + email)
         .subscribe(
           (data_User: UserMongo) => {
             resolve(data_User);
           },
-          (error) => {
-            rejects(error);
+          () => {
+            this.alertErrorService.notifyAlertErrorDefault();
           }
         );
     });
@@ -79,7 +94,7 @@ export class UserMoogoService {
             resolve(true);
           },
           (error) => {
-            rejects(error);
+            this.alertErrorService.notySwitchErrorStatus(error.status);
           }
         );
     });
@@ -91,7 +106,7 @@ export class UserMoogoService {
     newPassword: string,
     id?: number | string
   ): Promise<boolean | string> {
-    return new Promise((resolve, rejects) => {
+    return new Promise((resolve) => {
       this.http
         .put(environment.URL_API + '/user/update/password/' + id, {
           email: email,
@@ -102,7 +117,7 @@ export class UserMoogoService {
             resolve(true);
           },
           (error) => {
-            rejects(error);
+            this.alertErrorService.notySwitchErrorStatus(error.status);
           }
         );
     });

@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AppPlugingService } from 'src/app/Mes_Services/appPlugin.Service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppPlugin } from 'src/app/Models/modelApi';
 import { CommentaireModel } from 'src/app/Models/commentaire';
+import { ErrorService } from 'src/app/Mes_Services/error.Service';
 
 @Component({
   selector: 'app-update-app-plugin',
@@ -12,7 +13,10 @@ import { CommentaireModel } from 'src/app/Models/commentaire';
   styleUrls: ['./update-app-plugin.component.css'],
 })
 export class UpdateAppPluginComponent implements OnInit {
-  myForm: FormGroup;
+  //Variable pour le btn d'enregistrement desactiver le btn enregistrer d'est k'il click une fw
+  diseableBtnEnregistre: boolean = false;
+  dataCharger: boolean = false;
+
   idPlugin?: number;
   pluginCmp: AppPlugin = {
     _id: 0,
@@ -29,15 +33,13 @@ export class UpdateAppPluginComponent implements OnInit {
   };
 
   constructor(
-    private formBuilder: FormBuilder,
     private appPluginService: AppPlugingService,
     private route: Router,
     private _snackBar: MatSnackBar,
-    private extra: ActivatedRoute
+    private extra: ActivatedRoute,
+    private errorAlertService: ErrorService
   ) {}
   ngOnInit(): void {
-    this.initForm();
-
     //...Recuperation de l'indice via l'url
     //TODO
     this.idPlugin = this.extra.snapshot.params['idPlugin'];
@@ -49,36 +51,33 @@ export class UpdateAppPluginComponent implements OnInit {
       .then((data_App_Plugin: AppPlugin) => {
         if (data_App_Plugin) {
           this.pluginCmp = data_App_Plugin;
+          this.dataCharger = true;
         }
       })
-      .catch((error) => {
-        const message = 'Veillez verifier votre connexion ou actualisé !';
-        //Affichage de l'alerte
-        this.openSnackBar(message, 'ECM');
+      .catch(() => {
+        this.errorAlertService.notifyAlertErrorDefault();
       });
   }
 
   /**.............................. */
 
-  initForm() {
-    this.myForm = this.formBuilder.group({
-      language: ['', Validators.required],
-      documentation: ['', Validators.required],
-      code: ['', Validators.required],
-    });
-  }
-
-  onSubmitForm() {
-    const valueForm = this.myForm.value;
-    let language = valueForm['language'];
-    let documentation = valueForm['documentation'];
-    let code = valueForm['code'];
-
+  onSubmitForm(): boolean {
+    this.diseableBtnEnregistre = true;
+    if (
+      (this.pluginCmp.language == '' || this.pluginCmp.documentation == '',
+      this.pluginCmp.code == '')
+    ) {
+      this.diseableBtnEnregistre = false;
+      this.errorAlertService.notifyAlertErrorDefault(
+        'Veillez remplire tout les champs !'
+      );
+      return false;
+    }
     this.appPluginService
       .updatePlugin(
-        language,
-        documentation,
-        code,
+        this.pluginCmp.language,
+        this.pluginCmp.documentation,
+        this.pluginCmp.code,
         this.pluginCmp.tbCommentaire,
         this.pluginCmp.userId,
         Date.now(),
@@ -96,13 +95,17 @@ export class UpdateAppPluginComponent implements OnInit {
           this.route.navigate(['/appPlugin']);
         }
       })
-      .catch((noGood) => {
-        if (!noGood) {
-          const message = 'Veillez verifier votre connexion ou actualisé !';
-          //Affichage de l'alerte
-          this.openSnackBar(message, 'ECM');
-        }
+      .catch(() => {
+        this.diseableBtnEnregistre = false;
       });
+    return true;
+  }
+  //Methode pour supprimer le formulaire
+  //TODO
+  onResetForm() {
+    this.pluginCmp.language = '';
+    this.pluginCmp.documentation = '';
+    this.pluginCmp.code = '';
   }
 
   //Methode Pour Les Notifications ...C'est un service..

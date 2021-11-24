@@ -20,6 +20,11 @@
           <i class="fas fa-cogs"></i>PARAMETRE
         </a>
       </li>
+      <li class="list-group-item">
+        <a [routerLink]="['/local/init/EcmBd']">
+          <i class="fas fa-database"></i>BD LOCAL
+        </a>
+      </li>
       <li (click)="onsignOut()" class="list-group-item deconnexion">
         DECONNEXION<span class="fas fa-sign-out-alt"></span>
       </li>
@@ -33,10 +38,11 @@
           <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
             <div class="container-fluid">
               <a
+                (click)="drawer.toggle()"
                 class="navbar-brand logo"
-                [routerLink]="['/ecm']"
                 routerLinkActive="router-link-active"
-                >ECM</a
+              >
+                <i class="fas fa-bars"></i> ECM</a
               >
               <button
                 class="navbar-toggler"
@@ -52,6 +58,15 @@
 
               <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                  <li class="nav-item" *ngIf="user_Connected">
+                    <a
+                      class="nav-link active"
+                      aria-current="page"
+                      [routerLink]="['/ecm']"
+                      routerLinkActive="router-link-active"
+                      >AppPost</a
+                    >
+                  </li>
                   <li class="nav-item" *ngIf="user_Connected">
                     <a
                       class="nav-link active"
@@ -97,6 +112,20 @@
                       routerLinkActive="router-link-active"
                     >
                       Enregistrer Plugin</a
+                    >
+                  </li>
+                
+                  <li
+                    (click)="genereTokent()"
+                    class="nav-item"
+                    *ngIf="user_Connected"
+                  >
+                    <a
+                      class="nav-link active"
+                      aria-current="page"
+                      routerLinkActive="router-link-active"
+                    >
+                      Généré Token</a
                     >
                   </li>
                   <li *ngIf="user_Connected" class="nav-item dropdown">
@@ -185,9 +214,7 @@
           </nav>
         </div>
       </div>
-      <button class="btnNavSide" mat-raised-button (click)="drawer.toggle()">
-        <i class="fab fa-accusoft"></i>CIDAD
-      </button>
+
       <div class="container-fluid sid">
         <div class="container">
           <router-outlet></router-outlet>

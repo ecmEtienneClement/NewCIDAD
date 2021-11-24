@@ -1,0 +1,89 @@
+<div class="container-fluid">
+  <div #bd class="row bd">
+    <div class="col-12 mt-4 col-md-4">
+      <i class="good fas fa-database"></i>
+      <div class="form-check form-switch">
+        <label class="mt-3 form-check-label" for="checkPost">BD App-Post</label>
+        <input
+          [(ngModel)]="checkedPost"
+          class="form-check-input"
+          type="checkbox"
+          id="checkPost"
+        />
+      </div>
+    </div>
+    <div class="col-12 mt-4 col-md-4">
+      <i class="good fas fa-database"></i>
+      <div class="form-check form-switch">
+        <label class="mt-3 form-check-label" for="checkPluging"
+          >BD App-Plugin</label
+        >
+        <input
+          [(ngModel)]="checkedPluging"
+          class="form-check-input"
+          type="checkbox"
+          id="checkPluging"
+        />
+      </div>
+    </div>
+    <div class="col-12 mt-4 col-md-4">
+      <i class="good fas fa-database"></i>
+      <div class="form-check form-switch">
+        <label class="mt-3 form-check-label" for="checkVideo"
+          >BD App-URL-Video</label
+        >
+        <input
+          [(ngModel)]="checkedVideo"
+          class="form-check-input"
+          type="checkbox"
+          id="checkVideo"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="row row-progress">
+    <div class="col-12 col-progress mt-4">
+      <circle-progress
+        [percent]="pourcentage"
+        [radius]="100"
+        [outerStrokeWidth]="16"
+        [innerStrokeWidth]="8"
+        [outerStrokeColor]="'#78C000'"
+        [innerStrokeColor]="'#C7E596'"
+        [animation]="true"
+        [animationDuration]="700"
+      ></circle-progress>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12 col-select">
+      <div class="form-group mt-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Sélectionner le poucentage de sauvegarde</mat-label>
+          <mat-select [(ngModel)]="pourcentage">
+            <mat-option #mode value="25">25%</mat-option>
+            <mat-option #mode value="50">50%</mat-option>
+            <mat-option #mode value="75">75%</mat-option>
+            <mat-option #mode value="100">100%</mat-option>
+          </mat-select>
+          <mat-hint>Poucentage de sauvegarde</mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12 col-btn">
+      <button
+        title="Démarrer la sauvegarde"
+        (click)="demarrerSauvegard()"
+        type="button"
+        class="mt-4 btn btn-success"
+      >
+        Démarrer sauvegarde
+      </button>
+    </div>
+  </div>
+</div>

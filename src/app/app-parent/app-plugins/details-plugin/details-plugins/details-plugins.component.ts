@@ -21,6 +21,8 @@ import { NotificationModel } from 'src/app/Models/notification';
   styleUrls: ['./details-plugins.component.css'],
 })
 export class DetailsPluginsComponent implements OnInit {
+  //Variable pour le btn d'enregistrement desactiver le btn enregistrer d'est k'il click une fw
+  diseableBtnEnregistre: boolean = false;
   user_Id_Connect: string;
   //stocker des donnees dans le champs saisi
   commentaire: string = '';
@@ -106,11 +108,6 @@ export class DetailsPluginsComponent implements OnInit {
                     this.user_Id_Connect
                   );
                 }
-              })
-              .catch(() => {
-                this.errorAlert.notifyAlertErrorDefault(
-                  "Une action d'injection de valeur s'est produite !"
-                );
               });
           }
         },
@@ -148,17 +145,11 @@ export class DetailsPluginsComponent implements OnInit {
                 this.prenomUserPlugin = data_User.prenom;
                 this.promoUserPlugin = data_User.promotion;
               })
-              .catch((error) => {
-                alert(
-                  'Une erreur est survenue ! Veiller vérifier votre connexion ou actualisé ...!'
-                );
+              .catch(() => {
+                this.errorAlert.notifyAlertErrorDefault();
               });
           }
         }
-      })
-      .catch((error) => {
-        alert("Cet plugin n'existe pas !");
-        this.router.navigate(['/appPlugin']);
       });
     //Subsciption Pour la verification du code
     //TODO
@@ -187,6 +178,7 @@ export class DetailsPluginsComponent implements OnInit {
   //Recupration des donnees a envoye..
   //TODO
   onSubmitForm() {
+    this.diseableBtnEnregistre = true;
     let userCommentaire: CommentaireModel;
     if (this.fantome == 'false') {
       userCommentaire = new CommentaireModel(
@@ -232,6 +224,7 @@ export class DetailsPluginsComponent implements OnInit {
         this.idPlugin
       )
       .then((good: boolean) => {
+        this.diseableBtnEnregistre = false;
         if (good) {
           const debut_Documentation = this.pluginCmp.documentation.substr(
             0,
@@ -247,10 +240,8 @@ export class DetailsPluginsComponent implements OnInit {
           this.openSnackBar(message, 'ECM');
         }
       })
-      .catch((noGood) => {
-        if (!noGood) {
-          this.errorAlert.notifyAlertErrorDefault();
-        }
+      .catch(() => {
+        this.diseableBtnEnregistre = false;
       });
 
     this.commentaire = '';
@@ -316,13 +307,6 @@ export class DetailsPluginsComponent implements OnInit {
       .then((good: boolean) => {
         if (good) {
           const message = 'Votre commentaire a été bien supprimée ...';
-          //Affichage de l'alerte
-          this.openSnackBar(message, 'ECM');
-        }
-      })
-      .catch((noGood) => {
-        if (!noGood) {
-          const message = 'Veillez vérifier votre connexion ou actualisé !';
           //Affichage de l'alerte
           this.openSnackBar(message, 'ECM');
         }

@@ -15,7 +15,7 @@ export class Notification {
     private _snackBar: MatSnackBar,
     private evenService: EmitEvent
   ) {}
-  private tbNotify: NotificationModel[] = [];
+  private tbNotify: NotificationModel[];
 
   //Mise place des Subjects
   //TODO

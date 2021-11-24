@@ -1,4 +1,4 @@
-import {  NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -30,6 +30,7 @@ import { GardDetailGuard } from './Mes_Services/gard-detail.guard';
 import { GardUpdateGuardBug } from './Mes_Services/gard-update-bug.guard';
 import { GardDetailsPluginGuard } from './Mes_Services/gard-details-plugin.guard';
 import { GuardUpdatePluginGuard } from './Mes_Services/guard-update-plugin.guard';
+import { LocalModule } from './local/local.module';
 
 const routes: Routes = [
   { path: '', component: AcceuilleComponent },
@@ -59,7 +60,7 @@ const routes: Routes = [
       import('./posts/posts.module').then((mod) => mod.PostsModule),
   },
   {
-    path: 'ecm/:idUser/modifier/:indice',
+    path: 'ecm/:idUser/modifier/:indice/:idBug',
     canActivate: [GardGuard, GardUpdateGuardBug],
     loadChildren: () =>
       import('./posts/posts.module').then((mod) => mod.PostsModule),
@@ -135,6 +136,22 @@ const routes: Routes = [
         (mod) => mod.AppParentModule
       ),
   },
+  {
+    path: 'local/init/EcmBd',
+    canActivate: [GardGuard],
+    loadChildren: () =>
+      import('./local/local-routing.module').then(
+        (mod) => mod.LocalRoutingModule
+      ),
+  },
+  {
+    path: 'local/init/EcmBd/BdPourc',
+    canActivate: [GardGuard],
+    loadChildren: () =>
+      import('./local/local-routing.module').then(
+        (mod) => mod.LocalRoutingModule
+      ),
+  },
   { path: 'not-found', component: NotFoundComponent },
   {
     path: '**',
@@ -173,6 +190,7 @@ const routes: Routes = [
     CorpFilsModule,
     FontAwesomeModule,
     AppParentModule,
+    LocalModule,
   ],
 
   bootstrap: [AppComponent],

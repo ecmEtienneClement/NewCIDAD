@@ -3,13 +3,18 @@ import { EmitEvent } from 'src/app/Mes_Services/emitEvent.service';
 import { EventModel, EventType } from 'src/app/Models/eventAction';
 import { ReponseBugModel } from 'src/app/Models/reponseBug';
 import gsap from 'gsap';
+import { TextPlugin } from 'gsap/TextPlugin';
+gsap.registerPlugin(TextPlugin);
 import { Subscription } from 'rxjs';
+
 @Component({
   selector: 'app-viewdetails',
   templateUrl: './viewdetails.component.html',
   styleUrls: ['./viewdetails.component.css'],
 })
 export class ViewdetailsComponent implements OnInit, OnDestroy {
+  //Variable pour le btn d'enregistrement desactiver le btn enregistrer d'est k'il click une fw
+  diseableBtnCommentaire: boolean = false;
   @Input() tbSignalUserCommentaire: boolean[];
   @Input() tbViewUserCommentaire: boolean[];
   @Input() tbViewUser: boolean[];
@@ -19,7 +24,7 @@ export class ViewdetailsComponent implements OnInit, OnDestroy {
   @Input() prenom: string;
   @Input() nom: string;
   @Input() promo: string;
-  @Input() fantome: boolean;
+  @Input() fantome: string;
   @Input() tbReponseBug: ReponseBugModel[];
   @Input() totalPage: number;
   @Input() user_Id_Connect: string;
@@ -47,6 +52,13 @@ export class ViewdetailsComponent implements OnInit, OnDestroy {
         }
       )
     );
+    setTimeout(() => {
+      if (this.tbReponseBug) {
+        if (this.tbReponseBug.length > 0) {
+          this.animeTxtCliquer();
+        }
+      }
+    }, 5000);
   }
   /**......................................................................... */
   //Traitement des event parametre affichage
@@ -68,6 +80,40 @@ export class ViewdetailsComponent implements OnInit, OnDestroy {
   //TODO
   onResetForm() {
     this.commentaire = '';
+  }
+  //Methode pour animer le txt cliqueer pour voir la reponse
+  //TODO
+  animeTxtCliquer() {
+    let instance = gsap.timeline();
+    instance.to(`.cliquerPourDeplier`, {
+      text: 'CLIQUER POUR DEPLIER ...',
+      duration: 2.5,
+    });
+    setTimeout(() => {
+      instance.reversed(true);
+      setTimeout(() => {
+        this.animeTxtCliquer();
+      }, 7000);
+    }, 6000);
+  }
+  //Methode pour animer le txt cliqueer pour voir la reponse
+  //TODO
+  animeTxtCopy(indice: number) {
+    let instance = gsap.timeline();
+
+    instance.to(
+      `.card-cible:nth-child(${indice + 1}) .parentTxtCliqer .blocTxtCopi`,
+      {
+        ease: 'expo',
+        top: 0,
+        visibility: 'visible',
+        duration: 1,
+      }
+    );
+
+    setTimeout(() => {
+      instance.reversed(true);
+    }, 2000);
   }
   //Methode pour deployer les btn
   //TODO
@@ -201,38 +247,14 @@ export class ViewdetailsComponent implements OnInit, OnDestroy {
   }
   //Methode pour copier la reponse
   //TODO
-  copyUrlAppVideo(copiReponse: string) {
+  copyUrlAppVideo(copiReponse: string, indice: number) {
     navigator.clipboard.writeText(copiReponse);
-    /*
-    let instance = gsap.timeline();
-    instance.to(
-      `.card-cible:nth-child(${
-        indice + 1
-      }) .container .row .container-parent-txtCopy .textecommentaire .titre`,
-      {
-        opacity: 0,
-        duration: 0.5,
-      }
-    );
-    instance.to(
-      `.card-cible:nth-child(${
-        indice + 1
-      }) .container .row .container-parent-txtCopy .textecommentaire .textecopy`,
-      {
-        ease: 'expo',
-        top: 0,
-        visibility: 'visible',
-        duration: 1,
-      }
-    );
-    setTimeout(() => {
-      instance.reversed(true);
-    }, 2000);
-    */
+    this.animeTxtCopy(indice);
   }
   //Recupration des donnees a envoye..
   //TODO
   onSubmitForm(obj_Reponse: ReponseBugModel) {
+    this.diseableBtnCommentaire = true;
     //Event de l'Event avec string et indice
     this.eventService.emit_Event_Obj_Reponse_({
       type: EventType.COMMENTER__REPONSE_BUG,
@@ -240,6 +262,7 @@ export class ViewdetailsComponent implements OnInit, OnDestroy {
       data_paylode_String: this.commentaire,
     });
     this.commentaire = '';
+    this.diseableBtnCommentaire = false;
   }
   //Methode pour supprimer la reponse ..
   //TODO

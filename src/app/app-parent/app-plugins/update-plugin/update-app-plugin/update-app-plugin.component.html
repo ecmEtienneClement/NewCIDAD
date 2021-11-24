@@ -1,61 +1,81 @@
-<form [formGroup]="myForm" (ngSubmit)="onSubmitForm()">
-  <!-- Partie du Language-->
-  <div class="form-group mt-4">
-    <mat-form-field appearance="outline">
-      <mat-label>Java Php JavaScript Python ect</mat-label>
-      <input
-        required
-        #langLength
-        [(ngModel)]="pluginCmp.language"
-        maxlength="15"
-        matInput
-        type="text"
-        placeholder="Java  ect ..."
-        formControlName="language"
-      />
+<div class="img01"></div>
+<div class="container-form">
+  <div class="row">
+    <!-- Partie du Language-->
 
-      <mat-hint>Nouveau Language</mat-hint>
-      <mat-hint align="end">{{ langLength.value.length }}/15</mat-hint>
-    </mat-form-field>
+    <div class="col-12 col-md-4 col-lg-4">
+      <div class="form-group mt-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Java Php JavaScript Python ect</mat-label>
+          <input
+            required
+            #langLength
+            [(ngModel)]="pluginCmp.language"
+            maxlength="15"
+            matInput
+            type="text"
+            placeholder="Java  ect ..."
+          />
+
+          <mat-hint>Nouveau Language</mat-hint>
+          <mat-hint align="end">{{ langLength.value.length }}/15</mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Partie de la documentation-->
+    <div class="col-12 col-md-4 col-lg-4">
+      <div class="form-group mt-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Entrez la documentation portant sur cet plugin</mat-label>
+          <textarea
+            #detailsLength
+            [(ngModel)]="pluginCmp.documentation"
+            maxlength="500"
+            rows="7"
+            required
+            matInput
+            placeholder="Entrez la nouvelle documentation portant sur cet plugin"
+          ></textarea>
+          <mat-hint>Nouvelle documentation</mat-hint>
+          <mat-hint align="end">{{ detailsLength.value.length }}/500</mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Partie du code plugin-->
+    <div class="col-12 col-md-4 col-lg-4">
+      <div class="form-group mt-4">
+        <mat-form-field appearance="outline">
+          <mat-label>coller le nouveau code portant sur cet plugin</mat-label>
+          <textarea
+            [(ngModel)]="pluginCmp.code"
+            rows="7"
+            required
+            matInput
+            placeholder="Coller le nouveau code ici"
+          ></textarea>
+          <mat-hint>Nouveau code plugin</mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-btn">
+        <button
+          (click)="onSubmitForm()"
+          class="btn btn-success mt-4"
+          [disabled]="!dataCharger || diseableBtnEnregistre"
+        >
+          Modifier
+        </button>
+        <button
+          (click)="onResetForm()"
+          class="btn btn-danger mt-4"
+          [disabled]="!dataCharger"
+        >
+          Tout Effacer
+        </button>
+      </div>
+    </div>
   </div>
-  <!-- Partie de la documentation-->
-  <div class="form-group mt-4">
-    <mat-form-field appearance="outline">
-      <mat-label>Entrez la documentation portant sur cet plugin</mat-label>
-      <textarea
-        #detailsLength
-        [(ngModel)]="pluginCmp.documentation"
-        maxlength="500"
-        rows="7"
-        required
-        matInput
-        placeholder="Entrez la nouvelle documentation portant sur cet plugin"
-        formControlName="documentation"
-      ></textarea>
-      <mat-hint>Nouvelle documentation</mat-hint>
-      <mat-hint align="end">{{ detailsLength.value.length }}/500</mat-hint>
-    </mat-form-field>
-  </div>
-  <!-- Partie du code plugin-->
-  <div class="form-group mt-4">
-    <mat-form-field appearance="outline">
-      <mat-label>coller le nouveau code portant sur cet plugin</mat-label>
-      <textarea
-        [(ngModel)]="pluginCmp.code"
-        rows="7"
-        required
-        matInput
-        placeholder="Coller le nouveau code ici"
-        formControlName="code"
-      ></textarea>
-      <mat-hint>Nouveau code plugin</mat-hint>
-    </mat-form-field>
-  </div>
-  <button
-    type="submit"
-    class="btn btn-success mt-4"
-    [disabled]="myForm.invalid"
-  >
-    Modifier
-  </button>
-</form>
+</div>

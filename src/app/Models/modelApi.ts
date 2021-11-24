@@ -4,6 +4,12 @@ import { CommentaireModel } from './commentaire';
 import { NotifyModel } from './eventAction';
 
 //TODO
+export interface UserECM {
+  TK: string | null;
+  userIdFB: string | null;
+  userIdMG: string | null;
+}
+//TODO
 export interface UserMongo {
   _id: any;
   email: string;
@@ -34,7 +40,7 @@ export interface AppPlugin {
   date: number;
   update: number;
   tbViewUser: string[];
-  tbSignalCommentaire: string[] ;
+  tbSignalCommentaire: string[];
   tbViewCommentaire: string[];
 }
 //Model AppPlugin

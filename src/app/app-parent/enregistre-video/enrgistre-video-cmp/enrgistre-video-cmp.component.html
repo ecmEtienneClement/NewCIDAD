@@ -1,90 +1,115 @@
-<form [formGroup]="myForm" (ngSubmit)="onSubmitForm()">
-  <!-- Partie du cour-->
-  <div class="form-group mt-4">
-    <mat-form-field appearance="outline">
-      <mat-label>Entrez le nom du cour</mat-label>
-      <input
-        required
-        #courLength
-        matInput
-        type="text"
-        placeholder="Language Php , Anglais ..."
-        formControlName="cour"
-      />
-      <mat-hint>Nom du cour</mat-hint>
-      <mat-hint align="end">{{ courLength.value.length }}/50</mat-hint>
-    </mat-form-field>
-  </div>
-  <!-- Partie du titre-->
-  <div class="form-group mt-4">
-    <mat-form-field appearance="outline">
-      <mat-label>Selectionner le titre</mat-label>
-      <mat-select formControlName="titre">
-        <mat-optgroup>
-          LICENSE 1 SEMESTRE 1
-          <mat-option value="l1-s1-séquence-1">Séquence : 1</mat-option>
-          <mat-option value="l1-s1-séquence-2">Séquence : 2</mat-option>
-          <mat-option value="l1-s1-séquence-3">Séquence : 3</mat-option>
-          <mat-option value="l1-s1-séquence-4">Séquence : 4</mat-option>
-        </mat-optgroup>
-        <mat-optgroup>
-          LICENSE 1 SEMESTRE 2
-          <mat-option value="l1-s2-séquence-1">Séquence : 1</mat-option>
-          <mat-option value="l1-s2-séquence-2">Séquence : 2</mat-option>
-          <mat-option value="l1-s2-séquence-3">Séquence : 3</mat-option>
-          <mat-option value="l1-s2-séquence-4">Séquence : 4</mat-option>
-        </mat-optgroup>
-        <mat-optgroup>
-          LICENSE 2 SEMESTRE 1
-          <mat-option value="l2-s1-séquence-1">Séquence : 1</mat-option>
-          <mat-option value="l2-s1-séquence-2">Séquence : 2</mat-option>
-          <mat-option value="l2-s1-séquence-3">Séquence : 3</mat-option>
-          <mat-option value="l2-s1-séquence-4">Séquence : 4</mat-option>
-        </mat-optgroup>
-        <mat-optgroup>
-          LICENSE 2 SEMESTRE 2
-          <mat-option value="l2-s2-séquence-1">Séquence : 1</mat-option>
-          <mat-option value="l2-s2-séquence-2">Séquence : 2</mat-option>
-          <mat-option value="l2-s2-séquence-3">Séquence : 3</mat-option>
-          <mat-option value="l2-s2-séquence-4">Séquence : 4</mat-option>
-        </mat-optgroup>
-        <mat-optgroup>
-          LICENSE 3 SEMESTRE 1
-          <mat-option value="l3-s1-séquence-1">Séquence : 1</mat-option>
-          <mat-option value="l3-s1-séquence-2">Séquence : 2</mat-option>
-          <mat-option value="l3-s1-séquence-3">Séquence : 3</mat-option>
-          <mat-option value="l3-s1-séquence-4">Séquence : 4</mat-option>
-        </mat-optgroup>
-        <mat-optgroup>
-          LICENSE 3 SEMESTRE 2
-          <mat-option value="l3-s2-séquence-1">Séquence : 1</mat-option>
-          <mat-option value="l3-s2-séquence-2">Séquence : 2</mat-option>
-          <mat-option value="l3-s2-séquence-3">Séquence : 3</mat-option>
-          <mat-option value="l3-s2-séquence-4">Séquence : 4</mat-option>
-        </mat-optgroup>
-      </mat-select>
-      <mat-hint>Titre</mat-hint>
-    </mat-form-field>
-  </div>
-  <!-- Partie du lien-->
-  <div class="form-group mt-4">
-    <mat-form-field appearance="outline">
-      <mat-label>Entrez le lien de la video</mat-label>
-      <input
-        required
-        matInput
-        type="text"
-        placeholder="https://..."
-        formControlName="url"
-      />
-      <mat-hint>URL de la video</mat-hint>
-    </mat-form-field>
-  </div>
-  <button
-    type="submit"
-    class="btn btn-success mt-4"
-    [disabled]="myForm.invalid"
-  >
-    Enregistrer
-  </button>
-</form>
+<div class="img01"></div>
+
+<div class="container-form">
+  <form class="form" [formGroup]="myForm" (ngSubmit)="onSubmitForm()">
+    <div class="row">
+      <!-- Partie du cour-->
+      <div class="col-12 col-md-4">
+        <div class="form-group mt-4">
+          <mat-form-field appearance="outline">
+            <mat-label>Entrez le nom du cour</mat-label>
+            <input
+              required
+              #courLength
+              matInput
+              type="text"
+              placeholder="Language Php , Anglais ..."
+              formControlName="cour"
+            />
+            <mat-hint>Nom du cour</mat-hint>
+            <mat-hint align="end">{{ courLength.value.length }}/50</mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Partie du titre-->
+      <div class="col-12 col-md-4">
+        <div class="form-group mt-4">
+          <mat-form-field appearance="outline">
+            <mat-label>Selectionner le titre</mat-label>
+            <mat-select formControlName="titre">
+              <mat-optgroup>
+                LICENSE 1 SEMESTRE 1
+                <mat-option value="l1-s1-séquence-1">Séquence : 1</mat-option>
+                <mat-option value="l1-s1-séquence-2">Séquence : 2</mat-option>
+                <mat-option value="l1-s1-séquence-3">Séquence : 3</mat-option>
+                <mat-option value="l1-s1-séquence-4">Séquence : 4</mat-option>
+              </mat-optgroup>
+              <mat-optgroup>
+                LICENSE 1 SEMESTRE 2
+                <mat-option value="l1-s2-séquence-1">Séquence : 1</mat-option>
+                <mat-option value="l1-s2-séquence-2">Séquence : 2</mat-option>
+                <mat-option value="l1-s2-séquence-3">Séquence : 3</mat-option>
+                <mat-option value="l1-s2-séquence-4">Séquence : 4</mat-option>
+              </mat-optgroup>
+              <mat-optgroup>
+                LICENSE 2 SEMESTRE 1
+                <mat-option value="l2-s1-séquence-1">Séquence : 1</mat-option>
+                <mat-option value="l2-s1-séquence-2">Séquence : 2</mat-option>
+                <mat-option value="l2-s1-séquence-3">Séquence : 3</mat-option>
+                <mat-option value="l2-s1-séquence-4">Séquence : 4</mat-option>
+              </mat-optgroup>
+              <mat-optgroup>
+                LICENSE 2 SEMESTRE 2
+                <mat-option value="l2-s2-séquence-1">Séquence : 1</mat-option>
+                <mat-option value="l2-s2-séquence-2">Séquence : 2</mat-option>
+                <mat-option value="l2-s2-séquence-3">Séquence : 3</mat-option>
+                <mat-option value="l2-s2-séquence-4">Séquence : 4</mat-option>
+              </mat-optgroup>
+              <mat-optgroup>
+                LICENSE 3 SEMESTRE 1
+                <mat-option value="l3-s1-séquence-1">Séquence : 1</mat-option>
+                <mat-option value="l3-s1-séquence-2">Séquence : 2</mat-option>
+                <mat-option value="l3-s1-séquence-3">Séquence : 3</mat-option>
+                <mat-option value="l3-s1-séquence-4">Séquence : 4</mat-option>
+              </mat-optgroup>
+              <mat-optgroup>
+                LICENSE 3 SEMESTRE 2
+                <mat-option value="l3-s2-séquence-1">Séquence : 1</mat-option>
+                <mat-option value="l3-s2-séquence-2">Séquence : 2</mat-option>
+                <mat-option value="l3-s2-séquence-3">Séquence : 3</mat-option>
+                <mat-option value="l3-s2-séquence-4">Séquence : 4</mat-option>
+              </mat-optgroup>
+            </mat-select>
+            <mat-hint>Titre</mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Partie du lien-->
+      <div class="col-12 col-md-4">
+        <div class="form-group mt-4">
+          <mat-form-field appearance="outline">
+            <mat-label>Entrez le lien de la video</mat-label>
+            <input
+              required
+              matInput
+              type="text"
+              placeholder="https://..."
+              formControlName="url"
+            />
+            <mat-hint>URL de la video</mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <button
+          type="submit"
+          class="btn btn-success mt-4"
+          [disabled]="myForm.invalid || diseableBtnEnregistre"
+        >
+          Enregistrer
+        </button>
+        <button
+          type="reset"
+          class="btn btn-danger mt-4"
+          [disabled]="myForm.invalid || diseableBtnEnregistre"
+        >
+          Effacer
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

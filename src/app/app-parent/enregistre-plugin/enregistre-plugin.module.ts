@@ -5,13 +5,14 @@ import { EnregistrePluginRoutingModule } from './enregistre-plugin-routing.modul
 import { ShearmoduleEnregistreVieoPluginModule } from '../shearmodule-enregistre-vieo-plugin/shearmodule-enregistre-vieo-plugin.module';
 import { EnregistrePluginComponent } from './enregistre-plugin.component';
 
-
+import {MatIconModule} from '@angular/material/icon';
 @NgModule({
   declarations: [
     EnregistrePluginComponent
   ],
   imports: [
     CommonModule,
+    MatIconModule,
     EnregistrePluginRoutingModule,
     ShearmoduleEnregistreVieoPluginModule,
   ],

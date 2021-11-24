@@ -16,6 +16,9 @@ export enum EventType {
   DELETEBUG = '[BugModel] supprimer cet bug',
   VIEW_REPONSE_BUG = '[BugModel] maquer vue a la reponse',
   VIEW_COMMENTAIRE_REPONSE_BUG = '[BugModel] maquer vue au commentaire de la reponse',
+  ANIM_TOTAL_CARD = '[BugModel] animation des cards ',
+  NO_ANIM_TOTAL_CARD = '[BugModel] arrete animation des cards ',
+  FIN_ANIM_CARD = '[BugModel] fin animation card ',
   //.................EVENEMENTS EMISENT DE LA PARTIE REPONSES BUG........................
   //TODO
   CHEKED_REPONSE_BUG = '[ReponseBugModel] coche cette reponse du bug',
@@ -26,6 +29,7 @@ export enum EventType {
   //.................EVENEMENTS EMISENT POUR LA VERIFICATION DU CODE USER........................
   //TODO
   VERIFICATION_CODE = 'verifier si le mot de passe est correcte',
+
   //.................EVENEMENTS EMISENT POUR L'ARRIVE DE LA BD NOTIFY........................
   BD_NOTIFY_LOADED = 'la bd notification est bien rechargée',
   //.................EVENEMENTS EMISENT POUR PARAMETRE AFFICHAGE ECM........................

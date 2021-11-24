@@ -86,7 +86,7 @@ export class ParametreComponent implements OnInit, OnDestroy {
   formDeleteCompte: FormGroup;
   //Varible pour la reini par zone
   zoneReini: string = 'Post';
-  mailzoneReini: string | null;
+  mailzoneReini: string | null | any;
   mdpzoneReini: string;
   tbInstancegsap: any[] = [];
   //Variable pour la securite
@@ -138,13 +138,8 @@ export class ParametreComponent implements OnInit, OnDestroy {
       .getUserMongo(this.user_Email_Connect)
       .then((data_User: UserMongo) => {
         this.userMongo = data_User;
-      })
-      .catch((error) => {
-        const message =
-          "Une erreur s'est produite veillez actualiser ou verifier votre connexion !";
-        //Affichage de l'alerte
-        this.openSnackBar(message, 'ECM');
       });
+
     //InitFormUpdateMail
     //TODO
     this.initFormUpdateEmail();

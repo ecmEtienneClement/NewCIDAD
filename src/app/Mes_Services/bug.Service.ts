@@ -11,6 +11,7 @@ import { GardGuard } from './gard.guard';
 import { Notification } from './notification.service';
 import { ReponseBugModel } from '../Models/reponseBug';
 import { ErrorService } from './error.Service';
+import { LocalService } from './local.Service';
 
 @Injectable()
 export class BugService {
@@ -21,11 +22,12 @@ export class BugService {
     private serviceReponseBug: ReponseBugService,
     private gardService: GardGuard,
     private notificationService: Notification,
-    private errorNotifyService: ErrorService
+    private errorNotifyService: ErrorService,
+    private localService: LocalService
   ) {}
   //....Partie Observable du tbBugService
   tbSubjectBugService: Subject<BugModel[]> = new Subject<BugModel[]>();
-  private tbBugService: BugModel[] = [];
+  private tbBugService: BugModel[];
   etatConnexion: boolean = false;
 
   updatetbBugService() {
@@ -125,7 +127,13 @@ export class BugService {
     this.tbBugService.forEach((element) => {
       if (element.bug_Id == objBug.bug_Id) {
         const index: number = this.tbBugService.indexOf(element);
-        this.route.navigate(['/ecm', objBug.user_Id, 'modifier', index]);
+        this.route.navigate([
+          '/ecm',
+          objBug.user_Id,
+          'modifier',
+          index,
+          objBug.bug_Id,
+        ]);
       }
     });
   }
@@ -348,7 +356,7 @@ export class BugService {
     //On verifier si cette action est bien declancher par le proprietaire du post
     let userIdRepondant = this.gardService.user_Id_Connect;
     if (userIdRepondant !== objBug.user_Id) {
-        this.errorNotifyService.notifyActionNonPermise('cet post');
+      this.errorNotifyService.notifyActionNonPermise('cet post');
       return false;
     }
     let trouver: boolean = false;
@@ -423,7 +431,6 @@ export class BugService {
       .ref('/bdBug')
       .set(this.tbBugService)
       .then(() => {
-        console.log('sauvegardeBase success ...');
         return true;
       })
       .catch((error) => {
@@ -436,11 +443,19 @@ export class BugService {
     firebase
       .database()
       .ref('/bdBug')
-      .on('value', (valueBd) => {
-        this.tbBugService = valueBd.val() ? valueBd.val() : [];
-        this.updatetbBugService();
-      });
-    console.log('recupbase success ...');
+      .on(
+        'value',
+        (valueBd) => {
+          this.tbBugService = valueBd.val() ? valueBd.val() : [];
+          this.updatetbBugService();
+          this.sauvegardeDbBugCryptLocal();
+        },
+        () => {
+          this.errorNotifyService.notifyAlertErrorDefault(
+            'Erreur NV : 2 ! Veillez nous la signalée '
+          );
+        }
+      );
   }
   //.....Recuperation de la base de donnee d'un Bug solo..
   //TODO
@@ -460,6 +475,184 @@ export class BugService {
         );
     });
   }
+  //Methode pour la verification si le user est l'auteur de cet bug
+  //TODO
+  async verifyUserUpdateBug(
+    id_Bug: string,
+    id_User_Bug: string,
+    indice: number
+  ): Promise<boolean> {
+    return await new Promise((resolve, reject) => {
+      if (this.tbBugService) {
+        let trouver: boolean = false;
+        let valide: boolean = false;
+        for (let index = 0; index < this.tbBugService.length; index++) {
+          const element = this.tbBugService[index];
+          if (element.bug_Id == id_Bug) {
+            trouver = true;
+            if (element.user_Id == id_User_Bug) {
+              valide = true;
+              return resolve(true);
+            } else {
+              alert(
+                'Attention ! Cet post que vous tentez de modifié ne vous appartient pas !'
+              );
+
+              return reject(false);
+            }
+          }
+        }
+
+        if (!trouver) {
+          this.errorNotifyService.notifyAlertErrorDefault(
+            "Cet post n'existe pas !"
+          );
+          return reject(false);
+        }
+        if (!valide) {
+          return reject(false);
+        }
+      } else {
+        this.recupbaseSoloBug(indice)
+          .then((dataBug: any) => {
+            if (dataBug == null) {
+              this.errorNotifyService.notifyAlertErrorDefault(
+                "Cet post n'existe pas !"
+              );
+
+              return reject(false);
+            }
+            if (dataBug.user_Id != id_User_Bug) {
+              alert(
+                'Attention ! Cet post que vous tentez de modifié ne vous appartient pas !'
+              );
+              return reject(false);
+            }
+            resolve(true);
+          })
+          .catch(() => {
+            this.errorNotifyService.notifyAlertErrorDefault();
+            return reject(false);
+          });
+      }
+    });
+  }
+  //Methode pour crypter et sauvegarder les donnees en local
+  //TODO
+  sauvegardeDbBugCryptLocal(): boolean {
+    let pourcentageTb: number = 0;
+    //Verification du modeLocal du User
+    const modeLocalUserConnected: boolean | number =
+      this.localService.verifyModeLocal();
+    if (modeLocalUserConnected == true) {
+      //Verification si la BD Bug est activer
+      const checkedBug: boolean | number = this.localService.VerifyAppPost();
+      if (checkedBug == true) {
+        //Verifi si le tb est different de undif...
+        if (this.tbBugService) {
+          //recuperation du pourcentage
+          let pourcentage = this.localService.getPoucentageDonneLocal();
+          //arret du processus si le pourcentage est egal a 0
+          if (pourcentage == 0) {
+            this.errorNotifyService.notifyAlertErrorDefault(
+              "Mode local activer, mais pourcentage de sauvegarde de base non défini ! Veiller reconfiguré l'environnement local "
+            );
+            return false;
+          }
+          //cas ou le pourcentage est de 75%
+          if (pourcentage == 3) {
+            pourcentageTb = Math.floor(this.tbBugService.length / 4) * 3;
+          } else {
+            //Arrondi la valeur pour ne op avoir des virgules
+            pourcentageTb = Math.floor(this.tbBugService.length / pourcentage);
+          }
+
+          let i: number = 0;
+          //Debut de la sauvegarde
+          for (let index = 0; index < pourcentageTb; index++) {
+            const elementBug = this.tbBugService[index];
+            //ECM_Local
+            let name: string = 'ECM_BB_' + i;
+            localStorage.setItem(name, window.btoa(JSON.stringify(elementBug)));
+            ++i;
+          }
+          return true;
+        } else {
+          this.errorNotifyService.notifyAlertErrorDefault(
+            "Bd App-Post n'est pas chargée ! Veillez actualiser pour recharger la BD distante ou vérifier votre connexion ..."
+          );
+        }
+      }
+    }
+    return false;
+  }
+  //Methode pour recuperer les donnees en local
+  //TODO
+  recupDbBugCryptLocal(): boolean {
+    //Verification du modeLocal du User
+    const mode_Local_User_Connected = this.localService.verifyModeLocal();
+    if (mode_Local_User_Connected == true) {
+      //Verification si la BD Bug est activer
+      const checkedBug: boolean | number = this.localService.VerifyAppPost();
+      if (checkedBug == true) {
+        //Verification preliminaire de l'existance de la bd
+        const bdBugCrypt: any = localStorage.getItem('ECM_BB_0');
+        if (bdBugCrypt == null) {
+          this.errorNotifyService.notifyAlertErrorDefault(
+            "Désoler ! Nous n'avons pas trouvé de données local sur les Posts ! Veiller reconfiguré l'environnement local "
+          );
+          return false;
+        }
+        //Recuperation de la base
+        let tbBugLocal: BugModel[] = [];
+        for (let i = 0; i < 0; ++i) {
+          let name: string = 'ECM_BB_' + i;
+          let element: any = localStorage.getItem(name);
+          if (element == null) {
+            this.tbBugService = tbBugLocal;
+            this.updatetbBugService();
+            return true;
+          }
+          const elementDecrypt: string = window.atob(element);
+          const elementDecryptParseJson: any = JSON.parse(elementDecrypt);
+          tbBugLocal.push(elementDecryptParseJson);
+        }
+      }
+    }
+    return false;
+  }
+  //Methode pour supprimer les donnees en local
+  //TODO
+  deleteDbBugCryptLocal(): boolean {
+    //Verification preliminaire de l'existance de la bd
+
+    if (
+      localStorage.getItem('ECM_BB_0') == null &&
+      localStorage.getItem('ECM_BB_1') == null
+    ) {
+      this.errorNotifyService.notifyAlertErrorDefault(
+        "Nous n'avons pas trouvé de données local a supprimées sur les Posts ! "
+      );
+      return false;
+    }
+
+    for (let i = 0; i > -1; ++i) {
+      let name: string = 'ECM_BB_' + i;
+      let element: any = localStorage.getItem(name);
+      if (element != null) {
+        localStorage.removeItem(name);
+      }
+      if (element == null) {
+        this.errorNotifyService.notifyAlertErrorDefault(
+          'Données local des Posts supprimées ! '
+        );
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   //Methode Pour Les Notifications ...C'est un service..
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action);

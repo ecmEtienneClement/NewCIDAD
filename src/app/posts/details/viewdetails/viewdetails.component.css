@@ -4,6 +4,21 @@
   z-index: 2;
   background-color: blue;
 }
+.parentTxtCliqer {
+  position: relative;
+  overflow: hidden;
+}
+.blocTxtCopi {
+  visibility: hidden;
+  position: absolute;
+  letter-spacing: 4px;
+  left: 0;
+  top: -150%;
+  z-index: 5;
+  width: 100%;
+  height: 100%;
+  background-color: aquamarine;
+}
 /*PARTIC BLC BTN*/
 .blcBtn {
   position: relative;
@@ -94,12 +109,16 @@ pre {
   font-weight: bold;
   font-size: medium;
 }
+.txtfantome {
+  padding: 5px;
+}
 .btnDeleleCommentaire {
   float: right;
   color: red;
   margin-top: -10px;
 }
-.paginate {
+.paginate,
+.blocTxtCopi {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -109,26 +128,7 @@ pre {
 
 .cliquerPourDeplier {
   position: relative;
+  font-weight: bold;
   color: black; /* fallback for old browsers */
   font-size: 16;
-}
-.cliquerPourDeplier::before {
-  content: "";
-  position: absolute;
-  right: 0;
-
-  width: 20%;
-  height: 100%;
-  background-color: #fff;
-  animation: animate 6s linear infinite;
-}
-@keyframes animate {
-  0%,
-  100% {
-    width: 100%;
-  }
-  50%,
-  80% {
-    width: 0%;
-  }
 }

@@ -12,6 +12,8 @@ import { Notification } from 'src/app/Mes_Services/notification.service';
   styleUrls: ['./enrgistre-video-cmp.component.css'],
 })
 export class EnrgistreVideoCmpComponent implements OnInit {
+  //Variable pour le btn d'enregistrement desactiver le btn enregistrer d'est k'il click une fw
+  diseableBtnEnregistre: boolean = false;
   myForm: FormGroup;
   user_Id_Connect: string = '';
   constructor(
@@ -39,6 +41,7 @@ export class EnrgistreVideoCmpComponent implements OnInit {
   }
 
   onSubmitForm(): boolean {
+    this.diseableBtnEnregistre = true;
     //https://www.youtube.com/watch?v=VqNFvScAKA4
     //https://drive.google.com/file/d/1GdAxDtAbFgu2zye8f7P2HtSCejNNF2u3/view?usp=sharing
     const valueForm = this.myForm.value;
@@ -70,7 +73,7 @@ export class EnrgistreVideoCmpComponent implements OnInit {
         )
         .then((good: boolean) => {
           if (good) {
-            //j'injecte notify ici pour eviter erreur N0200 circular ID avec le service appVideo 
+            //j'injecte notify ici pour eviter erreur N0200 circular ID avec le service appVideo
             //que je doit injecter dans notification service
             this.notifyService.notifyNewVideo(titre);
             const message = 'La Video a été bien publié !';
@@ -79,14 +82,10 @@ export class EnrgistreVideoCmpComponent implements OnInit {
             this.route.navigate(['appVideo']);
           }
         })
-        .catch((noGood) => {
-          if (!noGood) {
-            const message =
-              "Une erreur s'est produite l'or de la publication de la Video !";
-            //Affichage de l'alerte
-            this.openSnackBar(message, 'ECM');
-          }
+        .catch(() => {
+          this.diseableBtnEnregistre = false;
         });
+
       return true;
     }
     const message = 'Veillez entrez un URL valide !';

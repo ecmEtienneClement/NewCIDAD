@@ -22,7 +22,7 @@
 
         <div class="row">
           <div class="col- 12">
-            <strong>Nombres de réponse (s)</strong><br />
+            <strong>Nombres de commentaire (s)</strong><br />
             {{ pluginCmp.tbCommentaire.length }}
           </div>
         </div>
@@ -45,7 +45,7 @@
 
   <button
     (click)="onSubmitForm()"
-    [disabled]="commentaire.length < 2"
+    [disabled]="commentaire.length < 2 || diseableBtnEnregistre"
     class="btn btn-sm"
   >
     Commenter

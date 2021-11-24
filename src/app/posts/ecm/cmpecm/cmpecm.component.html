@@ -22,7 +22,25 @@
         <span class="initiale">M</span>
       </div>
     </div>
+    <!-- ..................... Partie AFFICHE INFO DE CHARGEMENT .............................-->
+    <div class="row" *ngIf="chargementSuccess">
+      <div class="col-12">
+        <div class="alert alert-success">
+          <strong>Chargement terminer ... </strong><i class="fas fa-check"></i>
+        </div>
+      </div>
+    </div>
+    <div class="row" *ngIf="chargementError">
+      <div class="col-12">
+        <div class="alert alert-danger">
+          <strong
+            >Délai de Chargement dépassé ! Veillez vérifié votre connexion ...
+          </strong>
+        </div>
+      </div>
+    </div>
 
+    <button (click)="local()">local</button>
     <!-- .......................... Partie Recherche ........................................-->
 
     <div class="row">
