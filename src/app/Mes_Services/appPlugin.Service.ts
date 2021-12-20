@@ -8,10 +8,11 @@ import { CommentaireModel } from '../Models/commentaire';
 import { AppPlugin, UserECM } from '../Models/modelApi';
 import { ErrorService } from './error.Service';
 import { GardGuard } from './gard.guard';
-import { LocalService } from './local.Service';
+import { dbNameType, LocalService } from './local.Service';
 import { Notification } from './notification.service';
 import { UserService } from './user.Service';
-
+import * as moment from 'moment';
+moment.locale('fr');
 @Injectable()
 export class AppPlugingService implements OnInit {
   user_Id_Connect: string = '';
@@ -59,6 +60,7 @@ export class AppPlugingService implements OnInit {
     this.userEcmCmp.userIdMG =
       this.userService.VerifyTokenAndUserIdLocaleStorage().userIdMG;
     return new Promise((resolve, reject) => {
+      let dateSaved: string = moment().format('Do MMMM YYYY, HH:mm:ss');
       if (userId != '') {
         this.http
           .post(environment.URL_API + '/app/plugin/', {
@@ -67,7 +69,7 @@ export class AppPlugingService implements OnInit {
             code: code,
             tbCommentaire: tbCommentaire,
             userId: userId,
-            date: date,
+            date: dateSaved,
             update: update,
             tbViewUser: [],
             tbSignalCommentaire: [this.user_Id_Connect],
@@ -141,7 +143,7 @@ export class AppPlugingService implements OnInit {
     code: string,
     tbCommentaire: CommentaireModel[],
     userId: string | undefined = this.user_Id_Connect,
-    date: number = Date.now(),
+    date: string = '',
     update: number = 1,
     tbViewUser: string[],
     tbSignalCommentaire: string[],
@@ -151,6 +153,7 @@ export class AppPlugingService implements OnInit {
     this.userEcmCmp.userIdMG =
       this.userService.VerifyTokenAndUserIdLocaleStorage().userIdMG;
     return new Promise((resolve) => {
+      let dateSaved: string = moment().format('Do MMMM YYYY, HH:mm:ss');
       if (userId != '') {
         this.http
           .put(environment.URL_API + '/app/plugin/' + id, {
@@ -159,7 +162,7 @@ export class AppPlugingService implements OnInit {
             code: code,
             tbCommentaire: tbCommentaire,
             userId: userId,
-            date: date,
+            date: dateSaved,
             update: update,
             tbViewUser: tbViewUser,
             tbSignalCommentaire: tbSignalCommentaire,
@@ -424,7 +427,7 @@ export class AppPlugingService implements OnInit {
         : [];
     return tbAppPluginSearh.length;
   }
-
+  //tbPlugin
   //Methode pour supprimer plusieurs appPlugins d'un user
   //TODO
   deleteManyPlugin(user_Id: string): Promise<number> {
@@ -458,7 +461,8 @@ export class AppPlugingService implements OnInit {
         //Verifie si le tb est different de undifi
         if (this.tbAppPlugin) {
           //recuperation du pourcentage
-          let pourcentage = this.localService.getPoucentageDonneLocal();
+          let pourcentage =
+            this.localService.getPoucentageDonneLocal('ECM_PB_P');
           //arret du processus si le pourcentage est egal a 0
           if (pourcentage == 0) {
             this.errorNotifyService.notifyAlertErrorDefault(
@@ -483,6 +487,8 @@ export class AppPlugingService implements OnInit {
             localStorage.setItem(name, window.btoa(JSON.stringify(elementBug)));
             ++i;
           }
+          //Enregistrement de la date de sauvegarde
+          this.localService.dataSavedDonneLocal(dbNameType.PLUGIN);
           return true;
         } else {
           this.errorNotifyService.notifyAlertErrorDefault(
@@ -529,17 +535,38 @@ export class AppPlugingService implements OnInit {
     }
     return false;
   }
+  //Methode pour le nombre d'elements sauvegardé les donnees en local
+  //TODO
+  nbrElementDbPluginCryptLocal(): number {
+    //Verification preliminaire de l'existance de la bd
+    let nbrElement: number = 0;
+    if (localStorage.getItem('ECM_BP_0') == null) {
+      return 0;
+    }
+
+    for (let i = 0; i > -1; ++i) {
+      let name: string = 'ECM_BP_' + i;
+      let element: any = localStorage.getItem(name);
+      if (element != null) {
+        nbrElement += 1;
+      }
+      if (element == null) {
+        return nbrElement;
+      }
+    }
+
+    return nbrElement;
+  }
   //Methode pour supprimer les donnees en local
   //TODO
-  deleteDbPluginCryptLocal(): boolean {
+  deleteDbPluginCryptLocal(silence: boolean): boolean {
     //Verification preliminaire de l'existance de la bd
-    if (
-      localStorage.getItem('ECM_BP_0') == null &&
-      localStorage.getItem('ECM_BP_1') == null
-    ) {
-      this.errorNotifyService.notifyAlertErrorDefault(
-        "Nous n'avons pas trouvé de données local a supprimées sur les Plugins ! "
-      );
+    if (localStorage.getItem('ECM_BP_0') == null) {
+      if (!silence) {
+        this.errorNotifyService.notifyAlertErrorDefault(
+          "Nous n'avons pas trouvé de données local a supprimées sur les Plugins ! "
+        );
+      }
       return false;
     }
 
@@ -550,9 +577,11 @@ export class AppPlugingService implements OnInit {
         localStorage.removeItem(name);
       }
       if (element == null) {
-        this.errorNotifyService.notifyAlertErrorDefault(
-          'Données local des Plugins supprimées ! '
-        );
+        if (!silence) {
+          this.errorNotifyService.notifyAlertErrorDefault(
+            'Données local des Plugins supprimées ! '
+          );
+        }
         return true;
       }
     }

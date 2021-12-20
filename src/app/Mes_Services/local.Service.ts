@@ -1,7 +1,17 @@
 import { Injectable } from '@angular/core';
 import { ErrorService } from './error.Service';
+import * as moment from 'moment';
+moment().locale('fr');
+//Enumeration des types de db en local
+export enum dbNameType {
+  BUG,
+  PLUGIN,
+  VIDEO,
+}
+
 @Injectable()
 export class LocalService {
+  formaDate: string = 'Do MMMM YYYY, h:mm:ss ';
   constructor(private errorNotifyService: ErrorService) {}
   ecritureMemoireLocal: boolean = true;
   //Methode pour initialiser ECM_Local appeller du AppComponent
@@ -14,7 +24,9 @@ export class LocalService {
         localStorage.setItem('ECM_Local_Bd_B', window.btoa('false'));
         localStorage.setItem('ECM_Local_Bd_P', window.btoa('false'));
         localStorage.setItem('ECM_Local_Bd_V', window.btoa('false'));
-        localStorage.setItem('ECM_PB', '0');
+        localStorage.setItem('ECM_PB_B', '0');
+        localStorage.setItem('ECM_PB_P', '0');
+        localStorage.setItem('ECM_PB_V', '0');
         this.ecritureMemoireLocal = true;
         return true;
       } catch {
@@ -71,26 +83,80 @@ export class LocalService {
   }
   //Methode pour  le pourcentage de sauvegard des donnes local
   //TODO
-  savePoucentageDoneLocal(pourcentage: number) {
+  savePoucentageDoneLocal(pourcentage: number, nameBdPourcentage: string) {
     switch (pourcentage) {
       case 1:
-        localStorage.setItem('ECM_PB', '1');
+        localStorage.setItem(nameBdPourcentage, '1');
         break;
       case 2:
-        localStorage.setItem('ECM_PB', '2');
+        localStorage.setItem(nameBdPourcentage, '2');
         break;
       case 3:
-        localStorage.setItem('ECM_PB', '3');
+        localStorage.setItem(nameBdPourcentage, '3');
         break;
       case 4:
-        localStorage.setItem('ECM_PB', '4');
+        localStorage.setItem(nameBdPourcentage, '4');
         break;
     }
   }
+  //Methode pour la date de sauvegarde
+  //TODO
+  dataSavedDonneLocal(dbNameParam: dbNameType) {
+    moment().locale('fr');
+    const date: any = moment().format('Do MMMM YYYY, HH:mm:ss');
+    switch (dbNameParam) {
+      case dbNameType.BUG:
+        localStorage.setItem(
+          'ECM_DT_Local_B',
+          window.btoa(JSON.stringify(date))
+        );
+        break;
+      case dbNameType.PLUGIN:
+        localStorage.setItem(
+          'ECM_DT_Local_P',
+          window.btoa(JSON.stringify(date))
+        );
+
+        break;
+      case dbNameType.VIDEO:
+        localStorage.setItem(
+          'ECM_DT_Local_V',
+          window.btoa(JSON.stringify(date))
+        );
+
+        break;
+    }
+  }
+  getdateSavedDonneLocal(dbNameParam: dbNameType): any {
+    switch (dbNameParam) {
+      case dbNameType.BUG:
+        return this.traitementGetDateSavedLocal('ECM_DT_Local_B');
+      case dbNameType.PLUGIN:
+        return this.traitementGetDateSavedLocal('ECM_DT_Local_P');
+      case dbNameType.VIDEO:
+        return this.traitementGetDateSavedLocal('ECM_DT_Local_V');
+    }
+  }
+  traitementGetDateSavedLocal(dbName: string): any {
+    if (localStorage.getItem(dbName)) {
+      const date: any = localStorage.getItem(dbName);
+      try {
+        const dateDecript = window.atob(date);
+        const datePars = JSON.parse(dateDecript);
+        return datePars;
+      } catch {
+        this.ECM_SVSD_Error_Decript();
+      }
+    }
+    this.errorNotifyService.notifyAlertErrorDefault(
+      'Donnée local manquante ! Nous constatons que la date de sauvegarde de Local a était supprimer ...'
+    );
+    return false;
+  }
   //Methode pour chercher  le pourcentage de sauvegard des donnes local
   //TODO
-  getPoucentageDonneLocal(): number {
-    const pourcentage: string | null = localStorage.getItem('ECM_PB');
+  getPoucentageDonneLocal(nameBd: string): number {
+    const pourcentage: string | null = localStorage.getItem(nameBd);
     if (pourcentage != null) {
       switch (pourcentage) {
         case '1':
@@ -106,7 +172,7 @@ export class LocalService {
       }
     } else {
       this.errorNotifyService.notifyAlertErrorDefault(
-        "Donnée local manquante ! Veiller reconfiguré l'environnement local "
+        "Poucentage Donnée local manquante ! Veiller reconfiguré l'environnement local et redéfinir le poucentage de sauvegarde "
       );
     }
     return 0;
@@ -117,7 +183,7 @@ export class LocalService {
     checkedPost: boolean,
     checkedPlugin: boolean,
     checkedVideo: boolean
-  ) {
+  ): boolean {
     if (checkedPost) {
       localStorage.setItem('ECM_Local_Bd_B', window.btoa('true'));
     }
@@ -127,6 +193,25 @@ export class LocalService {
     if (checkedVideo) {
       localStorage.setItem('ECM_Local_Bd_V', window.btoa('true'));
     }
+    return true;
+  }
+  //Methode pour enregistrer les BD selectionner par le user
+  //TODO
+  onDesactivatCheckedBdSauvegarde(
+    checkedPost: boolean,
+    checkedPlugin: boolean,
+    checkedVideo: boolean
+  ): boolean {
+    if (checkedPost) {
+      localStorage.setItem('ECM_Local_Bd_B', window.btoa('false'));
+    }
+    if (checkedPlugin) {
+      localStorage.setItem('ECM_Local_Bd_P', window.btoa('false'));
+    }
+    if (checkedVideo) {
+      localStorage.setItem('ECM_Local_Bd_V', window.btoa('false'));
+    }
+    return true;
   }
   //Metodes pour la verification des BD selectionner pour la sauvegarde
   //TODO

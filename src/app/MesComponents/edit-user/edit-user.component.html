@@ -53,7 +53,7 @@
         </mat-form-field>
       </div>
 
-      <!--.................................PARTIE  DU NEW MODE DE NAV ..................................-->
+      <!--.................................PARTIE  DU NEW MODE DE NAV  ..................................-->
       <div class="form-group mt-4">
         <mat-form-field appearance="outline">
           <mat-label>Votre Nouveau Mode de Navigation</mat-label>
@@ -66,9 +66,35 @@
       </div>
     </div>
 
+    <div class="col-12">
+      <div class="form-group blocUpdatePpUser mt-4">
+        <label style="color: white" for="updatePp"
+          ><b>Modifier votre photo de profil</b></label
+        >
+        <input
+          name="updatePp"
+          class="form-control"
+          type="file"
+          (change)="detectFiles($event)"
+          accept="image/*"
+        />
+      </div>
+      <div class="chargement">
+        <div class="icone-chargement">
+          <span></span> <span></span> <span></span> <span></span> <span></span>
+        </div>
+        <div class="txt-chargement mt-3">
+          <b> ............... </b>
+        </div>
+      </div>
+      <div class="succefulChargement">
+        <b style="color: white">Image chargée</b>
+      </div>
+    </div>
+
     <div class="col-12 btn">
       <button
-        [disabled]="!data_Charger"
+        [disabled]="!data_Charger || fileIsUploading"
         type="button"
         class="btn mt-4 btn-outline-primary"
         (click)="onVerifyUser()"
@@ -77,5 +103,4 @@
       </button>
     </div>
   </div>
-
 </div>

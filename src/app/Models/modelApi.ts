@@ -37,7 +37,7 @@ export interface AppPlugin {
   code: string;
   tbCommentaire: CommentaireModel[];
   userId: string;
-  date: number;
+  date: string;
   update: number;
   tbViewUser: string[];
   tbSignalCommentaire: string[];

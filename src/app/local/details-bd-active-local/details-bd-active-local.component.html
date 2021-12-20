@@ -1,0 +1,438 @@
+<div class="container-fluid">
+  <div #bd class="row bd">
+    <!-- PARTI BD BUG-->
+    <div *ngIf="bdBugChecked" class="a col-bd col-10 mt-4 col-md-5">
+      <i class="good fas fa-database"></i>
+    </div>
+    <div *ngIf="bdBugChecked" class="col-des col-10 mt-4 col-md-5">
+      <p class="titre">Nom</p>
+      <p>BD_POST</p>
+      <p class="titre">Etat</p>
+      <p class="etat">{{ etat }}</p>
+      <p class="titre">Pourcentage</p>
+      <p>{{ pourcentageAfficheBug }}%</p>
+      <p class="titre">Nombre Post(s)</p>
+      <p>{{ nbrElementBug }} élement(s)</p>
+      <p class="titre">Mise à jour le</p>
+      {{ dateSavedBug }}
+    </div>
+    <!-- PARTI BD PLUGIN-->
+    <div *ngIf="bdPluginChecked" class="col-bd col-10 mt-4 col-md-5">
+      <i class="good fas fa-database"></i>
+    </div>
+    <div *ngIf="bdPluginChecked" class="col-des col-10 mt-4 col-md-5">
+      <p class="titre">Nom</p>
+      <p>BD_PLUGIN</p>
+      <p class="titre">Etat</p>
+      <p class="etat">{{ etat }}</p>
+      <p class="titre">Pourcentage</p>
+      <p>{{ pourcentageAffichePlugin }}%</p>
+      <p class="titre">Nombre Plugin(s)</p>
+      <p>{{ nbrElementPlugin }} élement(s)</p>
+      <p class="titre">Mise à jour le</p>
+      {{ dateSavedPlugin }}
+    </div>
+    <!-- PARTI BD VIDEO-->
+    <div *ngIf="bdVideoChecked" class="col-bd col-10 mt-4 col-md-5">
+      <i class="good fas fa-database"></i>
+    </div>
+    <div *ngIf="bdVideoChecked" class="col-des col-10 mt-4 col-md-5">
+      <p class="titre">Nom</p>
+      <p>BD_URL_VIDEO</p>
+      <p class="titre">Etat</p>
+      <p class="etat">{{ etat }}</p>
+      <p class="titre">Pourcentage</p>
+      <p>{{ pourcentageAfficheVideo }}%</p>
+      <p class="titre">Nombre Url_Video(s)</p>
+      <p>{{ nbrElementVideo }} élement(s)</p>
+      <p class="titre">Mise à jour le</p>
+      {{ dateSavedVideo }}
+    </div>
+  </div>
+  <div class="container-btn">
+    <!-- *******************PARTI ACCEUILLE*************************-->
+    <ul #ulBtnAcceuille class="list-group">
+      <li
+        (click)="annimBtnNavBD('AddBd')"
+        [ngClass]="{ masque: masquedBtnAddBd }"
+        class="list-group-item"
+      >
+        &nbsp; Ajouter BD
+      </li>
+      <li
+        (click)="annimBtnNavBD('DelBd')"
+        [ngClass]="{ masque: masquedBtnDeleteBd }"
+        class="list-group-item"
+      >
+        Supprimer BD
+      </li>
+      <li
+        (click)="annimBtnNavBD('%Bd')"
+        [ngClass]="{ masque: masquedBtnDeleteBd }"
+        class="list-group-item"
+      >
+        Modifier % BD
+      </li>
+    </ul>
+    <!-- *******************PARTI ADDBASE*************************-->
+    <ul #ulBtnAddBD class="list-group">
+      <!--*************************BD POSTE***************************************-->
+      <li
+        (click)="oncheckedPost()"
+        [ngClass]="{ masque: !bdBugMasqued }"
+        class="nav-add-bd mt-4 list-group-item"
+      >
+        <label class="form-check-label" for="checkPost">BD App-Post</label>
+        <input
+          [(ngModel)]="checkedPost"
+          class="form-check-input"
+          type="checkbox"
+        />
+      </li>
+      <div
+        [ngClass]="{ masque: !bdBugMasqued }"
+        class="nav-add-bd blcpoucentage"
+      >
+        <div class="mt-4">
+          <circle-progress
+            [percent]="pourcentageAddBug"
+            [radius]="50"
+            [outerStrokeWidth]="4"
+            [innerStrokeWidth]="2"
+            [outerStrokeColor]="'#78C000'"
+            [innerStrokeColor]="'#C7E596'"
+            [animation]="true"
+            [animationDuration]="700"
+          ></circle-progress>
+        </div>
+        <div class="form-group mt-4">
+          <mat-form-field appearance="outline">
+            <mat-select [(ngModel)]="pourcentageAddBug">
+              <mat-option #mode value="100">100%</mat-option>
+              <mat-option #mode value="75">75%</mat-option>
+              <mat-option #mode value="50">50%</mat-option>
+              <mat-option #mode value="25">25%</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <!--*************************BD PLUGIN***************************************-->
+      <li
+        (click)="oncheckedPlugin()"
+        [ngClass]="{ masque: !bdPluginMasqued }"
+        class="nav-add-bd mt-4 list-group-item"
+      >
+        <label class="form-check-label" for="checkedPlugin"
+          >BD App-Plugin</label
+        >
+        <input
+          [(ngModel)]="checkedPlugin"
+          class="form-check-input"
+          type="checkbox"
+        />
+      </li>
+      <div
+        [ngClass]="{ masque: !bdPluginMasqued }"
+        class="nav-add-bd blcpoucentage"
+      >
+        <div class="mt-4">
+          <circle-progress
+            [percent]="pourcentageAddPlugin"
+            [radius]="50"
+            [outerStrokeWidth]="4"
+            [innerStrokeWidth]="2"
+            [outerStrokeColor]="'#78C000'"
+            [innerStrokeColor]="'#C7E596'"
+            [animation]="true"
+            [animationDuration]="700"
+          ></circle-progress>
+        </div>
+        <div class="form-group mt-4">
+          <mat-form-field appearance="outline">
+            <mat-select [(ngModel)]="pourcentageAddPlugin">
+              <mat-option #mode value="100">100%</mat-option>
+              <mat-option #mode value="75">75%</mat-option>
+              <mat-option #mode value="50">50%</mat-option>
+              <mat-option #mode value="25">25%</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <!--*************************BD VIDEO***************************************-->
+      <li
+        (click)="oncheckedVideo()"
+        [ngClass]="{ masque: !bdVideoMasqued }"
+        class="nav-add-bd mt-4 list-group-item"
+      >
+        <label class="form-check-label" for="checkVideo"
+          >BD App-URL-Video</label
+        >
+        <input
+          [(ngModel)]="checkedVideo"
+          class="form-check-input"
+          type="checkbox"
+        />
+      </li>
+      <div
+        [ngClass]="{ masque: !bdVideoMasqued }"
+        class="nav-add-bd blcpoucentage"
+      >
+        <div class="mt-4">
+          <circle-progress
+            [percent]="pourcentageAddVideo"
+            [radius]="50"
+            [outerStrokeWidth]="4"
+            [innerStrokeWidth]="2"
+            [outerStrokeColor]="'#78C000'"
+            [innerStrokeColor]="'#C7E596'"
+            [animation]="true"
+            [animationDuration]="700"
+          ></circle-progress>
+        </div>
+        <div class="form-group mt-4">
+          <mat-form-field appearance="outline">
+            <mat-select [(ngModel)]="pourcentageAddVideo">
+              <mat-option #mode value="100">100%</mat-option>
+              <mat-option #mode value="75">75%</mat-option>
+              <mat-option #mode value="50">50%</mat-option>
+              <mat-option #mode value="25">25%</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <li
+        (click)="onValidChecked()"
+        class="nav-add-bd mt-4 btnVlider list-group-item"
+      >
+        Valider
+      </li>
+    </ul>
+    <!-- *******************PARTI DELETEBASE*************************-->
+
+    <ul #ulBtnDeleteBD class="list-group">
+      <li
+        (click)="oncheckedPost()"
+        [ngClass]="{ masque: !bdBugMasqued }"
+        class="mt-4 list-group-item"
+      >
+        <label class="form-check-label" for="checkPost">BD App-Post</label>
+        <input
+          [(ngModel)]="checkedPost"
+          class="form-check-input"
+          type="checkbox"
+        />
+      </li>
+      <li
+        (click)="oncheckedPlugin()"
+        [ngClass]="{ masque: !bdPluginMasqued }"
+        class="mt-4 list-group-item"
+      >
+        <label class="form-check-label" for="checkedPlugin"
+          >BD App-Plugin</label
+        >
+        <input
+          [(ngModel)]="checkedPlugin"
+          class="form-check-input"
+          type="checkbox"
+        />
+      </li>
+      <li
+        (click)="oncheckedVideo()"
+        [ngClass]="{ masque: !bdVideoMasqued }"
+        class="mt-4 list-group-item"
+      >
+        <label class="form-check-label" for="checkVideo"
+          >BD App-URL-Video</label
+        >
+        <input
+          [(ngModel)]="checkedVideo"
+          class="form-check-input"
+          type="checkbox"
+        />
+      </li>
+      <li (click)="onValidChecked()" class="mt-4 btnVlider list-group-item">
+        Valider
+      </li>
+    </ul>
+    <!-- *******************PARTI UPDATEPOURCENTAGE*************************-->
+
+    <ul #ulBtnpourcBD class="list-group">
+      <!--*************************BD POSTE***************************************-->
+      <li
+        (click)="oncheckedPost()"
+        [ngClass]="{ masque: !bdBugMasqued }"
+        class="nav-add-bd mt-4 list-group-item"
+      >
+        <label class="form-check-label" for="checkPost">BD App-Post</label>
+        <input
+          [(ngModel)]="checkedPost"
+          class="form-check-input"
+          type="checkbox"
+        />
+      </li>
+      <div
+        [ngClass]="{ masque: !bdBugMasqued }"
+        class="nav-add-bd blcpoucentage"
+      >
+        <div class="mt-4">
+          <circle-progress
+            [percent]="pourcentageUpdateBug"
+            [radius]="50"
+            [outerStrokeWidth]="4"
+            [innerStrokeWidth]="2"
+            [outerStrokeColor]="'#78C000'"
+            [innerStrokeColor]="'#C7E596'"
+            [animation]="true"
+            [animationDuration]="700"
+          ></circle-progress>
+        </div>
+        <div class="form-group mt-4">
+          <mat-form-field appearance="outline">
+            <mat-select [(ngModel)]="pourcentageUpdateBug">
+              <mat-option #mode value="100">100%</mat-option>
+              <mat-option #mode value="75">75%</mat-option>
+              <mat-option #mode value="50">50%</mat-option>
+              <mat-option #mode value="25">25%</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <!--*************************BD PLUGIN***************************************-->
+      <li
+        (click)="oncheckedPlugin()"
+        [ngClass]="{ masque: !bdPluginMasqued }"
+        class="nav-add-bd mt-4 list-group-item"
+      >
+        <label class="form-check-label" for="checkedPlugin"
+          >BD App-Plugin</label
+        >
+        <input
+          [(ngModel)]="checkedPlugin"
+          class="form-check-input"
+          type="checkbox"
+        />
+      </li>
+      <div
+        [ngClass]="{ masque: !bdPluginMasqued }"
+        class="nav-add-bd blcpoucentage"
+      >
+        <div class="mt-4">
+          <circle-progress
+            [percent]="pourcentageUpdatePlugin"
+            [radius]="50"
+            [outerStrokeWidth]="4"
+            [innerStrokeWidth]="2"
+            [outerStrokeColor]="'#78C000'"
+            [innerStrokeColor]="'#C7E596'"
+            [animation]="true"
+            [animationDuration]="700"
+          ></circle-progress>
+        </div>
+        <div class="form-group mt-4">
+          <mat-form-field appearance="outline">
+            <mat-select [(ngModel)]="pourcentageUpdatePlugin">
+              <mat-option #mode value="100">100%</mat-option>
+              <mat-option #mode value="75">75%</mat-option>
+              <mat-option #mode value="50">50%</mat-option>
+              <mat-option #mode value="25">25%</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <!--*************************BD VIDEO***************************************-->
+      <li
+        (click)="oncheckedVideo()"
+        [ngClass]="{ masque: !bdVideoMasqued }"
+        class="nav-add-bd mt-4 list-group-item"
+      >
+        <label class="form-check-label" for="checkVideo"
+          >BD App-URL-Video</label
+        >
+        <input
+          [(ngModel)]="checkedVideo"
+          class="form-check-input"
+          type="checkbox"
+        />
+      </li>
+      <div
+        [ngClass]="{ masque: !bdVideoMasqued }"
+        class="nav-add-bd blcpoucentage"
+      >
+        <div class="mt-4">
+          <circle-progress
+            [percent]="pourcentageUpdateVideo"
+            [radius]="50"
+            [outerStrokeWidth]="4"
+            [innerStrokeWidth]="2"
+            [outerStrokeColor]="'#78C000'"
+            [innerStrokeColor]="'#C7E596'"
+            [animation]="true"
+            [animationDuration]="700"
+          ></circle-progress>
+        </div>
+        <div class="form-group mt-4">
+          <mat-form-field appearance="outline">
+            <mat-select [(ngModel)]="pourcentageUpdateVideo">
+              <mat-option #mode value="100">100%</mat-option>
+              <mat-option #mode value="75">75%</mat-option>
+              <mat-option #mode value="50">50%</mat-option>
+              <mat-option #mode value="25">25%</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <li
+        (click)="onValidChecked()"
+        class="nav-add-bd mt-4 btnVlider list-group-item"
+      >
+        Valider
+      </li>
+    </ul>
+    <button
+      *ngIf="!btnParamActif && !btnHome"
+      (click)="annimBtnParam()"
+      type="button"
+      class="btn-parametre btn btn-primary"
+    >
+      <i class="fas fa-cogs"></i>
+    </button>
+    <button
+      *ngIf="btnParamActif && !btnHome"
+      (click)="annimBtnParam()"
+      type="button"
+      class="btn-parametre btn btn-primary"
+    >
+      <i class="fas fa-times"></i>
+    </button>
+    <button
+      *ngIf="btnHome"
+      (click)="annimBtnHomeBD()"
+      type="button"
+      class="btn-parametre btn btn-primary"
+    >
+      <i class="fas fa-home"></i>
+    </button>
+  </div>
+  <div class="container-notify">
+    <div class="alert">
+      <p>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="#fff"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M10.872 6.831l1.695 3.904 3.654-1.561-1.79 3.426 3.333.954-3.417 1.338 2.231 4.196-4.773-2.582-2.869 2.287.413-3.004-3.792-.726 2.93-1.74-1.885-2.512 3.427.646.843-4.626zm-.786-6.831l-1.665 9.119-6.512-1.228 3.639 4.851-5.548 3.294 7.108 1.361-.834 6.076 5.742-4.577 9.438 5.104-4.288-8.064 6.834-2.677-6.661-1.907 3.25-6.22-6.98 2.982-3.523-8.114z"
+          />
+        </svg>
+        Veillez ne pas cliquer simultanément ! Une action est en cour patienté
+        ...
+      </p>
+    </div>
+  </div>
+</div>
+<div *ngIf="bdNull" class="bdnull">
+  <h1>0BD</h1>
+</div>

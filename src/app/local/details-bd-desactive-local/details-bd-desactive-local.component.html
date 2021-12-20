@@ -1,0 +1,60 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <button type="button" (click)="retour()" class="btn btn-outline-primary">
+        Retour
+      </button>
+    </div>
+  </div>
+
+  <div #bd class="row bd">
+    <!-- PARTI BD BUG-->
+    <div *ngIf="nbrElementBug > 0" class="a col-bd col-10 mt-4 col-md-5">
+      <i class="good fas fa-database"></i>
+    </div>
+    <div *ngIf="nbrElementBug > 0" class="col-des col-10 mt-4 col-md-5">
+      <p class="titre">Nom</p>
+      <p>BD_POST</p>
+      <p class="titre">Etat</p>
+      <p class="etat">{{ etat }}</p>
+      <p class="titre">Pourcentage</p>
+      <p>{{ pourcentageAfficheBug }}%</p>
+      <p class="titre">Nombre Post(s)</p>
+      <p>{{ nbrElementBug }} élement(s)</p>
+      <p class="titre">Mise à jour le</p>
+      {{ dateSavedBug }}
+    </div>
+    <!-- PARTI BD PLUGIN-->
+    <div *ngIf="nbrElementPlugin > 0" class="col-bd col-10 mt-4 col-md-5">
+      <i class="good fas fa-database"></i>
+    </div>
+    <div *ngIf="nbrElementPlugin > 0" class="col-des col-10 mt-4 col-md-5">
+      <p class="titre">Nom</p>
+      <p>BD_PLUGIN</p>
+      <p class="titre">Etat</p>
+      <p class="etat">{{ etat }}</p>
+      <p class="titre">Pourcentage</p>
+      <p>{{ pourcentageAffichePlugin }}%</p>
+      <p class="titre">Nombre Plugin(s)</p>
+      <p>{{ nbrElementPlugin }} élement(s)</p>
+      <p class="titre">Mise à jour le</p>
+      {{ dateSavedPlugin }}
+    </div>
+    <!-- PARTI BD VIDEO-->
+    <div *ngIf="nbrElementVideo > 0" class="col-bd col-10 mt-4 col-md-5">
+      <i class="good fas fa-database"></i>
+    </div>
+    <div *ngIf="nbrElementVideo > 0" class="col-des col-10 mt-4 col-md-5">
+      <p class="titre">Nom</p>
+      <p>BD_URL_VIDEO</p>
+      <p class="titre">Etat</p>
+      <p class="etat">{{ etat }}</p>
+      <p class="titre">Pourcentage</p>
+      <p>{{ pourcentageAfficheVideo }}%</p>
+      <p class="titre">Nombre Url_Video(s)</p>
+      <p>{{ nbrElementVideo }} élement(s)</p>
+      <p class="titre">Mise à jour le</p>
+      {{ dateSavedVideo }}
+    </div>
+  </div>
+</div>

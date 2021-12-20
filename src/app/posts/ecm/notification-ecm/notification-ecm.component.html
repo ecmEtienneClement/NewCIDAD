@@ -93,24 +93,18 @@
   </mat-drawer>
 
   <mat-drawer-content class="containerParent">
-  
     <div class="row">
       <div class="col-12 col-lg-4">
-      
         <div class="img">
           <div class="box-img">
-            <img
-              class="srcimg"
-              src="https://images.pexels.com/photos/5486199/pexels-photo-5486199.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-              alt=""
-            />
+            <img class="srcimg" [src]="ppUserNotify" alt="Votre profil" />
           </div>
         </div>
       </div>
 
       <div class="col-12 col-lg-4 nom">
         <div class="box-nom">
-         <h1> {{ nomUserNotify }}</h1>
+          <h1>{{ nomUserNotify }}</h1>
         </div>
       </div>
     </div>

@@ -5,7 +5,7 @@ import { AppComponent } from './app.component';
 import { AcceuilleComponent } from './MesComponents/acceuille/acceuille.component';
 import { RouterModule, Routes } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DragDropModule } from '@angular/cdk/drag-drop';
+//import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -31,6 +31,11 @@ import { GardUpdateGuardBug } from './Mes_Services/gard-update-bug.guard';
 import { GardDetailsPluginGuard } from './Mes_Services/gard-details-plugin.guard';
 import { GuardUpdatePluginGuard } from './Mes_Services/guard-update-plugin.guard';
 import { LocalModule } from './local/local.module';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
+import { AfterInscriptionModule } from './inscription/after-inscription/after-inscription.module';
+import { ReiniMailComponent } from './MesComponents/reini-mail/reini-mail.component';
+import { AideComponent } from './MesComponents/aide/aide.component';
 
 const routes: Routes = [
   { path: '', component: AcceuilleComponent },
@@ -41,7 +46,25 @@ const routes: Routes = [
         (mod) => mod.InscriptionModule
       ),
   },
-
+  {
+    path: 'inscription/savePpUser',
+    loadChildren: () =>
+      import(
+        './inscription/after-inscription/after-inscription-routing.module'
+      ).then((mod) => mod.AfterInscriptionRoutingModule),
+  },
+  {
+    path: 'inscription/sendQuestionnaire',
+    loadChildren: () =>
+      import(
+        './inscription/after-inscription/after-inscription-routing.module'
+      ).then((mod) => mod.AfterInscriptionRoutingModule),
+  },
+  {
+    path: 'aide',
+    canActivate: [GardGuard],
+    component: AideComponent,
+  },
   {
     path: 'connexion',
     loadChildren: () =>
@@ -152,6 +175,22 @@ const routes: Routes = [
         (mod) => mod.LocalRoutingModule
       ),
   },
+  {
+    path: 'local/details/EcmBd/ActiveLocal',
+    canActivate: [GardGuard],
+    loadChildren: () =>
+      import('./local/local-routing.module').then(
+        (mod) => mod.LocalRoutingModule
+      ),
+  },
+  {
+    path: 'local/details/EcmBd/DesactiveLocal',
+    canActivate: [GardGuard],
+    loadChildren: () =>
+      import('./local/local-routing.module').then(
+        (mod) => mod.LocalRoutingModule
+      ),
+  },
   { path: 'not-found', component: NotFoundComponent },
   {
     path: '**',
@@ -171,6 +210,8 @@ const routes: Routes = [
     AlertDialogueCodeComponent,
     ModelReauthVueDialogComponent,
     NotFoundComponent,
+    ReiniMailComponent,
+    AideComponent,
   ],
   imports: [
     BrowserModule,
@@ -178,7 +219,7 @@ const routes: Routes = [
     HttpClientModule,
     RouterModule.forRoot(routes),
     BrowserAnimationsModule,
-    DragDropModule,
+    //DragDropModule,
     MatSelectModule,
     MatGridListModule,
     MatButtonModule,
@@ -191,6 +232,13 @@ const routes: Routes = [
     FontAwesomeModule,
     AppParentModule,
     LocalModule,
+    AfterInscriptionModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      // Register the ServiceWorker as soon as the app is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000',
+    }),
   ],
 
   bootstrap: [AppComponent],

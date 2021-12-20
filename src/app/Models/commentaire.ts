@@ -1,3 +1,5 @@
+import * as moment from 'moment';
+moment.locale('fr');
 export class CommentaireModel {
   //La valeur null c'est du au localStorage qui peut etre de valeur null
   constructor(
@@ -6,6 +8,6 @@ export class CommentaireModel {
     public nomUser: string | null = 'fantôme',
     public prenomUser: string | null = '',
     public promoUser: string | null = '',
-    public dateCommentaire: number = Date.now()
+    public dateCommentaire: string = moment().format('Do MMMM YYYY, HH:mm:ss')
   ) {}
 }

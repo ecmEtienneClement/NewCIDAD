@@ -1,0 +1,59 @@
+<div class="container">
+  <h1>ECM CIDAD</h1>
+  <div class="form-group mt-4">
+    <mat-form-field appearance="outline">
+      <mat-label>Veillez saisir votre mail </mat-label>
+      <input
+        style="color: blue"
+        type="email"
+        matInput
+        placeholder="ecm@gmail.com"
+        [(ngModel)]="mailUserSaisi"
+      />
+      <mat-hint style="color: blue">Entrez votre Mail</mat-hint>
+    </mat-form-field>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <button
+      
+        type="button m-3"
+        class="btn btn-sm btn-outline-success"
+        (click)="test()"
+      >
+        Valider
+      </button>
+      <button
+        type="button m-3"
+        class="btn btn-sm btn-outline-danger"
+        (click)="reset()"
+      >
+        Effacer
+      </button>
+    </div>
+  </div>
+  <!--..............................Partie de l'ANIMATION................................-->
+  <div #bloc_anim class="bloc-anim">
+    <div class="blocks" style="--i: 1"></div>
+    <div class="blocks" style="--i: 2"></div>
+    <div class="blocks" style="--i: 3"></div>
+    <div class="blocks" style="--i: 4"></div>
+    <div class="blocks" style="--i: 5"></div>
+    <div class="blocks" style="--i: 6"></div>
+    <div class="blocks" style="--i: 7"></div>
+    <div class="blocks" style="--i: 8"></div>
+    <div class="blocks" style="--i: 9"></div>
+    <div class="blocks" style="--i: 10"></div>
+    <div class="blocks" style="--i: 11"></div>
+    <div class="blocks" style="--i: 12"></div>
+    <div class="blocks" style="--i: 13"></div>
+    <div class="blocks" style="--i: 14"></div>
+    <div class="blocks" style="--i: 15"></div>
+    <div class="blocks" style="--i: 16"></div>
+    <div class="blocks" style="--i: 17"></div>
+    <div class="blocks" style="--i: 18"></div>
+    <div class="blocks" style="--i: 19"></div>
+    <div class="blocks" style="--i: 20"></div>
+    <div class="patiente">CIDAD</div>
+  </div>
+</div>

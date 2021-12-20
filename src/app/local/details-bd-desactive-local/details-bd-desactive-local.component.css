@@ -1,0 +1,40 @@
+.container-fluid {
+  position: relative;
+  min-height: 700px;
+  overflow: hidden;
+}
+.etat {
+  color: red;
+}
+.good {
+  color: rgb(62, 245, 102);
+  font-size: 175px;
+}
+.col-bd,
+.col-des
+ {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.col-bd {
+  animation: animeAfterBefor 5s linear infinite;
+}
+.col-des {
+  color: white;
+  border-bottom: 1px solid white;
+}
+.titre {
+  font-weight: bold;
+  font-size: 15px;
+  letter-spacing: 2px;
+}
+@keyframes animeAfterBefor {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+  }
+}

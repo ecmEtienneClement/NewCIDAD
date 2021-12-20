@@ -1,7 +1,4 @@
-<div
-  class="container"
- 
->
+<div class="container">
   <h1>ECM CIDAD</h1>
   <div class="form-group mt-4">
     <mat-form-field appearance="outline">
@@ -15,22 +12,53 @@
         placeholder="1234"
         [(ngModel)]="codeUserSaisi"
       />
-      <mat-hint style="color: blue">Entrez votre</mat-hint>
+      <mat-hint style="color: blue">Entrez votre code</mat-hint>
       <mat-hint align="end" style="color: blue">
         {{ nomLength.value.length }} /4</mat-hint
       >
     </mat-form-field>
   </div>
-
-  <button
-    [disabled]="!data_Charger || codeUserSaisi.length < 4"
-    type="button m-3"
-    class="btn btn-outline-success"
-    (click)="valider()"
-  >
-    Valider
-  </button>
-  <button type="button m-3" class="btn btn-outline-danger" (click)="reset()">
-    Effacer
-  </button>
+  <div class="row">
+    <div class="col-12">
+      <button
+        [disabled]="!data_Charger || codeUserSaisi.length < 4"
+        type="button m-3"
+        class="btn btn-sm btn-outline-success"
+        (click)="valider()"
+      >
+        Valider
+      </button>
+      <button
+        type="button m-3"
+        class="btn btn-sm btn-outline-danger"
+        (click)="reset()"
+      >
+        Effacer
+      </button>
+    </div>
+  </div>
+  <!--..............................Partie de l'ANIMATION................................-->
+  <div #bloc_anim class="bloc-anim">
+    <div class="blocks" style="--i: 1"></div>
+    <div class="blocks" style="--i: 2"></div>
+    <div class="blocks" style="--i: 3"></div>
+    <div class="blocks" style="--i: 4"></div>
+    <div class="blocks" style="--i: 5"></div>
+    <div class="blocks" style="--i: 6"></div>
+    <div class="blocks" style="--i: 7"></div>
+    <div class="blocks" style="--i: 8"></div>
+    <div class="blocks" style="--i: 9"></div>
+    <div class="blocks" style="--i: 10"></div>
+    <div class="blocks" style="--i: 11"></div>
+    <div class="blocks" style="--i: 12"></div>
+    <div class="blocks" style="--i: 13"></div>
+    <div class="blocks" style="--i: 14"></div>
+    <div class="blocks" style="--i: 15"></div>
+    <div class="blocks" style="--i: 16"></div>
+    <div class="blocks" style="--i: 17"></div>
+    <div class="blocks" style="--i: 18"></div>
+    <div class="blocks" style="--i: 19"></div>
+    <div class="blocks" style="--i: 20"></div>
+    <div class="patiente">CIDAD</div>
+  </div>
 </div>

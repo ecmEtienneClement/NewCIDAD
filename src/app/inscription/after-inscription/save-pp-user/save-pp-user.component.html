@@ -1,0 +1,35 @@
+<div class="container">
+  <div class="col-12">
+    <div class="form-group blocUpdatePpUser mt-4">
+      <label style="color: white" for="updatePp"
+        ><b class="txtPp"> profil</b></label
+      >
+      <input
+        name="updatePp"
+        class="form-control"
+        type="file"
+        (change)="detectFiles($event)"
+        accept="image/*"
+      />
+    </div>
+
+    <div class="chargement">
+      <div class="icone-chargement">
+        <span></span> <span></span> <span></span> <span></span> <span></span>
+      </div>
+      <div class="txt-chargement mt-3">
+        <b> ............... </b>
+      </div>
+    </div>
+    <div class="succefulChargement">
+      <b style="color: white">Image chargée</b>
+      <button
+        (click)="getNext()"
+        type="button"
+        class="btn mt-3 btn-outline-success"
+      >
+        Continuer
+      </button>
+    </div>
+  </div>
+</div>

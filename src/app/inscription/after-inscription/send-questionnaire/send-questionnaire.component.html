@@ -1,0 +1,85 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="colh col-xs-12 col-sm-12 col-md-12 col-lg-12">
+      <h1>CIDAD</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-parametre-default col-12 col-md-4 col-lg-4">
+      <div class="param code">
+        <h2>CODE</h2>
+        <p>
+          Votre code de confirmation d'action de suppression, modification ect
+          ... a était bien configuré et defini a : 1234. Vous pouviez modifier
+          le code dans les paramètres N°1.
+        </p>
+      </div>
+    </div>
+    <div class="col-parametre-default col-12 col-md-4 col-lg-4">
+      <div class="param securite">
+        <h2 style="text-transform: uppercase">sécurité</h2>
+        <p>
+          Mode de sécurité de votre compte a était bien configuré et defini a :
+          Mode-Sécurisé. Vous pouviez modifier le mode de sécurité dans les
+          paramètres N°5.
+        </p>
+      </div>
+    </div>
+    <div class="col-parametre-default col-12 col-md-4 col-lg-4">
+      <div class="param navigation">
+        <h2 style="text-transform: uppercase">navigation</h2>
+        <p>
+          Mode de navigation de votre compte a était bien configuré et defini a
+          : Mode-Identifiable. Vous pouviez modifier le mode de navigation dans
+          Edit-Profil.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-parametre-default col-12">
+      <button
+        (click)="continer()"
+        type="button"
+        class="btn param btnParam btn-sm btn-outline-primary"
+      >
+        Suivant
+      </button>
+    </div>
+  </div>
+  <div class="txtdemande">
+    <h2 style="color: white">SALAM</h2>
+    <p style="color: white">
+      ETIENNE CLEMENT MBAYE la configuration de votre compte CIDAD est presque
+      achevée. 5s pour répondre à nos 4 questions a savoir sur le déroulement de
+      votre inscription. Vous ! en 5s améliorez l'expérience utilisateur
+    </p>
+
+    <div class="row">
+      <div class="mt-4 col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <button
+          *ngIf="btnSendForm"
+          (click)="sendFormulaire()"
+          style="margin-right: 15px"
+          type="button"
+          class="btn btn-url btn-sm btn-outline-primary"
+        >
+          <a
+            href="https://docs.google.com/forms/d/e/1FAIpQLSes55ZnYNw0cfGDnBVdbhwZYJgnI1ZpyeUD00lD70B1bD30Bg/viewform?usp=sf_link"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Répondre</a
+          >
+        </button>
+        <button
+          (click)="next()"
+          style="margin-left: 15px"
+          type="button"
+          class="btn btnPasser btn-sm btn-outline-primary"
+        >
+          Passer
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -33,6 +33,7 @@ export class ViewdetailsComponent implements OnInit, OnDestroy {
   page: number = 1;
   commentaire: string = '';
   etatDeployerBtnGeneral: boolean = false;
+  annicliquer: boolean = false;
   tbInstanceGsap: any[] = [];
   tbInstanceGsapGeneral: any[] = [];
   constructor(private eventService: EmitEvent) {}
@@ -52,14 +53,8 @@ export class ViewdetailsComponent implements OnInit, OnDestroy {
         }
       )
     );
-    setTimeout(() => {
-      if (this.tbReponseBug) {
-        if (this.tbReponseBug.length > 0) {
-          this.animeTxtCliquer();
-        }
-      }
-    }, 5000);
   }
+
   /**......................................................................... */
   //Traitement des event parametre affichage
   //TODO
@@ -84,18 +79,15 @@ export class ViewdetailsComponent implements OnInit, OnDestroy {
   //Methode pour animer le txt cliqueer pour voir la reponse
   //TODO
   animeTxtCliquer() {
+    this.annicliquer = true;
     let instance = gsap.timeline();
     instance.to(`.cliquerPourDeplier`, {
       text: 'CLIQUER POUR DEPLIER ...',
       duration: 2.5,
+      repeat: -1,
     });
-    setTimeout(() => {
-      instance.reversed(true);
-      setTimeout(() => {
-        this.animeTxtCliquer();
-      }, 7000);
-    }, 6000);
   }
+
   //Methode pour animer le txt cliqueer pour voir la reponse
   //TODO
   animeTxtCopy(indice: number) {
@@ -216,6 +208,9 @@ export class ViewdetailsComponent implements OnInit, OnDestroy {
   //Methode pour marquer la reponse vu
   //TODO
   viewUserReponse(obj_Reponse: ReponseBugModel) {
+    if (!this.annicliquer) {
+      this.animeTxtCliquer();
+    }
     this.eventService.emit_Event_Obj_Reponse_({
       type: EventType.VIEW_REPONSE_BUG,
       data_paylode_obj_Reponse: obj_Reponse,
@@ -274,12 +269,12 @@ export class ViewdetailsComponent implements OnInit, OnDestroy {
   }
   deleteCommentaire(
     obj_Reponse: ReponseBugModel,
-    dateCommentaireDelete: number
+    dateCommentaireDelete: string
   ) {
     this.eventService.emit_Event_Obj_Reponse_({
       type: EventType.DELETE_COMMENTAIRE_REPONSE_BUG,
       data_paylode_obj_Reponse: obj_Reponse,
-      data_paylode_Number: dateCommentaireDelete,
+      data_paylode_String: dateCommentaireDelete,
     });
   }
   //Methode pour emmettre le changemant de la page afin de recalculer les valeurs du tbViewUser
@@ -294,7 +289,7 @@ export class ViewdetailsComponent implements OnInit, OnDestroy {
         '',
         false,
         [],
-        0
+        ''
       ),
       data_paylode_String: 'detail ecm',
       data_paylode_Number: event,

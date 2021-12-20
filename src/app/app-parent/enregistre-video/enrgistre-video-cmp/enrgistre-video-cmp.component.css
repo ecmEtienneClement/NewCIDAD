@@ -36,32 +36,30 @@
   object-fit: cover;
   overflow: hidden;
 }
-
-.img01::before {
-  content: "";
+svg {
   position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(#f00, #f0f);
-  clip-path: circle(50% at right 90%);
-  animation: animeAferBefor 5s linear infinite;
+  right: 0;
+  bottom: 0;
+  animation: animeAfterBefor 5s linear infinite;
 }
 
-.img01::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(#2196f3, #e91e63);
-  clip-path: circle(40% at 25% 10%);
+@keyframes animeAfterBefor {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+  }
 }
+
 .btn-danger {
   margin: 0 0 15px 15px;
 }
 .btn-success {
   margin-bottom: 15px;
+}
+mat-hint,
+mat-label {
+  font-weight: bold;
+  color: white;
 }

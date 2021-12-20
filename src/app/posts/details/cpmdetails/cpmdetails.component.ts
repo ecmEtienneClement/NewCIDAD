@@ -1,4 +1,4 @@
-import { Component,  OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -25,7 +25,7 @@ import gsap from 'gsap';
   templateUrl: './cpmdetails.component.html',
   styleUrls: ['./cpmdetails.component.css'],
 })
-export class CpmdetailsComponent implements OnInit {
+export class CpmdetailsComponent implements OnInit, AfterViewInit {
   tbBlocks: string[] = [
     '',
     '',
@@ -117,9 +117,8 @@ export class CpmdetailsComponent implements OnInit {
     '',
     '',
     '',
-
   ];
- 
+
   //Variable pour le btn d'enregistrement desactiver le btn enregistrer d'est k'il click une fw
   diseableBtnRepondre: boolean = false;
   tbViewUser: boolean[] = [];
@@ -148,9 +147,7 @@ export class CpmdetailsComponent implements OnInit {
   //stocker des donnees dans le champs saisi
   reponse: string = '';
   //Intialisation des info du bug
-  bugCmp: BugModel = new BugModel('id', '', '', '', '', '', 0, Date.now(), [
-    '',
-  ]);
+  bugCmp: BugModel = new BugModel('id', '', '', '', '', '', 0, '', ['']);
   //tbReponseCmp: any;
   indice: number;
   tbGeneralDBReponseBug: any = [];
@@ -164,7 +161,7 @@ export class CpmdetailsComponent implements OnInit {
   page_Event?: number = 1;
   id_Event?: string = '';
   obj_Event: ReponseBugModel;
-  number_Event?: number;
+  number_Event?: string;
   // cette variable nous permert d'arrete la boucle de l'anim gsap entete user cas ou le user qui
   // la page sans que la boucle n'est achever
   continu: boolean = true;
@@ -181,12 +178,11 @@ export class CpmdetailsComponent implements OnInit {
     private _snackBar: MatSnackBar,
     private alertErrorDefaultService: ErrorService
   ) {}
+  ngAfterViewInit(): void {
+    this.animCardUser();
+  }
 
   ngOnInit(): void {
-    setTimeout(() => {
-      this.animCardUser();
-    }, 2000);
-
     //Recuperation du User_Id Qui est connecter pour le texte UNE SOLUTION {{nomuser}}et pour les commentaires passage de ses informations
     //TODO
     this.user_Id_Connect = this.authService.user_Id_Connect;
@@ -226,6 +222,7 @@ export class CpmdetailsComponent implements OnInit {
     //.......Recuperation du soloBug
     //TODO
     // this.serviceBug.recupbase();
+
     this.serviceBug
       .recupbaseSoloBug(this.indice)
       .then((data_value: any) => {
@@ -340,6 +337,7 @@ export class CpmdetailsComponent implements OnInit {
     if (this.tbReponseBug.length == 0) {
       this.serviceBug.onVerifyChangeEtatBug(this.bugCmp.bug_Id);
     }
+
     //page total pour la pagination
     this.totalPage = this.tbReponseBug.length;
     //Appelle de la methode de view pour charger le tbViewUser
@@ -413,7 +411,7 @@ export class CpmdetailsComponent implements OnInit {
       case EventType.DELETE_COMMENTAIRE_REPONSE_BUG:
         this.aQui = 'DeleteCommentaireReponseBug';
         this.obj_Event = event.data_paylode_obj_Reponse;
-        this.number_Event = event.data_paylode_Number;
+        this.number_Event = event.data_paylode_String;
         this.onVerifyUser();
         break;
       case EventType.DELETE_REPONSE_BUG:
@@ -547,7 +545,7 @@ export class CpmdetailsComponent implements OnInit {
           this.onDeleteReponseBug(this.obj_Event);
           break;
         case 'CheckReponseBug':
-          //  this.onCheckReponseBug(this.obj_Event);
+          this.onCheckReponseBug(this.obj_Event);
           break;
         case 'DeleteCommentaireReponseBug':
           this.deleteCommentaire(this.obj_Event, this.number_Event);
@@ -629,6 +627,7 @@ export class CpmdetailsComponent implements OnInit {
   //Methode pour Checked la reponse bug
   //TODO
   onCheckReponseBug(obj_Reponse: ReponseBugModel) {
+    alert('ok');
     const isCheked: boolean =
       this.serviceReponseBug.onCheckReponseBug(obj_Reponse);
 
@@ -675,7 +674,7 @@ export class CpmdetailsComponent implements OnInit {
   //TODO
   deleteCommentaire(
     objReponse: ReponseBugModel,
-    dateCommentaireDelete?: number
+    dateCommentaireDelete?: string
   ) {
     this.serviceReponseBug.deleteCommentaire(objReponse, dateCommentaireDelete);
   }

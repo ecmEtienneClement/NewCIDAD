@@ -10,7 +10,11 @@ import { Subscription } from 'rxjs';
 import { EmitEvent } from 'src/app/Mes_Services/emitEvent.service';
 import { EventModel, EventType } from 'src/app/Models/eventAction';
 import { Router } from '@angular/router';
-
+// typical import
+import gsap from 'gsap';
+import { TextPlugin } from 'gsap/TextPlugin';
+import { ErrorService } from 'src/app/Mes_Services/error.Service';
+gsap.registerPlugin(TextPlugin);
 @Component({
   selector: 'app-edit-user',
   templateUrl: './edit-user.component.html',
@@ -19,13 +23,17 @@ import { Router } from '@angular/router';
 export class EditUserComponent implements OnInit, OnDestroy {
   //Desactive le btn Modifier avant le chargement des donnees pour eviter le user le click
   data_Charger: boolean = false;
+  fileIsUploading: boolean = false;
   newNom: string = '';
   newPrenom: string = '';
   newPromo: string = '';
+  newPpUser: string = '';
   newModeNav: string = 'false';
   securiteUser: string = 'true';
   subscriptionVerificationCode: Subscription = new Subscription();
-
+  newUrl: string = '';
+  urlChanged: boolean = false;
+  onUpdateChecked: boolean = false;
   Id_User_Connected: string = '';
   //Variable pour le nombre de tentative
   nbrTentative: number = 3;
@@ -35,13 +43,15 @@ export class EditUserComponent implements OnInit, OnDestroy {
     private _snackBar: MatSnackBar,
     public dialog: MatDialog,
     private eventService: EmitEvent,
-    private route: Router
+    private route: Router,
+    private notifyService: ErrorService
   ) {}
 
   ngOnInit(): void {
     ///Recuperation de l'ID du User Connecter et son email
     //TODO
     this.Id_User_Connected = this.gard.user_Id_Connect;
+
     //recuperation des information du User Connected
     //TODO
     this.userService.VerifyLocaleStorage().then((data_ObjUser) => {
@@ -50,6 +60,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
       this.newPromo = data_ObjUser.promotion;
       this.newModeNav = data_ObjUser.fantome;
       this.securiteUser = data_ObjUser.securite;
+      this.newPpUser = data_ObjUser.ppUser;
       this.data_Charger = true;
     });
 
@@ -97,7 +108,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
     } else {
       if (this.nbrTentative > 1) {
         --this.nbrTentative;
-        const message = `Votre code est incorrect ! Veillez effacer et reprendre tentative (s) restante (s) ${this.nbrTentative}`;
+        const message = `Votre code est incorrect ! tentative (s) restante (s) ${this.nbrTentative}`;
         //Affichage de l'alerte
         this.openSnackBar(message, 'ECM');
       } else {
@@ -112,7 +123,26 @@ export class EditUserComponent implements OnInit, OnDestroy {
     }
   }
   //Methode pour la mise a jour des champs nom prenom promotion et fantome
+  //TODO
   onUpdateUser() {
+    this.onUpdateChecked = true;
+    //On verifie si le pp est changer
+    if (this.urlChanged) {
+      this.userService
+        .onDeletePpUser(this.newPpUser)
+        .then(() => {
+          this.onSave(this.newUrl);
+        })
+        .catch(() => {
+          this.notifyService.notifyAlertErrorDefault(
+            "Une erreur s'est produite ! Vérifier votre connexion si l'erreur persiste actualisé et reprendre le processus"
+          );
+        });
+    } else {
+      this.onSave(this.newPpUser);
+    }
+  }
+  onSave(ppUserParams: string) {
     //Creation de firestore pour la modification des informations du user
     //TODO
     firebase
@@ -124,31 +154,46 @@ export class EditUserComponent implements OnInit, OnDestroy {
         prenom: this.newPrenom,
         promotion: this.newPromo,
         fantome: this.newModeNav,
+        ppUser: ppUserParams,
       })
       .then(() => {
         //TODO
-        this.userService
-          .getInfoUser(this.Id_User_Connected)
-          .then((data_User) => {
-            localStorage.setItem('nomUserConnected', data_User.nom);
-            localStorage.setItem('prenomUserConnected', data_User.prenom);
-            localStorage.setItem('promoUserConnected', data_User.promotion);
-            localStorage.setItem('modeNaveUserConnected', data_User.fantome);
-            localStorage.setItem('securiteUserConnected', data_User.securite);
-            const message = 'Modification (s) enregistrée (s) !';
-            //Affichage de l'alerte
-            this.openSnackBar(message, 'ECM');
-          })
-
-          .catch((error) => {
-            alert(
-              "Une erreur s'est produite recup info User veillez actualisé ..."
-            );
-          });
+        this.userService.updateInfoUserLocal();
+        this.masqueImageCharger();
+        const message = 'Modification(s) enregistrée(s) !';
+        //Affichage de l'alert
+        this.openSnackBar(message, 'ECM');
       })
-      .catch((error) => {
-        alert("une erreur s'est produite ...");
+      .catch(() => {
+        this.notifyService.notifyAlertErrorDefault(
+          "Une erreur s'est produite ! Vérifier votre connexion si l'erreur persiste actualisé et reprendre le processus"
+        );
       });
+  }
+  //Methode pour modifer le pp du user
+  //TODO
+  onChangePpUser(file: File) {
+    this.animChargementPp();
+    this.fileIsUploading = true;
+    this.userService
+      .onSavePpUser(file)
+      .then((url: string) => {
+        this.newUrl = url;
+        this.fileIsUploading = false;
+        this.urlChanged = true;
+        this.stopAnimChargementPp();
+        this.afficheImageCharger();
+      })
+      .catch(() => {
+        this.notifyService.notifyAlertErrorDefault(
+          "Une erreur s'est produite l'or du chargement de l'image ! Vérifier votre connexion si l'erreur persiste actualisé et reprendre le processus"
+        );
+      });
+  }
+  //Methode detecte File
+  //TODO
+  detectFiles(event: any) {
+    this.onChangePpUser(event.target.files[0]);
   }
   //Methode pour la demande de code
   //TODO
@@ -160,8 +205,67 @@ export class EditUserComponent implements OnInit, OnDestroy {
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action);
   }
+  //Methode pour animer le chargement de la photo
+  //TODO
+  animChargementPp() {
+    let instance = gsap.timeline();
+    instance.to('.chargement', {
+      duration: 1,
+      visibility: 'visible',
+    });
+    instance.to('.chargement .icone-chargement span', {
+      scaleY: 5,
+      duration: 0.25,
+      stagger: 0.1,
+      repeat: -1,
+    });
+    instance.to('.chargement .txt-chargement b', {
+      duration: 3,
+      text: 'Chargement Image Profil ...',
+      repeat: -1,
+    });
+  }
+  //Methode pour animer le chargement de la photo
+  //TODO
+  stopAnimChargementPp() {
+    let instance = gsap.timeline();
+    instance.to('.chargement', {
+      duration: 1,
+      visibility: 'hidden',
+    });
+  }
+  //Methode pour afficher que l'image est charger
+  //TODO
+  afficheImageCharger() {
+    let instance = gsap.timeline();
+    instance.to('.succefulChargement', {
+      duration: 1,
+      visibility: 'visible',
+    });
+  } //Methode pour masquer que l'image est charger
+  //TODO
+  masqueImageCharger() {
+    let instance = gsap.timeline();
+    instance.to('.succefulChargement', {
+      duration: 1,
+      visibility: 'hidden',
+    });
+  }
 
   ngOnDestroy(): void {
     this.subscriptionVerificationCode.unsubscribe();
+    //On verifie si le pp est changer est modification non enregistrer
+    if (this.urlChanged && !this.onUpdateChecked) {
+      this.userService
+        .onDeletePpUser(this.newUrl)
+        .then(() => {
+          alert(
+            'Nous constont que vous avez charger une image sans enregistre'
+          );
+        })
+        .catch(() => {
+          alert('erreur delete destroy');
+        });
+    }
   }
 }

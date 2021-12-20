@@ -14,7 +14,7 @@
         class="btn btn-sm btn-nav btn-default"
         (click)="deployerBtn(indice)"
       >
-        <i class="fas fa-bars"></i>
+        <i style="color: white" class="fas fa-bars"></i>
       </button>
       <button
         title="Fermer les boutons"
@@ -64,7 +64,7 @@
         title="Copier la réponse"
         type="button"
         class="btn btn-sm btn-copy btn-outline-primary"
-        (click)="copyUrlAppVideo(reponseBug.reponse,indice)"
+        (click)="copyUrlAppVideo(reponseBug.reponse, indice)"
       >
         <i class="fas fa-copy"></i>
       </button>
@@ -108,7 +108,7 @@
             </div>
           </mat-panel-title>
 
-          <p class="date">{{ reponseBug.dateReponse | date: "short" }}</p>
+          <p class="date">{{ reponseBug.dateReponse }}</p>
         </mat-expansion-panel-header>
 
         <pre
@@ -203,7 +203,7 @@
             >
               <div class="col-12">
                 <p class="txtdateCommentaire mt-3">
-                  {{ commentaire.dateCommentaire | date: "short" }}
+                  {{ commentaire.dateCommentaire }}
                 </p>
               </div>
               <div class="col-12 blcInfUserCommentaire">

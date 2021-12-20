@@ -1,0 +1,149 @@
+.container-fluid {
+  position: relative;
+  min-height: 700px;
+  overflow: hidden;
+}
+.etat {
+  color: rgb(62, 245, 102);
+}
+.good {
+  color: rgb(62, 245, 102);
+  font-size: 175px;
+}
+.col-bd,
+.col-des,
+.btn-parametre,
+.alert,
+.btnVlider {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.col-bd {
+  animation: animeAfterBefor 5s linear infinite;
+}
+.col-des {
+  color: white;
+  border-bottom: 1px solid white;
+}
+.titre {
+  font-weight: bold;
+  font-size: 15px;
+  letter-spacing: 2px;
+}
+@keyframes animeAfterBefor {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+  }
+}
+ul {
+  z-index: 5;
+  position: absolute;
+  width: 75px;
+  height: auto;
+  right: -100px;
+  top: 50px;
+}
+li {
+  color: wheat;
+  text-align: center;
+  padding: 1px 1px 0 0;
+  font-weight: bold;
+  margin-top: 15px;
+  height: 40px;
+  animation: animeAfterBefor 5s linear infinite;
+  border: 1px solid rgba(55, 85, 218, 0.5);
+  border-radius: 5px;
+  box-shadow: 0 5px 35px rgba(0, 0, 0, 0.2);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+li:hover,
+label:hover {
+  cursor: pointer;
+}
+.fa-cogs,
+.fa-times,
+.fa-home {
+  margin-top: 0px;
+  font-size: 30px;
+}
+.btn-parametre {
+  color: wheat;
+  animation: animeAfterBefor 5s linear infinite;
+  border: 1px solid rgba(55, 85, 218, 0.5);
+  border-radius: 5px;
+  box-shadow: 0 5px 35px rgba(0, 0, 0, 0.2);
+  background-color: rgba(255, 255, 255, 0.1);
+  z-index: 5;
+  position: absolute;
+  width: 50px;
+  height: 40px;
+  right: 5px;
+  top: 15px;
+}
+
+.alert {
+  color: white;
+  border-radius: 5px;
+  background-color: rgb(250, 78, 78);
+  border: 1px solid rgb(250, 78, 78);
+  z-index: 5;
+  position: absolute;
+  width: 210px;
+  height: 65px;
+  right: -250px;
+  top: 50px;
+}
+.blcpoucentage {
+  margin-top: 15px;
+  position: relative;
+  width: auto;
+  height: 100px;
+  background: transparent;
+  border: none;
+}
+.form-group {
+  position: relative;
+  height: 40px;
+}
+.form-group mat-form-field {
+  width: 50px;
+  position: absolute;
+  top: 7px;
+  left: 3px;
+}
+.blcpoucentage circle-progress {
+  position: absolute;
+  top: 0;
+  left: -30px;
+}
+.alert p {
+  margin-top: 10px;
+  padding: 0;
+}
+.masque {
+  visibility: hidden;
+}
+.bdnull {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 150px;
+  width: 255px;
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.bdnull h1 {
+  -webkit-text-stroke: 1px rgb(113, 247, 25);
+  font-size: 150px;
+  color: transparent;
+  animation: animeAfterBefor 5s linear infinite;
+}

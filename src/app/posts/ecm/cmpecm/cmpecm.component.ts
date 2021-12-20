@@ -19,13 +19,17 @@ import { AlertDialogueCodeComponent } from 'src/app/MesComponents/alert-dialogue
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ErrorService } from 'src/app/Mes_Services/error.Service';
+import gsap from 'gsap';
+import { TextPlugin } from 'gsap/TextPlugin';
 
+gsap.registerPlugin(TextPlugin);
 @Component({
   selector: 'app-cmpecm',
   templateUrl: './cmpecm.component.html',
   styleUrls: ['./cmpecm.component.css'],
 })
 export class CmpecmComponent implements OnInit {
+  AnnimationSuccess: boolean = false;
   tbSignalUserCommentaire: boolean[] = [];
   tbViewUserCommentaire: boolean[] = [];
   tbSignalUserCharged: boolean = false;
@@ -33,11 +37,12 @@ export class CmpecmComponent implements OnInit {
   tbViewUser: boolean[] = [];
   tbViewUserCharged: boolean = false;
   nomUserNotify: string = '';
+  ppUserNotify: string = '';
   tbCmp: BugModel[] | any = [];
 
   tbCmpCh: BugModel[] | any = [];
   chargement: boolean = true;
-  chargementSuccess: boolean = false;
+
   chargementError: boolean = false;
   user_Id_Connect: string;
   nomUser: string = '';
@@ -46,6 +51,7 @@ export class CmpecmComponent implements OnInit {
   nbrReponseCoche: number;
   promoUser: string = '';
   fantome: string = '';
+  ppUserInfo: string = '';
   securiteUser: string = '';
   subscription: Subscription = new Subscription();
   page_Event?: number = 1;
@@ -62,7 +68,7 @@ export class CmpecmComponent implements OnInit {
   aQui: string = '';
   obj_Event: BugModel;
   //variable pour anim cardTotal
-  animCardEnCour: boolean = false;
+
   //variable pour me permetre de savoir dans quel parti du tab le user se trouve
   indiceTabChange: number = 0;
   constructor(
@@ -79,7 +85,6 @@ export class CmpecmComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    localStorage.removeItem('ECM_UI');
     //Recuperation du User_Id
     //TODO
     this.user_Id_Connect = this.authService.user_Id_Connect;
@@ -90,6 +95,7 @@ export class CmpecmComponent implements OnInit {
       .getInfoUser(this.user_Id_Connect)
       .then((data_User) => {
         this.nomUserNotify = data_User.nom;
+        this.ppUserNotify = data_User.ppUser;
         this.securiteUser = data_User.securite;
       })
       .catch(() => {
@@ -105,19 +111,9 @@ export class CmpecmComponent implements OnInit {
             this.tbCmpCh = this.tbCmp = valuetb ? valuetb : [];
             //retraitement de tabChanger pour represent les mm post au user selon ou il etait au tab
             this.traitementTabChanged(this.indiceTabChange);
-            //Emmission pour no animation des cards
-            /*
-            this.eventService.emit_Event_Update_({
-              type: EventType.NO_ANIM_TOTAL_CARD,
-            });
-*/
+
             this.chargement = false;
             this.chargementError = false;
-            this.chargementSuccess = true;
-
-            setTimeout(() => {
-              this.chargementSuccess = false;
-            }, 5000);
           }
 
           this.verifyViewUserPaginate(this.page_Event);
@@ -132,6 +128,7 @@ export class CmpecmComponent implements OnInit {
       )
     );
     this.serviceBug.updatetbBugService();
+
     //temps pour le delais de recuperation de la base de donnee
     setTimeout(() => {
       if (this.chargement) {
@@ -150,7 +147,7 @@ export class CmpecmComponent implements OnInit {
     this.subscription.add(
       this.eventService.emitEventSubjectBug.subscribe(
         (data_Event: EventModel) => {
-          this.traintementEmitEventVeifyCode(data_Event);
+          this.traintementEmitEventVerifyCode(data_Event);
         }
       )
     );
@@ -163,13 +160,21 @@ export class CmpecmComponent implements OnInit {
         }
       )
     );
+    //TODO
+    //event annimation success
+    this.subscription.add(
+      this.eventService.emitEventSubjectBug.subscribe(
+        (data_Event: EventModel) => {
+          switch (data_Event.type) {
+            case EventType.ANIM_NOTIFY_SUCCESS_BUG:
+              this.annimAlertSuccess();
+              break;
+          }
+        }
+      )
+    );
   }
-
   /*.....................................................................................*/
-
-  local() {
-    this.serviceBug.recupDbBugCryptLocal();
-  }
   //Methode pour Verifier si le user a deja pas vu ce message
   //TODO
   verifySignaleUserCommentairePaginate(pageIndex: number = 1) {
@@ -225,12 +230,8 @@ export class CmpecmComponent implements OnInit {
   }
   //Verification de l'evenement afin de le traite avec la bonne methode ..
   //TODO
-  traintementEmitEventVeifyCode(data_Event: EventModel) {
+  traintementEmitEventVerifyCode(data_Event: EventModel) {
     switch (data_Event.type) {
-      //la vue va signaler la fin de lanimation des cards
-      case EventType.FIN_ANIM_CARD:
-        this.animCardEnCour = false;
-        break;
       case EventType.VERIFICATION_CODE:
         //appelle pour la verification
         this.verifyReponseEvent(data_Event.data_paylode_Number);
@@ -243,9 +244,7 @@ export class CmpecmComponent implements OnInit {
         if (data_Event.data_paylode_String === 'ecm') {
           this.page_Event = data_Event.data_paylode_Number;
           this.verifyViewUserPaginate(data_Event.data_paylode_Number);
-          this.eventService.emit_Event_Update_({
-            type: EventType.ANIM_TOTAL_CARD,
-          });
+
           this.verifySignaleUserCommentairePaginate(
             data_Event.data_paylode_Number
           );
@@ -306,7 +305,7 @@ export class CmpecmComponent implements OnInit {
     } else {
       if (this.nbrTentative > 1) {
         --this.nbrTentative;
-        const message = `Votre code est incorrect ! Veillez effacer et reprendre tentative (s) restante (s) ${this.nbrTentative}`;
+        const message = `Votre code est incorrect ! tentative (s) restante (s) ${this.nbrTentative}`;
         //Affichage de l'alerte
         this.openSnackBar(message, 'ECM');
       } else {
@@ -359,7 +358,6 @@ export class CmpecmComponent implements OnInit {
       case 0:
         this.indiceTabChange = 0;
         this.getAll();
-        this.AnimCardTotal();
         //Redefini les val du tb car les index vont changer
         this.verifyViewUserPaginate(this.page_Event);
         this.verifySignaleUserCommentairePaginate(this.page_Event);
@@ -368,7 +366,6 @@ export class CmpecmComponent implements OnInit {
       case 1:
         this.indiceTabChange = 1;
         this.getMesPost();
-        this.AnimCardTotal();
         this.verifyViewUserPaginate(this.page_Event);
         this.verifySignaleUserCommentairePaginate(this.page_Event);
         this.verifyViewSignaleUserCommentairePaginate(this.page_Event);
@@ -376,7 +373,6 @@ export class CmpecmComponent implements OnInit {
       case 2:
         this.indiceTabChange = 2;
         this.getResolu();
-        this.AnimCardTotal();
         this.verifyViewUserPaginate(this.page_Event);
         this.verifySignaleUserCommentairePaginate(this.page_Event);
         this.verifyViewSignaleUserCommentairePaginate(this.page_Event);
@@ -384,7 +380,6 @@ export class CmpecmComponent implements OnInit {
       case 3:
         this.indiceTabChange = 3;
         this.getNonResolu();
-        this.AnimCardTotal();
         this.verifyViewUserPaginate(this.page_Event);
         this.verifySignaleUserCommentairePaginate(this.page_Event);
         this.verifyViewSignaleUserCommentairePaginate(this.page_Event);
@@ -392,7 +387,6 @@ export class CmpecmComponent implements OnInit {
       case 4:
         this.indiceTabChange = 4;
         this.getModify();
-        this.AnimCardTotal();
         this.verifyViewUserPaginate(this.page_Event);
         this.verifySignaleUserCommentairePaginate(this.page_Event);
         this.verifyViewSignaleUserCommentairePaginate(this.page_Event);
@@ -400,24 +394,6 @@ export class CmpecmComponent implements OnInit {
     }
   }
 
-  //Mehode pour gerer l'animCardTotal
-  //TODO
-  AnimCardTotal() {
-    /*
-    if (!this.animCardEnCour) {
-      this.animCardEnCour = true;
-      this.eventService.emit_Event_Update_({
-        type: EventType.ANIM_TOTAL_CARD,
-        data_paylode_Number:
-          this.tbCmpCh.length > 12 ? 12 : this.tbCmpCh.length,
-      });
-    } else {
-      this.errorAlertService.notifyAlertErrorDefault(
-        'Veillez ne pas cliquer les boutons simultanément ! Une action est en cour ...'
-      );
-    }
-    */
-  }
   //Methode de getAll()
   //TODO
   getAll(): void {
@@ -520,6 +496,7 @@ export class CmpecmComponent implements OnInit {
         this.prenomUser = data_User.prenom;
         this.promoUser = data_User.promotion;
         this.fantome = data_User.fantome;
+        this.ppUserInfo = data_User.ppUser;
       })
       .catch((error) => {
         this.errorAlertService.notifyAlertErrorDefault();
@@ -561,7 +538,37 @@ export class CmpecmComponent implements OnInit {
   onDeletBug(objBug: BugModel) {
     this.serviceBug.deleteBug(objBug);
   }
-
+  //Methode pour annimation success
+  //TODO
+  annimAlertSuccess(): number {
+    if (this.AnnimationSuccess) {
+      return 0;
+    }
+    this.AnnimationSuccess = true;
+    let instance = gsap.timeline();
+    instance.to('.alert-notify', {
+      ease: 'back',
+      right: 10,
+      duration: 1,
+    });
+    instance.to('.alert-notify p', {
+      delay: 1,
+      text: 'Chargement terminer ... Tout les posts ont étaient bien rechargés ',
+      duration: 2,
+    });
+    instance.to('.progress-bar', {
+      width: 210,
+      duration: 2.5,
+    });
+    setTimeout(() => {
+      instance.reversed(true);
+      // le reversed prendra aussi une seconde
+      setTimeout(() => {
+        this.AnnimationSuccess = false;
+      }, 6500);
+    }, 7000);
+    return 1;
+  }
   //Methode pour la demande de code
   //TODO
   openDialog() {

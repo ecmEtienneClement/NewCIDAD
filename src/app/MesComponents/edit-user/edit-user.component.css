@@ -40,12 +40,22 @@
   z-index: 2;
 }
 
-.col-lg-6 {
+.col-lg-6,
+.blocUpdatePpUser,
+.chargement,
+.icone-chargement,
+.txt-chargement,
+.succefulChargement {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   align-content: center;
+}
+.icone-chargement,
+.txt-chargement {
+  flex-direction: row;
+  color: white;
 }
 button {
   font-weight: bold;
@@ -59,9 +69,33 @@ button {
 .button {
   overflow: hidden;
 }
+mat-label,
+mat-hint {
+  font-weight: bold;
+  color: white;
+}
 
 .box {
   z-index: 5;
   display: block;
   color: rebeccapurple;
+}
+.chargement,
+.succefulChargement {
+  visibility: hidden;
+}
+.chargement .icone-chargement span {
+  margin: 25px 0 0 5px;
+  width: 1px;
+  height: 5px;
+  background-color: yellow;
+  animation: animeAfterBefor 5s linear infinite;
+}
+@keyframes animeAfterBefor {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+  }
 }

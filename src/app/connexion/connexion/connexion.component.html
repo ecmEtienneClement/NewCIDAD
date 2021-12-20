@@ -1,65 +1,224 @@
-<div class="container">
-  <div class="jumbotron jumbotron-fluid">
-    <h1 class="display-4">BIENVENUE</h1>
+<div class="container-fluid">
+  <div class="container">
+    <h1 class="display-4 a">CIDAD</h1>
 
     <hr class="my-2" />
-  </div>
-  <div class="row">
-    <div class="col-12 col-lg-5">
-      <form [formGroup]="myForm" (ngSubmit)="onSubmitMyForm()">
-        <!--................................ PARTI DU MAIL ...................................-->
-        <div class="form-group mt-2">
-          <mat-form-field appearance="outline">
-            <mat-label>Entrez votre Mail</mat-label>
-            <input
-              required
-              matInput
-              placeholder="ecmbayeclement@gmail.com"
-              formControlName="mail"
-            />
-            <mat-hint>Mail</mat-hint>
-          </mat-form-field>
-        </div>
 
-        <!--................................ PARTI DU MOT DE PASSE .............................-->
-        <div class="form-group mt-2">
-          <mat-form-field appearance="outline">
-            <mat-label>Entrez votre mot de passe</mat-label>
-            <input
-              required
-              matInput
-              type="password"
-              formControlName="mdp"
-              placeholder="mot de passe"
-            />
-            <mat-hint>Mot de passe</mat-hint>
-          </mat-form-field>
+    <div class="row">
+      <div class="form col-12 col-lg-5">
+        <!-- *****************************FORME CONNEXION*************************************-->
+
+        <form
+          class="formeConnexion"
+          [formGroup]="myForm"
+          (ngSubmit)="onSubmitMyForm()"
+        >
+          <!--................................ PARTI DU MAIL ...................................-->
+          <div class="form-group mt-2">
+            <mat-form-field appearance="outline">
+              <mat-label>Entrez votre Mail</mat-label>
+              <input
+                required
+                matInput
+                placeholder="ecmbayeclement@gmail.com"
+                formControlName="mail"
+              />
+              <mat-hint>Mail</mat-hint>
+            </mat-form-field>
+          </div>
+
+          <!--................................ PARTI DU MOT DE PASSE .............................-->
+          <div class="form-group mt-2">
+            <mat-form-field appearance="outline">
+              <mat-label>Entrez votre mot de passe</mat-label>
+              <input
+                required
+                matInput
+                type="password"
+                formControlName="mdp"
+                placeholder="mot de passe"
+              />
+              <mat-hint>Mot de passe</mat-hint>
+            </mat-form-field>
+          </div>
+          <div class="form-group mt-2">
+            <a class="oublier" (click)="afficheFormReini()"
+              >Mot de passe oublier</a
+            >
+          </div>
+          <!--................................ PARTI DES BOUTONS ...................................-->
+          <div class="blc-btn">
+            <button
+              type="submit"
+              *ngIf="!myForm.invalid"
+              class="btn btn-outline-success mt-3"
+            >
+              Connexion
+            </button>
+            <button
+              (click)="masqueErreur()"
+              type="reset"
+              *ngIf="!myForm.invalid"
+              class="btn btn-outline-danger reset mt-3"
+            >
+              Annuler
+            </button>
+          </div>
+        </form>
+        <!-- *****************************FORME DEMANDE *************************************-->
+        <div class="formDemande">
+          <div class="txtDemande">
+            <h2>DEMANDE</h2>
+            <b></b>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <button
+                (click)="ouiDemande()"
+                type="button m-3"
+                class="btn btn-sm btn-outline-success"
+              >
+                Oui
+              </button>
+              <button
+                style="margin-left: 20px"
+                type="button m-3"
+                class="btn btn-sm btn-outline-danger"
+                (click)="nonDemande()"
+              >
+                Non
+              </button>
+              <button
+                style="margin-left: 20px"
+                type="button m-3"
+                class="btn btn-sm btn-outline-danger"
+                (click)="retourAnimationDemande()"
+              >
+                Retour
+              </button>
+            </div>
+          </div>
         </div>
-        <!--................................ PARTI DES BOUTONS ...................................-->
-        <div>
-          <button
-            type="submit"
-            *ngIf="!myForm.invalid"
-            class="btn btn-outline-success mt-3"
-          >
-            Connexion
-          </button>
-          <button
-            (click)="masqueErreur()"
-            type="reset"
-            *ngIf="!myForm.invalid"
-            class="btn btn-outline-danger reset mt-3"
-          >
-            Annuler
-          </button>
+        <!-- *****************************FORME REINI*************************************-->
+        <div class="forReini">
+          <div class="form-group mt-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Veillez saisir votre mail </mat-label>
+              <input
+                type="email"
+                matInput
+                placeholder="ecmbayeclement@gmail.com"
+                [(ngModel)]="mailUserSaisi"
+              />
+              <mat-hint style="color: white">Entrez votre Mail</mat-hint>
+            </mat-form-field>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <button
+                (click)="onReinicompte()"
+                type="button m-3"
+                class="btn btn-outline-success"
+              >
+                Valider
+              </button>
+              <button
+                style="margin-left: 25px"
+                type="button m-3"
+                class="btn btn-outline-danger"
+                (click)="retourFormConnexion()"
+              >
+                Retour
+              </button>
+            </div>
+          </div>
         </div>
-      </form>
+        <!-- *****************************FORME CONSIGNE *************************************-->
+        <div class="formConsigne">
+          <div class="txtconsigne">
+            <h2>CONSIGNE</h2>
+            <b></b>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <button
+                (click)="ouiDefini()"
+                type="button m-3"
+                class="btn btn-sm btn-outline-success"
+              >
+                Oui Reçu et Défini
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- *****************************FORME AFTER REINI*************************************-->
+        <div class="afterforReini">
+          <div class="form-group mt-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Nouveau mot de passe </mat-label>
+              <input
+                type="password"
+                matInput
+                placeholder="*****************"
+                [(ngModel)]="newMdpUserSaisi"
+              />
+              <mat-hint style="color: white"
+                >Entrez votre Mot de passe</mat-hint
+              >
+            </mat-form-field>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <button
+                (click)="onAfterReinicompte()"
+                type="button m-3"
+                class="btn btn-outline-success"
+              >
+                Valider
+              </button>
+              <button
+                *ngIf="retourSavedMdp"
+                (click)="retourFormConnexion()"
+                style="margin-left: 25px"
+                type="button m-3"
+                class="btn btn-outline-danger"
+              >
+                Retour
+              </button>
+            </div>
+          </div>
+        </div>
+        <!--..............................Partie de l'ANIMATION................................-->
+        <div class="bloc-anim">
+          <div class="blocks" style="--i: 1"></div>
+          <div class="blocks" style="--i: 2"></div>
+          <div class="blocks" style="--i: 3"></div>
+          <div class="blocks" style="--i: 4"></div>
+          <div class="blocks" style="--i: 5"></div>
+          <div class="blocks" style="--i: 6"></div>
+          <div class="blocks" style="--i: 7"></div>
+          <div class="blocks" style="--i: 8"></div>
+          <div class="blocks" style="--i: 9"></div>
+          <div class="blocks" style="--i: 10"></div>
+          <div class="blocks" style="--i: 11"></div>
+          <div class="blocks" style="--i: 12"></div>
+          <div class="blocks" style="--i: 13"></div>
+          <div class="blocks" style="--i: 14"></div>
+          <div class="blocks" style="--i: 15"></div>
+          <div class="blocks" style="--i: 16"></div>
+          <div class="blocks" style="--i: 17"></div>
+          <div class="blocks" style="--i: 18"></div>
+          <div class="blocks" style="--i: 19"></div>
+          <div class="blocks" style="--i: 20"></div>
+          <div class="patiente">CIDAD</div>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <!---->
+    <!---->
 
-  <div class="alert alert-danger mt-3" *ngIf="afficheErreur" role="alert">
-    {{ erreur }}
+    <div class="alert alert-danger mt-3" *ngIf="afficheErreur" role="alert">
+      {{ erreur }}
+    </div>
   </div>
 </div>

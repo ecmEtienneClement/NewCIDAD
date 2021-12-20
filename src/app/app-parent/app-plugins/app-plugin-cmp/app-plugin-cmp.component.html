@@ -17,6 +17,7 @@
         <div class="col-12">
           <app-notify-app-plugin
             [nomUserNotify]="nomUserNotify"
+            [ppUserNotify]="ppUserNotify"
           ></app-notify-app-plugin>
         </div>
       </div>
@@ -88,7 +89,7 @@
 
     <div class="row">
       <div
-        class="col-12 col-lg-4 mt-4"
+        class="col-12 col-lg-4 mt-4 card-cible"
         *ngFor="
           let item of tbAppPluginSearh
             | paginate: { itemsPerPage: 4, currentPage: page };
@@ -96,10 +97,39 @@
         "
       >
         <mat-card class="example-card">
-          <mat-card-subtitle>
+          <div class="blocInfoUser">
+            <div class="nomUserPlugin">
+              <div class="nameUser" *ngIf="fantome == 'false'">
+                <b class="infoUser"
+                  >{{ prenomUser | uppercase }}  {{ nomUser | uppercase }}</b
+                >
+                <p class="infoUser">{{ promoUser }}</p>
+              </div>
+              <!--Si le user est en mode fantome-->
+              <div class="fantome" *ngIf="fantome == 'true'">
+                <b class="infoUser ">FANTOME ...</b>
+              </div>
+            </div>
+            <span (click)="resetCarUser()" class="retourUser"
+              ><i style="color: black;" class="fas fa-chevron-left"></i
+            ></span>
+            <img
+              *ngIf="fantome == 'false'"
+              class="srcimg"
+              [src]="ppUserPlugin"
+              alt="image de l'utilisateur"
+            />
+            <img
+              *ngIf="fantome == 'true'"
+              class="srcimg"
+              src="https://images.pexels.com/photos/5380612/pexels-photo-5380612.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+              alt="image de l'utilisateur"
+            />
+          </div>
+          <mat-card-subtitle class="animmat-card-subtitle">
             <div class="row">
               <div class="col-12">
-                <span class="date">{{ item.date | date: "short" }}</span>
+                <span class="date">{{ item.date }}</span>
               </div>
               <div class="col-12">
                 <mat-menu #aboveMenu="matMenu" yPosition="above">
@@ -117,10 +147,11 @@
                 </mat-menu>
                 <li
                   title="Information du User"
-                  [matMenuTriggerFor]="aboveMenu"
-                  (click)="onViewInfoUser(item.userId)"
+                  (click)="onViewInfoUser(item.userId, indice)"
                   class="list-group-item liUser"
-                  [ngClass]="{ liUserbtn: deployerbtnUser }"
+                  [ngClass]="{
+                    liUserbtn: deployerbtnUser
+                  }"
                 >
                   <a class="aUser"> <i class="fas fa-user-injured"></i></a>
                 </li>
@@ -146,7 +177,7 @@
                       tbSignalCommentaireUser[indice] &&
                       tbViewCommentaireUser[indice]
                     "
-                    class="m-2 spinner-grow-no-width  spinner-grow text-primary"
+                    class="m-2 spinner-grow-no-width spinner-grow text-primary"
                     ><i class="fas fa-comment-dots"></i>
                   </span>
                 </span>
@@ -154,7 +185,7 @@
             </div>
           </mat-card-subtitle>
 
-          <mat-card-title>
+          <mat-card-title class="animmat-card-title">
             <p class="titre">{{ item.language }}</p></mat-card-title
           >
           <mat-card-content
@@ -183,7 +214,7 @@
               <li
                 title="Voir les détails du plugin"
                 (click)="viewPlugin(item)"
-                class="list-group-item view"
+                class="list-group-item view btnliste"
                 [ngClass]="{ btnView: deployerbtnView }"
               >
                 <a><i class="far fa-eye"></i></a>
@@ -193,16 +224,16 @@
                 [matMenuTriggerFor]="aboveMenuNbr"
                 title="Voir le nombre de commentaire (s)"
                 (click)="nbrPlugin(item._id)"
-                class="list-group-item nbr"
+                class="list-group-item nbr btnliste"
                 [ngClass]="{ btnnbr: deployerbtnnbr }"
               >
                 <a><i class="fas fa-question"></i></a>
               </li>
               <li
-                 *ngIf="item.userId == user_Id_Connect"
+                *ngIf="item.userId == user_Id_Connect"
                 title="Modifié le plugin"
                 (click)="updatePlugin(item)"
-                class="list-group-item update"
+                class="list-group-item update btnliste"
                 [ngClass]="{ btnupdate: deployerbtnupdate }"
               >
                 <a routerLinkActive="router-link-active"
@@ -213,7 +244,7 @@
                 *ngIf="item.userId == user_Id_Connect"
                 title="Supprimé le plugin"
                 (click)="deletePlugin(item)"
-                class="list-group-item delete"
+                class="list-group-item delete btnliste"
                 [ngClass]="{ btndelete: deployerbtndelete }"
               >
                 <a><i class="fas fa-minus-circle"></i></a>

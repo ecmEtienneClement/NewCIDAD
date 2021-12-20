@@ -16,9 +16,10 @@ export enum EventType {
   DELETEBUG = '[BugModel] supprimer cet bug',
   VIEW_REPONSE_BUG = '[BugModel] maquer vue a la reponse',
   VIEW_COMMENTAIRE_REPONSE_BUG = '[BugModel] maquer vue au commentaire de la reponse',
-  ANIM_TOTAL_CARD = '[BugModel] animation des cards ',
-  NO_ANIM_TOTAL_CARD = '[BugModel] arrete animation des cards ',
-  FIN_ANIM_CARD = '[BugModel] fin animation card ',
+  ANIM_NOTIFY_SUCCESS_BUG = '[BugModel] animation suucess bdbug',
+  // ANIM_TOTAL_CARD = '[BugModel] animation des cards ',
+  //NO_ANIM_TOTAL_CARD = '[BugModel] arrete animation des cards ',
+  //FIN_ANIM_CARD = '[BugModel] fin animation card ',
   //.................EVENEMENTS EMISENT DE LA PARTIE REPONSES BUG........................
   //TODO
   CHEKED_REPONSE_BUG = '[ReponseBugModel] coche cette reponse du bug',
@@ -50,6 +51,7 @@ export enum EventType {
   //.................EVENEMENTS EMISENT POUR PARAMETRE AFFICHAGE DETAILE ECM........................
   AFFICHE_PARAMETRE_DT_ECM = 'fermer les parametres du  detail ecm',
   OPEN_BTN_CARD_DT_ECM = 'deployement du bouton  detail ecm',
+  ANNIM_CLIQUER_POUR_DEPLIER = 'annimer cliquer pour deplier',
   //.................EVENEMENTS EMISENT POUR LE CHANGE DE LA PAGE DE PAGINATION........................
   CHANGE_PAGINATE = 'changement de la page de pagination',
   //.................EVENEMENTS EMISENT POUR LES NOTIFICATIONS........................

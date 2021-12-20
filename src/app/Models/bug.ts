@@ -20,7 +20,7 @@ export class BugModel {
     public details: string,
     public etat: string,
     public bugUpdate: number,
-    public date: number,
+    public date: string,
     public codeBug: string[],
     public tbViewUser: string[] = [''],
     public newReponse: boolean = false,

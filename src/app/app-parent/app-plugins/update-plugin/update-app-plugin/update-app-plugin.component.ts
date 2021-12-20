@@ -6,7 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AppPlugin } from 'src/app/Models/modelApi';
 import { CommentaireModel } from 'src/app/Models/commentaire';
 import { ErrorService } from 'src/app/Mes_Services/error.Service';
-
+import * as moment from 'moment';
+moment.locale('fr');
 @Component({
   selector: 'app-update-app-plugin',
   templateUrl: './update-app-plugin.component.html',
@@ -23,9 +24,9 @@ export class UpdateAppPluginComponent implements OnInit {
     language: '',
     documentation: '',
     code: '',
-    tbCommentaire: [new CommentaireModel('', '', '', '', '', 0)],
+    tbCommentaire: [new CommentaireModel('', '', '', '', '', '')],
     userId: '',
-    date: 0,
+    date: '',
     update: 0,
     tbViewUser: [],
     tbViewCommentaire: [],
@@ -73,6 +74,7 @@ export class UpdateAppPluginComponent implements OnInit {
       );
       return false;
     }
+    let dateSaved: string = moment().format('Do MMMM YYYY, HH:mm:ss');
     this.appPluginService
       .updatePlugin(
         this.pluginCmp.language,
@@ -80,7 +82,7 @@ export class UpdateAppPluginComponent implements OnInit {
         this.pluginCmp.code,
         this.pluginCmp.tbCommentaire,
         this.pluginCmp.userId,
-        Date.now(),
+        dateSaved,
         /*valeur update */ 1,
         this.pluginCmp.tbViewUser,
         this.pluginCmp.tbSignalCommentaire,

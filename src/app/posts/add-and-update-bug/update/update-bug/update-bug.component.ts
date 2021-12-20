@@ -14,7 +14,7 @@ export class UpdateBugComponent implements OnInit {
   //Variable pour le btn d'enregistrement desactiver le btn enregistrer d'est k'il click une fw
   diseableBtnEnregistre: boolean = false;
   dataCharger: boolean = false;
-  bugCmp: any = new BugModel('', '', '', '', '', '', 0, Date.now(), ['']);
+  bugCmp: any = new BugModel('', '', '', '', '', '', 0, '', ['']);
   myForm: FormGroup;
   indice: number;
   //Valeure des champs par defaut ...

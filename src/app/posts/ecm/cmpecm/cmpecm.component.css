@@ -1,10 +1,32 @@
-
 .alert-success,
 .alert-danger {
   display: flex;
   text-align: center;
   align-items: center;
   justify-content: center;
+}
+.colNotify {
+  position: relative;
+  overflow: hidden;
+}
+
+.alert-notify {
+  color: white;
+  border-radius: 5px;
+  background-color: rgb(62, 245, 102);
+  border: 1px solid rgb(62, 245, 102);
+  z-index: 5;
+  position: absolute;
+  width: 210px;
+  height: 68px;
+  right: -250px;
+  top: 50px;
+}
+.alert-notify p {
+  font-weight: bold;
+}
+.fa-thumbs-up {
+  font-size: 25px;
 }
 
 .date,
@@ -15,6 +37,7 @@
 h3,
 .nbrReponse,
 button {
+  color: whitesmoke;
   font-weight: bold;
 }
 .ligne {
@@ -49,10 +72,7 @@ button {
 .btn-search {
   font-size: 10px;
 }
-.container-bug {
-  background-image: url("src/app/images/pexels-photo-952670.jpeg");
-  animation: annim 10s linear infinite;
-}
+
 @keyframes anim {
   0% {
     background-position: 0 0;

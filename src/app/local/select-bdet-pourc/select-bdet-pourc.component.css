@@ -1,3 +1,8 @@
+.container-fluid {
+  position: relative;
+  overflow: hidden;
+}
+
 .bd {
   opacity: 1;
 }
@@ -32,6 +37,9 @@ label {
 }
 circle-progress:hover {
   cursor: progress;
+}
+.form-group mat-form-field {
+  width: 170px;
 }
 .row-progress {
   position: relative;
@@ -69,4 +77,23 @@ mat-hint {
   margin-bottom: 45px;
   font-weight: bold;
   animation: animeAfterBefor 5s linear infinite;
+}
+
+.alert-notify {
+  color: white;
+  border-radius: 5px;
+  background-color: rgb(62, 245, 102);
+  border: 1px solid rgb(62, 245, 102);
+  z-index: 5;
+  position: absolute;
+  width: 210px;
+  height: 68px;
+  right: -250px;
+  top: 50px;
+}
+.alert-notify p {
+  font-weight: bold;
+}
+.fa-thumbs-up {
+  font-size: 25px;
 }

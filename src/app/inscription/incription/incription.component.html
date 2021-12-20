@@ -1,34 +1,27 @@
 <div class="jumbotron jumbotron-fluid">
   <div class="alert alert-info mt-4">
-    <p class="lead">Adhérer à la communauté CIDAD c'est 100% gratuit</p>
+    <p class="cidad">CIDAD</p>
+    <p class="cidad-des definition"></p>
+  </div>
+  <div class="alert alert-info mt-4">
+    <p class="cidad">ECM</p>
+    <p class="cidad-des ecm"></p>
+    <p class="promo"></p>
+  </div>
+  <div class="alert alert-info mt-4">
+    <p class="cidad-des condition"></p>
+  </div>
+  <div class="alert alert-info mt-4">
+    <p class="ida"></p>
+    <p class="adhesion"></p>
   </div>
 </div>
 
-<div class="row">
-  <div class="col-12 mt-3">
-    <div
-      id="carouselExampleSlidesOnly"
-      class="carousel slide"
-      data-bs-ride="carousel"
-    >
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          <img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-vgzBvStVFA2p0cXTNwnJsP0P_-C6QfGFNQ&usqp=CAU"
-            class="d-block w-100"
-            alt="..."
-          />
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 <div class="jumbotron">
-  <h1 class="display-4">CREER UN COMPTE</h1>
-
+  <h1 class="display-4 creer" style="color: whitesmoke"></h1>
   <div class="alert alert-info" *ngIf="myFormVmdp.invalid">
-    <strong>Inscrivez-Vous!</strong><br />
-    Veillez remplire ce formulaire afin de creer votre compte avec CIDAD ...
+    <strong class="txtinscription"></strong><br />
+    <p class="veillez"></p>
   </div>
 
   <div class="alert alert-success" *ngIf="!myFormVmdp.invalid">
@@ -37,195 +30,218 @@
   </div>
 </div>
 <!-- ...........................  Partie de la FORMULAIRE  ...............................-->
-<div class="container">
-  <div class="container-fluid Container-Fils-Formulaire">
-    <mat-stepper [linear]="isLinear" #stepper>
-      <!-- ............................ PARTI DU NOM .................................-->
-      <mat-step [stepControl]="myFormNom" label="Entrez votre Nom">
-        <form [formGroup]="myFormNom">
-          <mat-form-field appearance="outline">
-            <mat-label>Votre Nom</mat-label>
 
-            <input
-              #nomLength
-              maxlength="15"
-              matInput
-              placeholder="MBAYE"
-              formControlName="nom"
-              required
-            />
-            <mat-hint> Nom</mat-hint>
-            <mat-hint align="end"> {{ nomLength.value.length }} /15</mat-hint>
-          </mat-form-field>
-          <div>
-            <button mat-button matStepperNext>Suivant</button>
-          </div>
-        </form>
-      </mat-step>
-      <!-- ............................ PARTI DU PRENOM .................................-->
-      <mat-step [stepControl]="myFormPrenom" label="Entrez votre Prenom">
-        <form [formGroup]="myFormPrenom">
-          <mat-form-field appearance="outline">
-            <input
-              #prenomLength
-              matInput
-              maxlength="25"
-              formControlName="prenom"
-              placeholder="Etienne Clement"
-              required
-            />
-            <mat-label>Votre Prenom</mat-label>
-            <mat-hint align="end">
-              {{ prenomLength.value.length }} /25</mat-hint
-            >
-          </mat-form-field>
-          <div>
-            <button mat-button matStepperPrevious>Retour</button>
-            <button mat-button matStepperNext>Suivant</button>
-          </div>
-        </form>
-      </mat-step>
+<div class="container-fluid Container-Fils-Formulaire">
+  <mat-stepper [linear]="isLinear" #stepper>
+    <!-- ............................ PARTI DU NOM .................................-->
+    <mat-step [stepControl]="myFormNom" label="Entrez votre Nom">
+      <form [formGroup]="myFormNom">
+        <mat-form-field appearance="outline">
+          <mat-label>Votre Nom</mat-label>
 
-      <!-- ............................ PARTI DE LA PROMOTION .................................-->
-      <mat-step [stepControl]="myFormPromotion" label="Choisir votre Promotion">
-        <form [formGroup]="myFormPromotion">
-          <mat-form-field appearance="outline">
-            <mat-label>Votre Promotion</mat-label>
-            <mat-select formControlName="promotion">
-              <mat-option value="P1">Promotion : 1</mat-option>
-              <mat-option value="P2">Promotion : 2</mat-option>
-              <mat-option value="P3">Promotion : 3</mat-option>
-              <mat-option value="P4">Promotion : 4</mat-option>
-              <mat-option value="P5">Promotion : 5</mat-option>
-              <mat-option value="P6">Promotion : 6</mat-option>
-              <mat-option value="P7">Promotion : 7</mat-option>
-              <mat-option value="P8">Promotion : 8</mat-option>
-            </mat-select>
-            <mat-hint>Promotion</mat-hint>
-          </mat-form-field>
-          <div>
-            <button mat-button matStepperPrevious>Retour</button>
-            <button mat-button matStepperNext>Suivant</button>
-          </div>
-        </form>
-      </mat-step>
-      <!-- ............................ PARTI DU MAIL .................................-->
-      <mat-step [stepControl]="myFormMail" label="Entrez votre Mail">
-        <form [formGroup]="myFormMail">
-          <mat-form-field appearance="outline">
-            <input
-              #mailLength
-              matInput
-              maxlength="35"
-              formControlName="mail"
-              placeholder="ecmbayeclement@gmail.com"
-              required
-            />
-            <mat-label>Votre Mail</mat-label>
-            <mat-hint align="end"> {{ mailLength.value.length }} /35</mat-hint>
-          </mat-form-field>
-          <div>
-            <button mat-button matStepperPrevious>Retour</button>
-            <button mat-button matStepperNext>Suivant</button>
-          </div>
-        </form>
-      </mat-step>
-      <!-- ............................ PARTI DU MOT DE PASSE .................................-->
-      <mat-step [stepControl]="myFormMdp" label="Entrez votre Mot de Passe">
-        <form [formGroup]="myFormMdp">
-          <mat-form-field appearance="outline">
-            <mat-label>Votre Mot de Passe</mat-label>
-            <input
-              required
-              #mdpLength
-              maxlength="20"
-              matInput
-              formControlName="mdp"
-              placeholder="Votre Mot de Passe"
-              [type]="hide ? 'password' : 'text'"
-            />
-
-            <button
-              mat-icon-button
-              matSuffix
-              (click)="hide = !hide"
-              [attr.aria-label]="'Hide password'"
-              [attr.aria-pressed]="hide"
-            >
-              <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
-            </button>
-            <mat-hint align="end"> {{ mdpLength.value.length }} /20</mat-hint>
-          </mat-form-field>
-          <div>
-            <button mat-button matStepperPrevious>Retour</button>
-            <button mat-button matStepperNext>Suivant</button>
-          </div>
-        </form>
-      </mat-step>
-      <!-- ............................ PARTI CONFIRMATION DU MOT DE PASSE .................................-->
-      <mat-step [stepControl]="myFormVmdp" label="Confirmez votre Mot de Passe">
-        <form [formGroup]="myFormVmdp">
-          <mat-form-field appearance="outline">
-            <mat-label>Confirmer Mot de Passe</mat-label>
-            <input
-              required
-              #vmdpLength
-              maxlength="20"
-              matInput
-              formControlName="vmdp"
-              placeholder="Votre Mot de Passe"
-              [type]="hide ? 'password' : 'text'"
-            />
-
-            <button
-              mat-icon-button
-              matSuffix
-              (click)="hide = !hide"
-              [attr.aria-label]="'Hide password'"
-              [attr.aria-pressed]="hide"
-            >
-              <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
-            </button>
-            <mat-hint align="end"> {{ vmdpLength.value.length }} /20</mat-hint>
-          </mat-form-field>
-          <div>
-            <button mat-button matStepperPrevious>Retour</button>
-            <button mat-button matStepperNext>Suivant</button>
-          </div>
-        </form>
-      </mat-step>
-      <mat-step>
-        <ng-template matStepLabel>Soumettre</ng-template>
-        <p
-          style="font-weight: bold; font-size: 20px"
-          class="alert alert-success"
-        >
-          Bravo ! Inscrivez-Vous
-        </p>
+          <input
+            #nomLength
+            maxlength="15"
+            matInput
+            placeholder="MBAYE"
+            formControlName="nom"
+            required
+          />
+          <mat-hint> Nom</mat-hint>
+          <mat-hint align="end"> {{ nomLength.value.length }} /15</mat-hint>
+        </mat-form-field>
         <div>
-          <div class="row">
-            <div class="col-12">
-              <button matStepperPrevious class="btn btn-outline-primary">
-                Back
-              </button>
-              <button (click)="stepper.reset()" class="btn btn-outline-danger">
-                Annuler
-              </button>
-              <button
-                [disabled]="myFormVmdp.invalid"
-                (click)="onSubmitMyForm()"
-                class="btn btn-outline-success"
-              >
-                S'inscrire
-              </button>
-            </div>
+          <button mat-button matStepperNext>Suivant</button>
+        </div>
+      </form>
+    </mat-step>
+    <!-- ............................ PARTI DU PRENOM .................................-->
+    <mat-step [stepControl]="myFormPrenom" label="Entrez votre Prenom">
+      <form [formGroup]="myFormPrenom">
+        <mat-form-field appearance="outline">
+          <input
+            #prenomLength
+            matInput
+            maxlength="25"
+            formControlName="prenom"
+            placeholder="Etienne Clement"
+            required
+          />
+          <mat-label>Votre Prenom</mat-label>
+          <mat-hint align="end"> {{ prenomLength.value.length }} /25</mat-hint>
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperPrevious>Retour</button>
+          <button mat-button matStepperNext>Suivant</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <!-- ............................ PARTI DE LA PROMOTION .................................-->
+    <mat-step [stepControl]="myFormPromotion" label="Choisir votre Promotion">
+      <form [formGroup]="myFormPromotion">
+        <mat-form-field appearance="outline">
+          <mat-label>Votre Promotion</mat-label>
+          <mat-select formControlName="promotion">
+            <mat-option value="P5">Promotion : 5</mat-option>
+            <mat-option value="P6">Promotion : 6</mat-option>
+            <mat-option value="P7">Promotion : 7</mat-option>
+            <mat-option value="P8">Promotion : 8</mat-option>
+          </mat-select>
+          <mat-hint>Promotion</mat-hint>
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperPrevious>Retour</button>
+          <button mat-button matStepperNext>Suivant</button>
+        </div>
+      </form>
+    </mat-step>
+    <!-- ............................ PARTI DU MAIL .................................-->
+    <mat-step [stepControl]="myFormMail" label="Entrez votre Mail">
+      <form [formGroup]="myFormMail">
+        <mat-form-field appearance="outline">
+          <input
+            #mailLength
+            matInput
+            maxlength="35"
+            formControlName="mail"
+            placeholder="ecmbayeclement@gmail.com"
+            required
+          />
+          <mat-label>Votre Mail</mat-label>
+          <mat-hint align="end"> {{ mailLength.value.length }} /35</mat-hint>
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperPrevious>Retour</button>
+          <button mat-button matStepperNext>Suivant</button>
+        </div>
+      </form>
+    </mat-step>
+    <!-- ............................ PARTI DU MOT DE PASSE .................................-->
+    <mat-step [stepControl]="myFormMdp" label="Entrez votre Mot de Passe">
+      <form [formGroup]="myFormMdp">
+        <mat-form-field appearance="outline">
+          <mat-label>Votre Mot de Passe</mat-label>
+          <input
+            required
+            #mdpLength
+            maxlength="20"
+            matInput
+            formControlName="mdp"
+            placeholder="Votre Mot de Passe"
+            [type]="hide ? 'password' : 'text'"
+          />
+
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="hide = !hide"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hide"
+          >
+            <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+          </button>
+          <mat-hint align="end"> {{ mdpLength.value.length }} /20</mat-hint>
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperPrevious>Retour</button>
+          <button mat-button matStepperNext>Suivant</button>
+        </div>
+      </form>
+    </mat-step>
+    <!-- ............................ PARTI CONFIRMATION DU MOT DE PASSE .................................-->
+    <mat-step
+     
+      [stepControl]="myFormVmdp"
+      label="Confirmez votre Mot de Passe"
+    >
+      <form [formGroup]="myFormVmdp">
+        <mat-form-field appearance="outline">
+          <mat-label>Confirmer Mot de Passe</mat-label>
+          <input
+            required
+            #vmdpLength
+            maxlength="20"
+            matInput
+            formControlName="vmdp"
+            placeholder="Votre Mot de Passe"
+            [type]="hide ? 'password' : 'text'"
+          />
+
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="hide = !hide"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hide"
+          >
+            <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+          </button>
+          <mat-hint align="end"> {{ vmdpLength.value.length }} /20</mat-hint>
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperPrevious>Retour</button>
+          <button mat-button matStepperNext>Suivant</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Soumettre</ng-template>
+      <p style="font-weight: bold; font-size: 20px" class="alert alert-success">
+        Bravo ! Inscrivez-Vous
+      </p>
+      <div>
+        <div class="row">
+          <div class="col-12">
+            <button matStepperPrevious class="btn btn-sm btn-outline-primary">
+              Retour
+            </button>
+            <button
+              (click)="stepper.reset()"
+              class="btn btn-sm btn-outline-danger"
+            >
+              Annuler
+            </button>
+            <button
+              [disabled]="myFormVmdp.invalid"
+              (click)="onSubmitMyForm()"
+              class="btn mt-2 btn-sm btn-outline-success"
+            >
+              S'inscrire
+            </button>
           </div>
         </div>
-      </mat-step>
-    </mat-stepper>
+      </div>
+    </mat-step>
+  </mat-stepper>
 
-    <div class="alert alert-danger" *ngIf="afficheErreur" role="alert">
-      {{ erreur }}
-    </div>
+  <div class="alert alert-danger" *ngIf="afficheErreur" role="alert">
+    {{ erreur }}
+  </div>
+</div>
+<!--..............................Partie de l'ANIMATION................................-->
+<div class="bloc-anim">
+  <div class="blocksParent">
+    <div class="blocks" style="--i: 1"></div>
+    <div class="blocks" style="--i: 2"></div>
+    <div class="blocks" style="--i: 3"></div>
+    <div class="blocks" style="--i: 4"></div>
+    <div class="blocks" style="--i: 5"></div>
+    <div class="blocks" style="--i: 6"></div>
+    <div class="blocks" style="--i: 7"></div>
+    <div class="blocks" style="--i: 8"></div>
+    <div class="blocks" style="--i: 9"></div>
+    <div class="blocks" style="--i: 10"></div>
+    <div class="blocks" style="--i: 11"></div>
+    <div class="blocks" style="--i: 12"></div>
+    <div class="blocks" style="--i: 13"></div>
+    <div class="blocks" style="--i: 14"></div>
+    <div class="blocks" style="--i: 15"></div>
+    <div class="blocks" style="--i: 16"></div>
+    <div class="blocks" style="--i: 17"></div>
+    <div class="blocks" style="--i: 18"></div>
+    <div class="blocks" style="--i: 19"></div>
+    <div class="blocks" style="--i: 20"></div>
+    <div class="patiente">CIDAD</div>
   </div>
 </div>

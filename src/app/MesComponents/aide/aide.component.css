@@ -1,0 +1,130 @@
+.container-fluid {
+  overflow: hidden;
+  position: relative;
+}
+.rowDescript,
+.col-parametre-default,
+.ecmcidad {
+  overflow: hidden;
+}
+.code,
+.securite,
+.navigation,
+.bloc-Cidad {
+  position: relative;
+  overflow: hidden;
+  height: 75px;
+  margin: 35px 5px 5px 0;
+  padding: 5px;
+  border-radius: 8px;
+  box-shadow: 0 5px 35px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  z-index: 15;
+  color: white;
+}
+.bloc-Cidad h1 {
+  font-size: 45px;
+  font-weight: bold;
+  letter-spacing: 5px;
+}
+.param:hover,
+.bloc-Cidad:hover {
+  cursor: pointer;
+  box-shadow: 0 5px 0px whitesmoke;
+  border: 1px solid green;
+  transition: 1s;
+}
+/*Animation card*/
+.bloc-Cidad::before {
+  position: absolute;
+  content: "";
+  left: 0;
+  bottom: 0;
+  height: 100%;
+  width: 40px;
+  background: rgba(255, 255, 255, 0.2);
+  transform: skewX(-45deg) translateX(-300px);
+  animation: animcrd 4s linear infinite;
+}
+@keyframes animcrd {
+  0% {
+    transform: skewX(-45deg) translateX(-300px);
+  }
+  100% {
+    transform: skewX(-45deg) translateX(1200px);
+  }
+}
+.param::before {
+  position: absolute;
+  content: "";
+  left: 0;
+  bottom: 0;
+  height: 100%;
+  width: 40px;
+  background: rgba(255, 255, 255, 0.2);
+  transform: skewX(-45deg) translateX(-300px);
+
+  animation: animcard 4s linear infinite;
+}
+@keyframes animcard {
+  0% {
+    transform: skewX(-45deg) translateX(-300px);
+  }
+  100% {
+    transform: skewX(-45deg) translateX(500px);
+  }
+}
+.rowDetails {
+  visibility: hidden;
+}
+.col-details {
+  overflow: hidden;
+}
+.bloc-details {
+  transform: translateY(400px);
+}
+.titre-des {
+  font-weight: bold;
+  text-decoration: underline;
+}
+p,
+h2 {
+  color: white;
+}
+span,
+strong {
+  font-weight: bold;
+  letter-spacing: 2px;
+  font-size: 16px;
+  margin-top: 5px;
+}
+a {
+  text-decoration: none;
+}
+.alert {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.alert {
+  color: white;
+  border-radius: 5px;
+  background-color: rgb(250, 78, 78);
+  border: 1px solid rgb(250, 78, 78);
+  z-index: 5;
+  position: absolute;
+  width: 210px;
+  height: 65px;
+  right: -250px;
+  top: 50px;
+}
+.alert p {
+  margin-top: 10px;
+  padding: 0;
+}

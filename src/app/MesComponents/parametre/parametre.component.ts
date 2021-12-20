@@ -40,7 +40,7 @@ export class ParametreComponent implements OnInit, OnDestroy {
   data_Charger: boolean = false;
   subscriptionVerificationCode: Subscription = new Subscription();
   //Variable pour le nombre de tentative
-  nbrTentative: number = 3;
+  nbrTentative: number = 4;
   //Model user Mongo
   userMongo: UserMongo = { _id: 0, email: '', password: '' };
   Id_User_Connected: string = '';
@@ -89,6 +89,7 @@ export class ParametreComponent implements OnInit, OnDestroy {
   mailzoneReini: string | null | any;
   mdpzoneReini: string;
   tbInstancegsap: any[] = [];
+  urlPpUser: string = '';
   //Variable pour la securite
   securite: string = 'true';
   //Variable aQui nous permet  de savoir la methode qui a demander la reauthentification
@@ -161,16 +162,10 @@ export class ParametreComponent implements OnInit, OnDestroy {
         this.data_Charger = true;
         this.codeUserbd = data_User.code;
         this.securite = data_User.securite;
-        localStorage.setItem('nomUserConnected', data_User.nom);
-        localStorage.setItem('prenomUserConnected', data_User.prenom);
-        localStorage.setItem('promoUserConnected', data_User.promotion);
-        localStorage.setItem('modeNaveUserConnected', data_User.fantome);
-        localStorage.setItem('securiteUserConnected', data_User.securite);
+        this.urlPpUser = data_User.ppUser;
       })
-      .catch((error) => {
-        alert(
-          "Une erreur s'est produite recup info User veillez actualisé ..."
-        );
+      .catch(() => {
+        this.errorAlertService.notifyAlertErrorDefault();
       });
 
     //Subsciption Pour la verification du code ...
@@ -264,13 +259,10 @@ export class ParametreComponent implements OnInit, OnDestroy {
         this.openSnackBar(message, 'ECM');
       } else {
         this.dialog.closeAll();
-        //Redirection apres nbrtentative atteint pour reinitialiser le code
-        /* const message =
-          'Veillez entrer votre email afin de reinitialiser votre code a 1234';
+        const message = `Nous constatons que vous avez oubliez votre mot de passe ou vous n'est pas le propriétaire du compte ! Vous serez déconnecté, procéder à la réinitialisation du mot de passe`;
         //Affichage de l'alerte
         this.openSnackBar(message, 'ECM');
-        */
-        //      this.route.navigate(['/parametre']);
+        this.authService.signOutUser();
       }
     }
   }
@@ -414,6 +406,7 @@ export class ParametreComponent implements OnInit, OnDestroy {
               this.userMongo._id
             )
             .then(() => {
+              localStorage.setItem('ECM_UM', newEmail);
               const message =
                 'Votre mail a était bien modifié ! La page sera actualisée dans 2s';
               //Affichage de l'alerte
@@ -824,6 +817,16 @@ export class ParametreComponent implements OnInit, OnDestroy {
       this.user
         .deleteInfoUser(this.Id_User_Connected)
         .then(() => {
+          this.user
+            .onDeletePpUser(this.urlPpUser)
+            .then(() => {
+              //RAS
+            })
+            .catch(() => {
+              this.errorAlertService.notifyAlertErrorDefault(
+                "Une erreur s'est produite ! Veillez nous le signaler"
+              );
+            });
           let processus: string = 'suppression de vos données personnelles';
           this.rapport = 'Vos données personnelles ont étaient supprimées !';
           //demarage de l'annimation de la suppression

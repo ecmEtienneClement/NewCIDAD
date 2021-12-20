@@ -1,4 +1,8 @@
-<div *ngIf="!localIsActivated" class="container-fluid">
+<div
+  #containerInitialisation
+  *ngIf="!localIsActivated && !localIsReActivated"
+  class="container-fluid"
+>
   <div class="titre">
     <ul #itemTitre class="list-inline">
       <li>Vos</li>
@@ -57,8 +61,9 @@
       </button>
     </div>
   </div>
+ 
 </div>
-<div *ngIf="localIsActivated" class="container-fluid">
+<div *ngIf="localIsActivated && !localIsReActivated" class="container-fluid">
   <div class="row row-titre-local">
     <div class="col-12 colTitre">
       <p class="titreLocal" #itemTitreLocalActiver>.............</p>
@@ -103,5 +108,59 @@
       </div>
     </div>
   </div>
+</div>
+<div *ngIf="localIsReActivated" class="container-fluid">
+  <div class="row row-titre-local">
+    <div class="col-12 colTitre">
+      <p class="titreLocalReactive" #itemTitreLocalReActiver>Local Désactivé</p>
+    </div>
+  </div>
+  <div #menuReActiver class="menu">
+    <div class="item-menu mt-4">
+      Votre BD <i class="good fas fa-database"></i> local est desactivée ! Vos
+      données sont toujour sauvegardées mais ne seront plus présentées l'or du
+      chargement, vous allez donc attendre les données de la BD
+      <i class="good fas fa-database"></i> distante
+      <i class="good far fa-meh-rolling-eyes"></i>. Si vous  voulez 
+     réactivé votre
+      BD <i class="good fas fa-database"></i> local cliquer sur le bouton
+      <span class="btn-details-txt">
+        Réactivé <i class="good fas fa-database"></i> Local.</span
+      >, ou modifier certaines configurations
+      cliquer sur le bouton
+      <span class="btn-details-txt">
+        Détails <i class="good fas fa-database"></i> Local.</span
+      >
+    </div>
 
+    <div class="row blcbtn">
+      <div class="col-12 col-md-6">
+        <button
+          title="Détails mode local"
+          (click)="detailsModeLocalDesactive()"
+          type="button"
+          class="mt-4 btn btn-danger"
+        >
+          Détails <i class="good fas fa-database"></i> Local
+        </button>
+      </div>
+      <div class="col-12 col-md-6">
+        <button
+          title="Désactivé mode local"
+          (click)="ReactiveModeLocal()"
+          type="button"
+          class="mt-4 btn btn-danger"
+        >
+          Réactivé <i class="good fas fa-database"></i> Local
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="local-active">
+  <i class="fab fa-studiovinari"></i>
+  <b>local activé</b>
+</div>
+<div class="local-active-description">
+  <p>ECM CIDAD</p>
 </div>

@@ -14,7 +14,8 @@ import { CommentaireModel } from 'src/app/Models/commentaire';
 import { EventModel, EventType } from 'src/app/Models/eventAction';
 import { AppPlugin } from 'src/app/Models/modelApi';
 import { NotificationModel } from 'src/app/Models/notification';
-
+import * as moment from 'moment';
+moment.locale('fr');
 @Component({
   selector: 'app-details-plugins',
   templateUrl: './details-plugins.component.html',
@@ -29,6 +30,7 @@ export class DetailsPluginsComponent implements OnInit {
   nomUserPlugin: string = '';
   prenomUserPlugin: string = '';
   promoUserPlugin: string = '';
+  fantomeUserPlugin: string = '';
 
   idPlugin?: number;
   pluginCmp: AppPlugin = {
@@ -36,9 +38,9 @@ export class DetailsPluginsComponent implements OnInit {
     language: '',
     documentation: '',
     code: '',
-    tbCommentaire: [new CommentaireModel('', '', '', '', '', 0)],
+    tbCommentaire: [new CommentaireModel('', '', '', '', '', '')],
     userId: '',
-    date: 0,
+    date: '',
     update: 0,
     tbViewUser: [],
     tbSignalCommentaire: [],
@@ -53,7 +55,7 @@ export class DetailsPluginsComponent implements OnInit {
   subscription: Subscription = new Subscription();
 
   aQui: string = '';
-  Date_Commentaire_number_Event: number;
+  Date_Commentaire_string_Event: string;
   User_Id_Commentaire_string_Event: string = '';
 
   nbrTentative: number = 3;
@@ -144,6 +146,7 @@ export class DetailsPluginsComponent implements OnInit {
                 this.nomUserPlugin = data_User.nom;
                 this.prenomUserPlugin = data_User.prenom;
                 this.promoUserPlugin = data_User.promotion;
+                this.fantomeUserPlugin = data_User.fantome;
               })
               .catch(() => {
                 this.errorAlert.notifyAlertErrorDefault();
@@ -178,6 +181,7 @@ export class DetailsPluginsComponent implements OnInit {
   //Recupration des donnees a envoye..
   //TODO
   onSubmitForm() {
+    let dateSaved: string = moment().format('Do MMMM YYYY, HH:mm:ss');
     this.diseableBtnEnregistre = true;
     let userCommentaire: CommentaireModel;
     if (this.fantome == 'false') {
@@ -187,7 +191,7 @@ export class DetailsPluginsComponent implements OnInit {
         this.nomUser,
         this.prenomUser,
         this.promoUser,
-        Date.now()
+        dateSaved
       );
     } else {
       userCommentaire = new CommentaireModel(
@@ -253,12 +257,12 @@ export class DetailsPluginsComponent implements OnInit {
   }
   //Methode pour verifier la securiter du User cette methode declanche la procedure de securite...
   //TODO
-  onVerifyUser(User_Id_Commentaire: string, DateCommentaire: number) {
+  onVerifyUser(User_Id_Commentaire: string, DateCommentaire: string) {
     if (this.securiteUser == 'true') {
       //ecrit sur la variable memoire
       this.aQui = 'DeleteCommentaire';
       this.User_Id_Commentaire_string_Event = User_Id_Commentaire;
-      this.Date_Commentaire_number_Event = DateCommentaire;
+      this.Date_Commentaire_string_Event = DateCommentaire;
       //Popope pour le code
       this.openDialog();
     } else if (this.securiteUser == 'false') {
@@ -270,7 +274,7 @@ export class DetailsPluginsComponent implements OnInit {
       }
     }
   }
-  deleteCommentaire(User_Id_Commentaire: string, DateCommentaire: number) {
+  deleteCommentaire(User_Id_Commentaire: string, DateCommentaire: string) {
     let trouver: boolean = false;
     //Enregistrement du commentaire dans tb Plugin
     this.pluginCmp.tbCommentaire.forEach((element) => {
@@ -322,7 +326,7 @@ export class DetailsPluginsComponent implements OnInit {
         case 'DeleteCommentaire':
           this.deleteCommentaire(
             this.User_Id_Commentaire_string_Event,
-            this.Date_Commentaire_number_Event
+            this.Date_Commentaire_string_Event
           );
           break;
       }

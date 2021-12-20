@@ -1,0 +1,57 @@
+label {
+  margin: 65px 0 50px 0;
+}
+.txtPp {
+  font-size: 75px;
+  text-transform: uppercase;
+  color: #333;
+  -webkit-text-stroke: 1px rgb(113, 247, 25);
+  animation: animeAfterBefor 5s linear infinite;
+}
+@keyframes animeAfterBefor {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+  }
+}
+
+.blocUpdatePpUser,
+.chargement,
+.icone-chargement,
+.txt-chargement,
+.succefulChargement {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+}
+.icone-chargement,
+.txt-chargement {
+  flex-direction: row;
+  color: white;
+}
+button {
+  font-weight: bold;
+}
+.chargement,
+.succefulChargement {
+  visibility: hidden;
+}
+.chargement .icone-chargement span {
+  margin: 25px 0 0 5px;
+  width: 1px;
+  height: 5px;
+  background-color: yellow;
+  animation: animeAfterBefor 5s linear infinite;
+}
+@keyframes animeAfterBefor {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+  }
+}

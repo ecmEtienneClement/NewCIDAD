@@ -23,6 +23,7 @@ export class NotifyAppPluginComponent implements OnInit {
   nbrtbCommentairePlugins: number = 0;
   nbrTotalNotify: number = 0;
   @Input() nomUserNotify: string | null;
+  @Input() ppUserNotify: string;
 
   constructor(
     private notifyService: Notification,
@@ -74,7 +75,7 @@ export class NotifyAppPluginComponent implements OnInit {
           this.nbrTotalNotify = tbFilterByIdNotify[0].nbrTotalNotifyPlugin;
         }
       },
-      (error) => {
+      () => {
         alert('Erreur recup Notify Veiller actualisée');
       }
     );
@@ -83,6 +84,8 @@ export class NotifyAppPluginComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.subscriptionDbNotify.unsubscribe();
-    this.notifyService.onResetCollectionNotifyUserPlugin();
+    if (this.nbrTotalNotify != 0) {
+      this.notifyService.onResetCollectionNotifyUserPlugin();
+    }
   }
 }

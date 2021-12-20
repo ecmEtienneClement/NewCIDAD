@@ -52,12 +52,14 @@ export class EnrgistreVideoCmpComponent implements OnInit {
       const message = 'Désoler nous ne prenons pas les URL non sécurisés !';
       //Affichage de l'alerte
       this.openSnackBar(message, 'ECM');
+      this.diseableBtnEnregistre = false;
       return false;
     }
     if (url.startsWith('https://www.youtube.com/')) {
-      const message = 'Désoler nous ne prenons pas les videos de youtube !';
+      const message = 'Désoler nous ne prenons pas les URL videos de youtube !';
       //Affichage de l'alerte
       this.openSnackBar(message, 'ECM');
+      this.diseableBtnEnregistre = false;
       return false;
     }
     if (url.startsWith('https://')) {
@@ -68,15 +70,14 @@ export class EnrgistreVideoCmpComponent implements OnInit {
           titre,
           url,
           [],
-          [this.user_Id_Connect],
-          Date.now()
+          [this.user_Id_Connect]
         )
         .then((good: boolean) => {
           if (good) {
             //j'injecte notify ici pour eviter erreur N0200 circular ID avec le service appVideo
             //que je doit injecter dans notification service
             this.notifyService.notifyNewVideo(titre);
-            const message = 'La Video a été bien publié !';
+            const message = 'URL video a été bien publié !';
             //Affichage de l'alerte
             this.openSnackBar(message, 'ECM');
             this.route.navigate(['appVideo']);

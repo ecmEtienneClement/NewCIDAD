@@ -5,9 +5,10 @@ import { environment } from 'src/environments/environment';
 import { AppVideo, UserECM } from '../Models/modelApi';
 import { ErrorService } from './error.Service';
 import { GardGuard } from './gard.guard';
-import { LocalService } from './local.Service';
+import { dbNameType, LocalService } from './local.Service';
 import { UserService } from './user.Service';
-
+import * as moment from 'moment';
+moment.locale('fr');
 @Injectable()
 export class AppVideoService implements OnInit {
   userEcmCmp: UserECM = {
@@ -55,13 +56,13 @@ export class AppVideoService implements OnInit {
     titre: string,
     url: string,
     signaler: string[],
-    viewUser: string[],
-    date: number = Date.now()
+    viewUser: string[]
   ): Promise<boolean> {
     this.userEcmCmp.userIdMG =
       this.userService.VerifyTokenAndUserIdLocaleStorage().userIdMG;
     return new Promise((resolve, reject) => {
       if (userId != '') {
+        let dateSaved: string = moment().format('Do MMMM YYYY, HH:mm:ss');
         this.http
           .post(environment.URL_API + '/app/video/', {
             userId: userId,
@@ -70,7 +71,7 @@ export class AppVideoService implements OnInit {
             url: url,
             signaler: signaler,
             viewUser: viewUser,
-            date: date,
+            date: dateSaved,
             userIdTK: this.userEcmCmp.userIdMG,
           })
           .subscribe(
@@ -103,6 +104,7 @@ export class AppVideoService implements OnInit {
       (data_App_Video: AppVideo[]) => {
         this.tbAppVideo = data_App_Video;
         this.emitUpdatetbAppVideo();
+        this.sauvegardeDbVideoCryptLocal();
         console.log('recup db AppVideog success ...');
       },
       (error) => {
@@ -130,6 +132,7 @@ export class AppVideoService implements OnInit {
       this.userService.VerifyTokenAndUserIdLocaleStorage().userIdMG;
     return new Promise((resolve) => {
       if (userId != '') {
+        let dateSaved: string = moment().format('Do MMMM YYYY, HH:mm:ss');
         this.http
           .put(environment.URL_API + '/app/video/' + id, {
             userId: userId,
@@ -138,7 +141,7 @@ export class AppVideoService implements OnInit {
             url: url,
             signaler: signaler,
             viewUser: viewUser,
-            date: date,
+            date: dateSaved,
             userIdTK: this.userEcmCmp.userIdMG,
           })
           .subscribe(
@@ -222,8 +225,11 @@ export class AppVideoService implements OnInit {
         //Verifie si le tb est different de undif..
         if (this.tbAppVideo) {
           //recuperation du pourcentage
-          let pourcentage = this.localService.getPoucentageDonneLocal();
+
+          let pourcentage =
+            this.localService.getPoucentageDonneLocal('ECM_PB_V');
           //arret du processus si le pourcentage est egal a 0
+
           if (pourcentage == 0) {
             this.alertErrorService.notifyAlertErrorDefault(
               "Mode local activer, mais pourcentage de sauvegarde de base non défini ! Veiller reconfiguré l'environnement local "
@@ -232,10 +238,10 @@ export class AppVideoService implements OnInit {
           }
           //cas ou le pourcentage est de 75%
           if (pourcentage == 3) {
-            pourcentageTb = Math.floor(this.tbAppVideo.length / 4) * 3;
+            pourcentageTb = Math.ceil(this.tbAppVideo.length / 4) * 3;
           } else {
             //Arrondi la valeur pour ne op avoir des virgules
-            pourcentageTb = Math.floor(this.tbAppVideo.length / pourcentage);
+            pourcentageTb = Math.ceil(this.tbAppVideo.length / pourcentage);
           }
 
           let i: number = 0;
@@ -247,6 +253,8 @@ export class AppVideoService implements OnInit {
             localStorage.setItem(name, window.btoa(JSON.stringify(elementBug)));
             ++i;
           }
+          //Enregistrement de la date de sauvegarde
+          this.localService.dataSavedDonneLocal(dbNameType.VIDEO);
           return true;
         } else {
           this.alertErrorService.notifyAlertErrorDefault(
@@ -292,17 +300,37 @@ export class AppVideoService implements OnInit {
     }
     return false;
   }
+  //Methode pour le nombre d'elements sauvegardé les donnees en local
+  //TODO
+  nbrElementDbBugCryptLocal(): number {
+    //Verification preliminaire de l'existance de la bd
+    let nbrElement: number = 0;
+    if (localStorage.getItem('ECM_BV_0') == null) {
+      return 0;
+    }
+    for (let i = 0; i > -1; ++i) {
+      let name: string = 'ECM_BV_' + i;
+      let element: any = localStorage.getItem(name);
+      if (element != null) {
+        nbrElement += 1;
+      }
+      if (element == null) {
+        return nbrElement;
+      }
+    }
+
+    return nbrElement;
+  }
   //Methode pour supprimer les donnees en local
   //TODO
-  deleteDbBugCryptLocal(): boolean {
+  deleteDbVideoCryptLocal(silence: boolean): boolean {
     //Verification preliminaire de l'existance de la bd
-    if (
-      localStorage.getItem('ECM_BV_0') == null &&
-      localStorage.getItem('ECM_BV_1') == null
-    ) {
-      this.alertErrorService.notifyAlertErrorDefault(
-        "Nous n'avons pas trouvé de données local a supprimées sur les URL_Videos ! "
-      );
+    if (localStorage.getItem('ECM_BV_0') == null) {
+      if (!silence) {
+        this.alertErrorService.notifyAlertErrorDefault(
+          "Nous n'avons pas trouvé de données local a supprimées sur les URL_Videos ! "
+        );
+      }
       return false;
     }
 
@@ -313,9 +341,11 @@ export class AppVideoService implements OnInit {
         localStorage.removeItem(name);
       }
       if (element == null) {
-        this.alertErrorService.notifyAlertErrorDefault(
-          'Données local des URL_Videos supprimées ! '
-        );
+        if (!silence) {
+          this.alertErrorService.notifyAlertErrorDefault(
+            'Données local des URL_Videos supprimées ! '
+          );
+        }
         return true;
       }
     }

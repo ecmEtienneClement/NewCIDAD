@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { IncriptioMongoComponent } from './incriptio-mongo.component';
+import { ReiniMailComponent } from './reini-mail.component';
 
-describe('IncriptioMongoComponent', () => {
-  let component: IncriptioMongoComponent;
-  let fixture: ComponentFixture<IncriptioMongoComponent>;
+describe('ReiniMailComponent', () => {
+  let component: ReiniMailComponent;
+  let fixture: ComponentFixture<ReiniMailComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ IncriptioMongoComponent ]
+      declarations: [ ReiniMailComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(IncriptioMongoComponent);
+    fixture = TestBed.createComponent(ReiniMailComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

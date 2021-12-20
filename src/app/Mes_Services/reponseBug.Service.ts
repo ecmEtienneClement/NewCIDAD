@@ -9,7 +9,8 @@ import { Notification } from './notification.service';
 import { GardGuard } from './gard.guard';
 import { CommentaireModel } from '../Models/commentaire';
 import { ErrorService } from './error.Service';
-
+import * as moment from 'moment';
+moment.locale('fr');
 @Injectable()
 export class ReponseBugService {
   user_Id_Connect: string;
@@ -52,6 +53,8 @@ export class ReponseBugService {
     //Mise en place de ID de la reponse
     //Id de la reponse nous permet de bien identifier ,recuperé son index dans le tbReponse
     const id_Reponse = Date.now() + reponse.split(' ').join('%').substr(0, 5);
+    //date
+    let dateSaved: string = moment().format('Do MMMM YYYY, HH:mm:ss');
     //Mise en place new Reponse
     const newReponseBug = new ReponseBugModel(
       id_Reponse,
@@ -60,7 +63,7 @@ export class ReponseBugService {
       reponse,
       false,
       [new CommentaireModel('', '', '', '', '')],
-      Date.now()
+      dateSaved
     );
     this.tbReponseBug.unshift(newReponseBug);
     this.sauvegardeBaseReponse();
@@ -169,6 +172,7 @@ export class ReponseBugService {
       fantomUser != '' &&
       this.user_Id_Connect
     ) {
+      let dateSaved: string = moment().format('Do MMMM YYYY, HH:mm:ss');
       let userCommentaire: CommentaireModel;
       if (fantomUser == 'false') {
         userCommentaire = new CommentaireModel(
@@ -177,7 +181,7 @@ export class ReponseBugService {
           nomUser,
           prenomUser,
           promoUser,
-          Date.now()
+          dateSaved
         );
       } else {
         userCommentaire = new CommentaireModel(
@@ -222,14 +226,14 @@ export class ReponseBugService {
   //TODO
   deleteCommentaire(
     objReponse: ReponseBugModel,
-    dateCommentaireDelete?: number
+    dateCommentaireDelete?: string
   ): boolean {
     //On verifier si cette action est bien declancher par le proprietaire du post
     let userIdRepondant = this.authService.user_Id_Connect;
     //on Verifie si c'est le dernier commentaire avant de le supprimer on ajout le commentaire par defaut
     if (objReponse.commentaire.length == 1) {
       objReponse.commentaire.unshift(
-        new CommentaireModel('', '', '', '', '', Date.now())
+        new CommentaireModel('', '', '', '', '', '')
       );
     }
     //On recherche l'index du commentaire a supprimer
@@ -348,7 +352,7 @@ export class ReponseBugService {
               ? element.commentaire.filter(
                   (element) => element.Id_User != id_User
                 )
-              : [new CommentaireModel('', '', '', '', '', Date.now())];
+              : [new CommentaireModel('', '', '', '', '', '')];
 
           if (
             tbFilterCommentaire.length == 1 &&

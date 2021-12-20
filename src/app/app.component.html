@@ -1,31 +1,49 @@
 <mat-drawer-container class="example-container" hasBackdrop="true">
   <mat-drawer class="sideNave" #drawer mode="over">
-    <ul class="list-group">
-      <li class="list-group-item"><h1>CIDAD</h1></li>
-      <li class="list-group-item">
-        <a [routerLink]="['/profilUser']"><i class="fas fa-user"></i>PROFIL</a>
+    <ul class="list-group listeSideNave">
+      <mat-menu #aboveMenuNbr="matMenu" yPosition="above">
+        <p>
+          Salut {{ prenomUserConnected }} <br />
+          Vous pouvez envoyez des commentaires ou signalez un problème dans aide
+          puis cliquer sur (CIDAD)
+        </p>
+      </mat-menu>
+      <li [matMenuTriggerFor]="aboveMenuNbr" class="list-group-item">
+        <h1 style="letter-spacing: 4px">CIDAD</h1>
+        <h3 style="text-transform: uppercase">{{ nomUserConnected }}</h3>
       </li>
-      <li class="list-group-item">
-        <a [routerLink]="['/editUser']">
-          <i class="fas fa-user"></i>EDIT PROFIL</a
+      <li (click)="navSideNave('profilUser')" class="list-group-item nav-side">
+        <i class="fas fa-user"></i>
+        <a>PROFIL</a>
+      </li>
+      <li (click)="navSideNave('editUser')" class="list-group-item nav-side">
+        <i class="fas fa-user-cog"></i>
+        <a> EDIT PROFIL</a>
+      </li>
+
+      <li class="list-group-item nav-side">
+        <i class="fas fa-school"></i>
+        <a
+          style="color: black ;text-decoration: none;"
+          href="https://formation.uvs.sn/front_pagefiliere_IDA"
+          target="blank"
         >
-      </li>
-
-      <li class="list-group-item">
-        <a href=""> <i class="fas fa-school"></i>UVS-IDA </a>
-      </li>
-
-      <li class="list-group-item">
-        <a [routerLink]="['/parametre']">
-          <i class="fas fa-cogs"></i>PARAMETRE
+          UVS-IDA
         </a>
       </li>
-      <li class="list-group-item">
-        <a [routerLink]="['/local/init/EcmBd']">
-          <i class="fas fa-database"></i>BD LOCAL
-        </a>
+
+      <li (click)="navSideNave('parametre')" class="list-group-item nav-side">
+        <i class="fas fa-cogs"></i>
+        <a> PARAMÉTRE </a>
       </li>
-      <li (click)="onsignOut()" class="list-group-item deconnexion">
+      <li
+        (click)="navSideNave('/local/init/EcmBd')"
+        class="list-group-item nav-side"
+      >
+        <i class="fas fa-database"></i>
+        <a> BD LOCAL </a>
+      </li>
+      <li (click)="onVerifyUser()" class="list-group-item deconnexion nav-side">
         DECONNEXION<span class="fas fa-sign-out-alt"></span>
       </li>
     </ul>
@@ -38,6 +56,7 @@
           <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
             <div class="container-fluid">
               <a
+                (click)="animSideNav()"
                 (click)="drawer.toggle()"
                 class="navbar-brand logo"
                 routerLinkActive="router-link-active"
@@ -58,7 +77,12 @@
 
               <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                  <li class="nav-item" *ngIf="user_Connected">
+                  <li
+                    (click)="onActiveAnim('post')"
+                    class="nav-item"
+                    [ngClass]="{ 'active-item-nav': activePost }"
+                    *ngIf="user_Connected"
+                  >
                     <a
                       class="nav-link active"
                       aria-current="page"
@@ -67,7 +91,12 @@
                       >AppPost</a
                     >
                   </li>
-                  <li class="nav-item" *ngIf="user_Connected">
+                  <li
+                    (click)="onActiveAnim('video')"
+                    class="nav-item"
+                    [ngClass]="{ 'active-item-nav': activeVideo }"
+                    *ngIf="user_Connected"
+                  >
                     <a
                       class="nav-link active"
                       aria-current="page"
@@ -76,7 +105,12 @@
                       >AppVideo</a
                     >
                   </li>
-                  <li class="nav-item" *ngIf="user_Connected">
+                  <li
+                    (click)="onActiveAnim('plugin')"
+                    class="nav-item"
+                    [ngClass]="{ 'active-item-nav': activePlugin }"
+                    *ngIf="user_Connected"
+                  >
                     <a
                       class="nav-link active"
                       aria-current="page"
@@ -86,7 +120,12 @@
                     >
                   </li>
 
-                  <li class="nav-item" *ngIf="user_Connected">
+                  <li
+                    (click)="onActiveAnim('savePost')"
+                    class="nav-item"
+                    [ngClass]="{ 'active-item-nav': activeSavePost }"
+                    *ngIf="user_Connected"
+                  >
                     <a
                       class="nav-link active"
                       aria-current="page"
@@ -95,16 +134,26 @@
                       >Enregistrer Post</a
                     >
                   </li>
-                  <li class="nav-item" *ngIf="user_Connected">
+                  <li
+                    (click)="onActiveAnim('saveVideo')"
+                    class="nav-item"
+                    [ngClass]="{ 'active-item-nav': activeSaveVideo }"
+                    *ngIf="user_Connected"
+                  >
                     <a
                       class="nav-link active"
                       aria-current="page"
                       [routerLink]="['/EnregistreVideo']"
                       routerLinkActive="router-link-active"
-                      >Partager Video</a
+                      >Partager URL-Video</a
                     >
                   </li>
-                  <li class="nav-item" *ngIf="user_Connected">
+                  <li
+                    (click)="onActiveAnim('savePlugin')"
+                    class="nav-item"
+                    [ngClass]="{ 'active-item-nav': activeSavePlugin }"
+                    *ngIf="user_Connected"
+                  >
                     <a
                       class="nav-link active"
                       aria-current="page"
@@ -114,7 +163,7 @@
                       Enregistrer Plugin</a
                     >
                   </li>
-                
+
                   <li
                     (click)="genereTokent()"
                     class="nav-item"
@@ -182,6 +231,21 @@
                       </li>
                     </ul>
                   </li>
+                  <li
+                    (click)="onActiveAnim('aide')"
+                    class="nav-item"
+                    [ngClass]="{ 'active-item-nav': activeAide }"
+                    *ngIf="user_Connected"
+                  >
+                    <a
+                      [routerLink]="['/aide']"
+                      class="nav-link active"
+                      aria-current="page"
+                      routerLinkActive="router-link-active"
+                    >
+                      Aide</a
+                    >
+                  </li>
                 </ul>
                 <li class="nav-item">
                   <span *ngIf="etatConnexionUser">
@@ -191,7 +255,12 @@
                     <i class="userDesconnect fas fa-wifi"></i>
                   </span>
                 </li>
-                <li class="nav-item" *ngIf="!user_Connected">
+                <li
+                  (click)="onActiveAnim('connexion')"
+                  class="nav-item"
+                  [ngClass]="{ 'active-item-nav': activeConnexion }"
+                  *ngIf="!user_Connected"
+                >
                   <a
                     class="nav-link active"
                     aria-current="page"
@@ -200,7 +269,12 @@
                     >Connexion</a
                   >
                 </li>
-                <li class="nav-item" *ngIf="!user_Connected">
+                <li
+                  (click)="onActiveAnim('inscription')"
+                  class="nav-item"
+                  [ngClass]="{ 'active-item-nav': activeInscription }"
+                  *ngIf="!user_Connected"
+                >
                   <a
                     class="nav-link active"
                     aria-current="page"

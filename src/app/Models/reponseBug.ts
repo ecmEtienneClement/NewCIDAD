@@ -8,7 +8,7 @@ export class ReponseBugModel {
     public reponse: string,
     public isGood: boolean,
     public commentaire: CommentaireModel[],
-    public dateReponse: number,
+    public dateReponse: string,
     public tbcommentaireUser: string[] = [user_Id],
     public tbViewUser: string[] = [user_Id],
     public tbViewcommentaireUser: string[] = [user_Id]

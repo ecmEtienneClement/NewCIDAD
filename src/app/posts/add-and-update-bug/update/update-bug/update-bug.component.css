@@ -63,3 +63,8 @@
 .btn-success {
   margin-bottom: 15px;
 }
+mat-hint,
+mat-label {
+  font-weight: bold;
+  color: white;
+}

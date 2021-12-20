@@ -26,10 +26,10 @@ export class NotificationEcmComponent implements OnInit, OnDestroy {
   nbrtbIdCommentaireReponse: number = 0;
   nbrTotalNotify: number = 0;
   @Input() nomUserNotify: string;
+  @Input() ppUserNotify: string;
 
   constructor(
     private notifyService: Notification,
-
     private authService: GardGuard,
     private appVideoService: AppVideoService
   ) {}
@@ -107,6 +107,8 @@ export class NotificationEcmComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptionDbNotify.unsubscribe();
-    this.notifyService.onResetCollectionNotifyUser();
+    if (this.nbrTotalNotify != 0) {
+      this.notifyService.onResetCollectionNotifyUser();
+    }
   }
 }

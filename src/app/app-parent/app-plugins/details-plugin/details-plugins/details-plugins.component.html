@@ -1,10 +1,21 @@
 <div class="container">
   <div class="alert alert-info mt-3">
     <div class="row cadre">
-      <div class="blocNom col-12 col-md-8 col-lg-8">
-        <p class="nomUser">{{ nomUserPlugin }}</p>
-        <p class="nomUser">{{ prenomUserPlugin }}</p>
+      <div
+        *ngIf="fantomeUserPlugin == 'false'"
+        class="blocNom col-12 col-md-8 col-lg-8"
+      >
+        <p class="nomUser">
+          {{ nomUserPlugin }} {{ prenomUserPlugin }} faye diop
+        </p>
+
         <p class="nomUser">{{ promoUserPlugin }}</p>
+      </div>
+      <div
+        *ngIf="fantomeUserPlugin == 'true'"
+        class="blocNom col-12 col-md-8 col-lg-8"
+      >
+        <h2 class="txtFantome">fantôme</h2>
       </div>
       <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
         <div class="row">
@@ -16,7 +27,7 @@
         <div class="row">
           <div class="col- 12">
             <strong>Date de la Poste</strong><br />
-            {{ pluginCmp.date | date: "short" }}
+            {{ pluginCmp.date }}
           </div>
         </div>
 
@@ -47,6 +58,7 @@
     (click)="onSubmitForm()"
     [disabled]="commentaire.length < 2 || diseableBtnEnregistre"
     class="btn btn-sm"
+    style="color: white; font-weight: bold"
   >
     Commenter
   </button>
@@ -61,8 +73,8 @@
   >
     <div class="row" *ngFor="let commentaire of pluginCmp.tbCommentaire">
       <div class="col-12">
-        <p class="txtdateCommentaire mt-3">
-          {{ commentaire.dateCommentaire | date: "short" }}
+        <p style="color: white" class="txtdateCommentaire mt-3">
+          {{ commentaire.dateCommentaire }}
         </p>
       </div>
       <div class="col-12 blcInfUserCommentaire">

@@ -12,20 +12,20 @@ import { GardGuard } from 'src/app/Mes_Services/gard.guard';
 import { UserService } from 'src/app/Mes_Services/user.Service';
 import { EventModel, EventType } from 'src/app/Models/eventAction';
 import { AppPlugin } from 'src/app/Models/modelApi';
-
+import gsap from 'gsap';
 @Component({
   selector: 'app-app-plugin-cmp',
   templateUrl: './app-plugin-cmp.component.html',
   styleUrls: ['./app-plugin-cmp.component.css'],
 })
 export class AppPluginCmpComponent implements OnInit, OnDestroy {
-
   //Variables pour le deployement
   deployerbtnUser: boolean = false;
   deployerbtnView: boolean = false;
   deployerbtnnbr: boolean = false;
   deployerbtnupdate: boolean = false;
   deployerbtndelete: boolean = false;
+  animationUser: boolean = false;
   //Variables du user connected
   securiteUser: string | null = '';
   nomUserNotify: string | null = '';
@@ -34,6 +34,8 @@ export class AppPluginCmpComponent implements OnInit, OnDestroy {
   prenomUser: string = '';
   promoUser: string = '';
   fantome: string = '';
+  ppUserPlugin: string = '';
+  ppUserNotify: string = '';
   //Variable tb VIEW
   tbViewUser: boolean[] = [];
   tbSignalCommentaireUser: boolean[] = [];
@@ -45,6 +47,7 @@ export class AppPluginCmpComponent implements OnInit, OnDestroy {
   //Variable tb
   tbAppPlugin: AppPlugin[] = [];
   tbAppPluginSearh: AppPlugin[] = [];
+  tbInstanceGsap: any[] = [];
 
   userIdPluging: string = '';
   nbrCommentaire: number = 0;
@@ -74,10 +77,16 @@ export class AppPluginCmpComponent implements OnInit, OnDestroy {
     this.user_Id_Connect = this.authService.user_Id_Connect;
     //recuperation des information du User Connected pour voir si son compte est securisé ou pas
     //TODO
-    this.userService.VerifyLocaleStorage().then((data_ObjUser) => {
-      this.nomUserNotify = data_ObjUser.nom;
-      this.securiteUser = data_ObjUser.securite;
-    });
+    this.userService
+      .VerifyLocaleStorage()
+      .then((data_ObjUser) => {
+        this.nomUserNotify = data_ObjUser.nom;
+        this.securiteUser = data_ObjUser.securite;
+        this.ppUserNotify = data_ObjUser.ppUser;
+      })
+      .catch(() => {
+        this.errorAlertService.notifyAlertErrorDefault();
+      });
     //Recuperation du TbAppPlugin
     //TODO
     this.subscription.add(
@@ -91,7 +100,6 @@ export class AppPluginCmpComponent implements OnInit, OnDestroy {
             this.verifyViewUserPaginate(this.page);
             this.verifySignalUserPaginate(this.page);
             this.verifyViewCommentaireUserPaginate(this.page);
-            localStorage.setItem('tbPlugin', JSON.stringify(this.tbAppPlugin));
           }
         },
         (error) => {}
@@ -276,7 +284,8 @@ export class AppPluginCmpComponent implements OnInit, OnDestroy {
   }
   //......Voir les information du User
   //TODO
-  onViewInfoUser(user_Id: any = '') {
+  onViewInfoUser(user_Id: any = '', indice: number) {
+    this.animInfoUser(indice);
     this.userService
       .getInfoUser(user_Id)
       .then((data_User) => {
@@ -284,8 +293,9 @@ export class AppPluginCmpComponent implements OnInit, OnDestroy {
         this.prenomUser = data_User.prenom;
         this.promoUser = data_User.promotion;
         this.fantome = data_User.fantome;
+        this.ppUserPlugin = data_User.ppUser;
       })
-      .catch((error) => {
+      .catch(() => {
         const message = 'Veillez verifier votre connexion ou actualisé !';
         //Affichage de l'alerte
         this.openSnackBar(message, 'ECM');
@@ -405,7 +415,7 @@ export class AppPluginCmpComponent implements OnInit, OnDestroy {
     } else {
       if (this.nbrTentative > 1) {
         --this.nbrTentative;
-        const message = `Votre code est incorrect ! Veillez effacer et reprendre tentative (s) restante (s) ${this.nbrTentative}`;
+        const message = `Votre code est incorrect !tentative (s) restante (s) ${this.nbrTentative}`;
         //Affichage de l'alerte
         this.openSnackBar(message, 'ECM');
       } else {
@@ -437,6 +447,66 @@ export class AppPluginCmpComponent implements OnInit, OnDestroy {
   //TODO
   openDialog() {
     this.dialog.open(AlertDialogueCodeComponent);
+  }
+  //Animation info user
+  //TODO
+  animInfoUser(indice: number) {
+    if (this.tbInstanceGsap.length != 0) {
+      this.tbInstanceGsap[0].reversed(true);
+      this.tbInstanceGsap.splice(0, 1);
+    }
+    this.deployerbtnUser = true;
+    let instance = gsap.timeline();
+    this.tbInstanceGsap.push(instance);
+    //
+    instance.to(`.card-cible:nth-child(${indice + 1}) mat-card-subtitle`, {
+      visibility: 'hidden',
+      duration: 0.1,
+    });
+    instance.to(`.card-cible:nth-child(${indice + 1}) mat-card-title`, {
+      visibility: 'hidden',
+      duration: 0.1,
+    });
+    instance.to(`.card-cible:nth-child(${indice + 1}) mat-card-content`, {
+      visibility: 'hidden',
+      duration: 0.1,
+    });
+    instance.to(`.card-cible:nth-child(${indice + 1}) .btnliste`, {
+      visibility: 'hidden',
+      duration: 0.1,
+    });
+    instance.to(`.card-cible:nth-child(${indice + 1}) .fa-user-injured`, {
+      visibility: 'hidden',
+      duration: 0.1,
+    });
+    instance.to(`.card-cible:nth-child(${indice + 1}) .liUser`, {
+      ease: 'bounce',
+      top: 285,
+      duration: 1,
+    });
+    instance.to(`.card-cible:nth-child(${indice + 1}) .liUser`, {
+      duration: 2,
+      scale: 28,
+    });
+    instance.to(`.card-cible:nth-child(${indice + 1}) .liUser`, {
+      visibility: 'hidden',
+      duration: 2,
+    });
+    instance.to(`.card-cible:nth-child(${indice + 1}) .blocInfoUser`, {
+      ease: 'back',
+      zIndex: 10,
+      duration: 1,
+      left: 0,
+    });
+  }
+  //Methode pour fermer les info user
+  //TODO
+  resetCarUser() {
+    this.tbInstanceGsap[0].reversed(true);
+    this.tbInstanceGsap.splice(0, 1);
+    setTimeout(() => {
+      this.deployerbtnUser = false;
+    }, 7000);
   }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();

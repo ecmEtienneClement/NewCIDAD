@@ -5,9 +5,13 @@ import { UserModel } from '../Models/user';
 import { Injectable } from '@angular/core';
 import { NotificationModel } from '../Models/notification';
 import { Notification } from './notification.service';
+import { UserService } from './user.Service';
 @Injectable()
 export class AuthService {
-  constructor(private notifyService: Notification) {}
+  constructor(
+    private notifyService: Notification,
+    private userService: UserService
+  ) {}
   /*
    .........................................METHODES ........................................
    */
@@ -35,6 +39,7 @@ export class AuthService {
               mdp: user.mdp,
               code: user.code,
               securite: user.securite,
+              ppUser: '',
             })
             .then(() => {
               //Creation de la collection pour les notifications du user
@@ -63,14 +68,12 @@ export class AuthService {
         .signInWithEmailAndPassword(mail, mdp)
         .then(() => {
           resolve();
-          
         })
         .catch((error) => {
           reject(error);
         });
     });
   }
-
   //ReAuthentification d'un User ...
   //TODO
   reAuthentification(mail: string, mdp: string) {
@@ -139,6 +142,7 @@ export class AuthService {
   //Deconnexion d'un User ...
   //TODO
   signOutUser() {
+    localStorage.setItem('ECM_TK','');
     firebase.auth().signOut();
   }
 
@@ -155,6 +159,36 @@ export class AuthService {
         .catch((error) => {
           reject(error);
         });
+    });
+  }
+
+  //Delete User
+  //TODO
+  deleteUserOfErrorCreateUser(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          this.notifyService.onDeleteCollectionNotifyUser(user.uid);
+          this.userService
+            .deleteInfoUser(user.uid)
+            .then(() => {
+              const userdelete = firebase.auth().currentUser;
+              userdelete
+                ?.delete()
+                .then(() => {
+                  resolve(true);
+                })
+                .catch(() => {
+                  reject(false);
+                });
+            })
+            .catch(() => {
+              reject(false);
+            });
+        } else {
+          reject(false);
+        }
+      });
     });
   }
 }

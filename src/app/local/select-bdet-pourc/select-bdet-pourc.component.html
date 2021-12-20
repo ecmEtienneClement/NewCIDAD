@@ -1,5 +1,6 @@
 <div class="container-fluid">
   <div #bd class="row bd">
+    <!--***********************PARTIE BUG**********************************-->
     <div class="col-12 mt-4 col-md-4">
       <i class="good fas fa-database"></i>
       <div class="form-check form-switch">
@@ -11,7 +12,31 @@
           id="checkPost"
         />
       </div>
+      <circle-progress
+        [percent]="pourcentageBug"
+        [radius]="70"
+        [outerStrokeWidth]="4"
+        [innerStrokeWidth]="2"
+        [outerStrokeColor]="'#78C000'"
+        [innerStrokeColor]="'#C7E596'"
+        [animation]="true"
+        [animationDuration]="700"
+      ></circle-progress>
+      <div class="form-group mt-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Poucentage </mat-label>
+          <mat-select [(ngModel)]="pourcentageBug">
+            <mat-option #mode value="100">100%</mat-option>
+            <mat-option #mode value="75">75%</mat-option>
+            <mat-option #mode value="50">50%</mat-option>
+            <mat-option #mode value="25">25%</mat-option>
+          </mat-select>
+          <mat-hint>Poucentage de sauvegarde</mat-hint>
+        </mat-form-field>
+      </div>
     </div>
+    <!--***********************PARTIE PLUGIN**********************************-->
+
     <div class="col-12 mt-4 col-md-4">
       <i class="good fas fa-database"></i>
       <div class="form-check form-switch">
@@ -25,7 +50,32 @@
           id="checkPluging"
         />
       </div>
+      <circle-progress
+        [percent]="pourcentagePlugin"
+        [radius]="70"
+        [outerStrokeWidth]="4"
+        [innerStrokeWidth]="2"
+        [outerStrokeColor]="'#78C000'"
+        [innerStrokeColor]="'#C7E596'"
+        [animation]="true"
+        [animationDuration]="700"
+      ></circle-progress>
+
+      <div class="form-group mt-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Poucentage </mat-label>
+          <mat-select [(ngModel)]="pourcentagePlugin">
+            <mat-option #mode value="100">100%</mat-option>
+            <mat-option #mode value="75">75%</mat-option>
+            <mat-option #mode value="50">50%</mat-option>
+            <mat-option #mode value="25">25%</mat-option>
+          </mat-select>
+          <mat-hint>Poucentage de sauvegarde</mat-hint>
+        </mat-form-field>
+      </div>
     </div>
+    <!--***********************PARTIE VIDEO**********************************-->
+
     <div class="col-12 mt-4 col-md-4">
       <i class="good fas fa-database"></i>
       <div class="form-check form-switch">
@@ -39,34 +89,25 @@
           id="checkVideo"
         />
       </div>
-    </div>
-  </div>
-
-  <div class="row row-progress">
-    <div class="col-12 col-progress mt-4">
       <circle-progress
-        [percent]="pourcentage"
-        [radius]="100"
-        [outerStrokeWidth]="16"
-        [innerStrokeWidth]="8"
+        [percent]="pourcentageVideo"
+        [radius]="70"
+        [outerStrokeWidth]="4"
+        [innerStrokeWidth]="2"
         [outerStrokeColor]="'#78C000'"
         [innerStrokeColor]="'#C7E596'"
         [animation]="true"
         [animationDuration]="700"
       ></circle-progress>
-    </div>
-  </div>
 
-  <div class="row">
-    <div class="col-12 col-select">
       <div class="form-group mt-4">
         <mat-form-field appearance="outline">
-          <mat-label>Sélectionner le poucentage de sauvegarde</mat-label>
-          <mat-select [(ngModel)]="pourcentage">
-            <mat-option #mode value="25">25%</mat-option>
-            <mat-option #mode value="50">50%</mat-option>
-            <mat-option #mode value="75">75%</mat-option>
+          <mat-label>Poucentage </mat-label>
+          <mat-select [(ngModel)]="pourcentageVideo">
             <mat-option #mode value="100">100%</mat-option>
+            <mat-option #mode value="75">75%</mat-option>
+            <mat-option #mode value="50">50%</mat-option>
+            <mat-option #mode value="25">25%</mat-option>
           </mat-select>
           <mat-hint>Poucentage de sauvegarde</mat-hint>
         </mat-form-field>
@@ -84,6 +125,23 @@
       >
         Démarrer sauvegarde
       </button>
+    </div>
+  </div>
+  <div class="alert-notify">
+    <p>
+      <i class="far fa-thumbs-up"></i>
+      ECM_CIDAD
+    </p>
+    <div class="progress">
+      <div
+        #proogressBar
+        class="progress-bar progress-bar-striped progress-bar-animated"
+        role="progressbar"
+        aria-valuenow="75"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        style="width: 0%"
+      ></div>
     </div>
   </div>
 </div>

@@ -1,0 +1,548 @@
+<div class="container-fluid">
+  <div class="row">
+    <div
+      (click)="ecmCidad('details-ecmcidad')"
+      class="col-parametre-default  col-12"
+    >
+      <div class="bloc-Cidad">
+        <h1 style="text-transform: uppercase">CIDAD</h1>
+        <p style="text-transform: capitalize">
+          communauté informatique développement d'application débogueur
+        </p>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="rowDescript" class="rowDescript row">
+    <div
+      (click)="viewDetails('details-post')"
+      class="col-parametre-default colDescript col-12 col-md-3 col-lg-3"
+    >
+      <div class="param code">
+        <h2>APP-POST</h2>
+        <p>Posté vos codes pour recevoir de l'aide</p>
+      </div>
+    </div>
+    <div
+      (click)="viewDetails('details-pluging')"
+      class="col-parametre-default colDescript col-12 col-md-3 col-lg-3"
+    >
+      <div class="param securite">
+        <h2 style="text-transform: uppercase">APP-PLUGIN</h2>
+        <p>Partager vos bout codes qui pourons aidé</p>
+      </div>
+    </div>
+    <div
+      (click)="viewDetails('details-video')"
+      class="col-parametre-default colDescript col-12 col-md-3 col-lg-3"
+    >
+      <div class="param navigation">
+        <h2 style="text-transform: uppercase">APP-URL-VIDEO</h2>
+        <p>
+          Partager les liens des tutorats afin d'aidé ceux qui ne l'on pas
+          suivis
+        </p>
+      </div>
+    </div>
+    <div
+      (click)="viewDetails('details-token')"
+      class="col-parametre-default colDescript col-12 col-md-3 col-lg-3"
+    >
+      <div class="param navigation">
+        <h2 style="text-transform: uppercase">TOKEN</h2>
+        <p>Sécurisé vos requettes en générant un token</p>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="rowDescript" class="rowDescript row">
+    <div
+      (click)="viewDetails('details-modeSecurise')"
+      class="col-parametre-default colDescript col-12 col-md-3 col-lg-3"
+    >
+      <div class="param code">
+        <h2 style="text-transform: uppercase">mode de sécurité</h2>
+        <p>Sécurisé votre compte CIDAD en activant le Mode-Sécurisé</p>
+      </div>
+    </div>
+    <div
+      (click)="viewDetails('details-modeNavigation')"
+      class="col-parametre-default colDescript col-12 col-md-3 col-lg-3"
+    >
+      <div class="param securite">
+        <h2 style="text-transform: uppercase">MODE DE NAVIGATION</h2>
+        <p>Navigué en mode identifiable ou fantôme</p>
+      </div>
+    </div>
+    <div
+      (click)="viewDetails('details-code')"
+      class="col-parametre-default colDescript col-12 col-md-3 col-lg-3"
+    >
+      <div class="param navigation">
+        <h2 style="text-transform: uppercase">CODE</h2>
+        <p>
+          Vous avez un code de quatre (4) chiffres pour sécurisé votre compte
+          CIDAD
+        </p>
+      </div>
+    </div>
+    <div
+      (click)="viewDetails('details-mdp')"
+      class="col-parametre-default colDescript col-12 col-md-3 col-lg-3"
+    >
+      <div class="param navigation">
+        <h2 style="text-transform: uppercase">MOT DE PASSE</h2>
+        <p>Connectez-vous à CIDAD avec votre mot de passe</p>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="rowDescript" class="rowDescript row">
+    <div
+      (click)="viewDetails('details-mail')"
+      class="col-parametre-default colDescript col-12 col-md-3 col-lg-3"
+    >
+      <div class="param code">
+        <h2 style="text-transform: uppercase">Mail</h2>
+        <p>Vous permet aussi de vous connecté à CIDAD et</p>
+      </div>
+    </div>
+    <div
+      (click)="viewDetails('details-noti')"
+      class="col-parametre-default colDescript col-12 col-md-3 col-lg-3"
+    >
+      <div class="param navigation">
+        <h2 style="text-transform: uppercase">notifications</h2>
+        <p>Recevez des notifications en temps réel avec CIDAD</p>
+      </div>
+    </div>
+    <div
+      (click)="viewDetails('details-zone')"
+      class="col-parametre-default colDescript col-12 col-md-3 col-lg-3"
+    >
+      <div class="param securite">
+        <h2 style="text-transform: uppercase">ZONE réinitialisation</h2>
+        <p>Vous avez la possibilité de définir des zones à</p>
+      </div>
+    </div>
+    <div
+      (click)="viewDetails('details-reini')"
+      class="col-parametre-default colDescript col-12 col-md-3 col-lg-3"
+    >
+      <div class="param navigation">
+        <h2 style="text-transform: uppercase">réinitialisation</h2>
+        <p>réinitialisé votre compte CIDAD afin de repartir a zéro</p>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="rowDescript" class="rowDescript row">
+    <div
+      (click)="viewDetails('details-local')"
+      class="col-parametre-default colDescript col-12 col-md-3 col-lg-3"
+    >
+      <div class="param code">
+        <h2 style="text-transform: uppercase">local</h2>
+        <p>Vous pouvez créer un base de donnée en local</p>
+      </div>
+    </div>
+    <div
+      (click)="viewDetails('details-delete')"
+      class="col-parametre-default colDescript col-12 col-md-3 col-lg-3"
+    >
+      <div class="param code">
+        <h2 style="text-transform: uppercase">supprimé</h2>
+        <p>Vous pouvez supprimez votre compte CIDAD</p>
+      </div>
+    </div>
+  </div>
+  <!--************
+
+                                PARTIE DES DETAILS
+    *************-->
+  <div *ngIf="rowDetails" class="rowDetails row">
+    <!--***************************DETAILS SUR APP-POST*******************************-->
+    <div *ngIf="colDetailPost" class="col-details col-12">
+      <div class="bloc-details details-post">
+        <h2 class="titre-des">APP-POST</h2>
+        <p>
+          App-Post vous permet de recevoir des suggestions de solutions sur vos
+          codes qui ont des erreurs (Bugs).Pour se faire il faudrait enregistré
+          le post sur [Enregistrer Post], le post aura un Titre, Language,
+          Détails et le(s) Code(s). <br />
+          <strong>Régles D'or :</strong>
+          <br />
+          [1]==> Toujour vérifier s'il n'y a pas un post similaire a la vôtre
+          avant d'enregistrez. <br />
+          [2]==> Toujour dire Merçi a la bonne réponse. <br />
+          <span> 1-Titre :</span><br />
+          Permet de déterminer la thématique du bug.<br />
+          exemples: <br />
+          [1]==> J'ai un problème de connexion avec ma base de donnée. <br />
+          [2]==> Ma fonction (promesse) ne capte pas les erreurs. <br />
+          <span> 2-Language :</span> <br />
+          Permet d'identifier le language du post et est aussi utilisé comme
+          recherche
+          <br />
+          exemples: <br />
+          [1...]==> PHP, Java Script ,Java ect ... <br />
+          NB : Veillez bien saisir le language normalement. <br />
+          <span> 3-Détails :</span> <br />
+          Le plus important! détail permet aux autres de comprendre ce qui c'est
+          passé ou plutôt ce que vous voulez faire, vous allez expliquez ce que
+          vous tentez de faire et comment, ce qui permettra aux autres d'avoir
+          une idée claire sur le post car lire le(s) code(s) d'autrui peut vite
+          devenir un calvaire du coup avec le(s) détail(s) l'approche sera plus
+          simple aux autres. Alors soyez clair et direct sur le(s) détail(s).
+          <br />
+
+          <span> 4-Code(s) :</span> <br />
+          Vous allez copié et collé le code, maximum trois(3) codes car il se
+          peut que vous travailez avec plusieurs fichiers comme un fichier html
+          pour recupérer les données un fichier php pour traiter les données
+          donc en cas d'erreur il est préférable que vous collez tout ces deux
+          fichiers.
+          <br />
+          Enfin vous enregistrez le post qui sera notifié aux membres de CIDAD
+          et procéderons aux suggestions de solutions.
+        </p>
+      </div>
+    </div>
+    <!--***************************DETAILS SUR APP-PLUGIN*******************************-->
+    <div *ngIf="colDetailPlugin" class="col-details col-12">
+      <div class="bloc-details details-pluging">
+        <h2 class="titre-des">APP-PLUGIN</h2>
+        <p>
+          App-Pluging permet de partager des codes (script) prêt a l'emploi!
+          <br />
+          NB : <br />
+          Le code d'un plugin ne doit faire une et une seule et doit bien la
+          faire. <br />
+          Ne codé pas un script qui existe déja pour les languages exemples : Un
+          code qui trie un TB, Un code qui supprime les doublons d'un TB ect ...
+          <br />
+          Cherché a faire des scripts plus complexe, factorisé un code, des
+          animations CSS ect ... <br />
+          Partager le plugin sur [Enregistrer Plugin],le plugin aura un
+          Language, Documentation et le Code. <br />
+
+          <strong>Régle D'or :</strong>
+          <br />
+          [1]==> Toujour vérifier s'il n'y a pas un plugin similaire a la vôtre
+          avant d'enregistrez. <br />
+
+          <span> 1-Language :</span><br />
+          Permet d'identifier le language du plugin et est aussi utilisé comme
+          recherche
+          <br />
+          exemples: <br />
+          [1...]==> PHP, Java Script ,Java ect ... <br />
+          NB : Veillez bien saisir le language normalement. <br />
+          <span> 2-Documentation :</span>
+          <br />
+          Permet aux autres de ce documenté sur ce plugin et de savoir comment
+          l'implémenté dans leur code, et aussi quel est le problème résolu par
+          ce plugin, en quoi est t'il important. <br />
+          <span> 3-Code : </span><br />Le code du plugin, vous allez copié et le
+          collé. <br />
+          Enfin vous enregistrez le plugin qui sera notifié aux membres de CIDAD
+          qui pourra aidé certains d'entre eux lors de leur développement.
+        </p>
+      </div>
+    </div>
+    <!--***************************DETAILS SUR APP-PLUGIN*******************************-->
+    <div *ngIf="colDetailVideo" class="col-details col-12">
+      <div class="bloc-details details-video">
+        <h2 class="titre-des">APP-URL-VIDEO</h2>
+        <p>
+          Partager les liens des tutorats! d'abord un contexte ils nous est
+          arrivé parfois de faire cour sur Google meet pour des raisons
+          quelconques, le cour est enregistré par le tuteur ensuite passe le
+          lien de ce cour aux responsables qui a leur tour crée un compte gmail
+          public y enregistre tout les liens(URL) pour que les autres puissent
+          voir ou revoir le cour. <br />
+          Bien !!!oui c'est bien mais il se trouve qu'il y a problème oui
+          (Compte Gmail Public) tout le monde y avait accés ce qui est normal
+          mais par erreur certains supprimé les liens(URL) ou les classés dans
+          le spam, par conséquence les autres ne pourrons plus voir ou revoir ce
+          cour. <br />
+          App-URL-Video permet aux réponsables d'enregistré les liens(URL) des
+          cours sur meet en toute sécurité seul celui qui la partagé peut le
+          supprimé, les autres ne pourrons que visionnez, copié ou signalé le
+          lien(URL). Partager le app-url-video sur [Enregistrer URL-Video], l'
+          URL-Video aura nom-Cour, Licence-Séquence et l'URL. <br />
+
+          <strong>Régles D'or :</strong>
+          <br />
+          [1]==> Toujour vérifier s'il n'y a pas un URL similaire a la vôtre
+          avant d'enregistrez. <br />
+          [2]==> Pas d'URL non sécurisé qui sera même rejeté. <br />
+          [3]==> Pas d'URL YouTube qui sera même rejeté. <br />
+
+          <span> 1-nom-Cour :</span><br />Permet d'identifier le cour exemples:
+          <br />
+          [1]==> Language C <br />
+          [2]==> Language Java <br />
+          [3]==> JSP et Servlet <br />
+          NB : Veillez bien saisir le nom-Cour normalement. <br />
+          <span> 2-Licence-Séquence :</span> <br />
+          A sélectionné exemples: <br />
+          [1]==> LICENSE 1 SEMESTRE 1 [Séquence : 2] <br />
+          [2]==> LICENSE 3 SEMESTRE 2 [Séquence : 4] <br />
+
+          <span> 3-l'URL :</span> <br />
+          Le lien(URL) du cour, vous allez copié et le collé. <br />
+          Enfin vous enregistrez le lien qui sera notifié aux membres de CIDAD
+          qui permettra a certains de voir et revoir le cour sans problème.
+        </p>
+      </div>
+    </div>
+    <!--***************************DETAILS SUR TOKEN*******************************-->
+    <div *ngIf="colDetailToken" class="col-details col-12">
+      <div class="bloc-details details-token">
+        <h2 class="titre-des">TOKEN</h2>
+        <p>
+          Les tokens assurent la sécurité de vos requêtes vers l'API-REST et
+          votre authentification qui est valable 72h. Si le token n'est plus
+          valide ou cache nettoyer Vous serez notifié de ce token réjeté par
+          l'API puis [Généré Token] va s'affiché. <br />
+          Cliquer sur ce bouton puis saisir votre mot de passe et un nouveau
+          token vous serez généré pour 72h.
+        </p>
+      </div>
+    </div>
+    <!--***************************DETAILS SUR MODE SECURISÉ*******************************-->
+    <div *ngIf="colDetailmodeSecurise" class="col-details col-12">
+      <div class="bloc-details details-modeSecurise">
+        <h2 class="titre-des">MODE DE SECURITÉ</h2>
+        <p>
+          Définir votre mode de sécurité pour votre compte CIDAD dans paramètre
+          N°05 <br />
+          <span> 1-Mode Sécurisé :</span>
+          <br />
+          Une demande de code de confirmation sur toute les actions sensibles
+          comme une suppression, modification ect ...Pour bien certifié que vous
+          éte l'auteur de cette action demandé avec trois (3) tentatives. Ce qui
+          protégera vos données au cas ou si un autre utilisé votre machine a
+          votre insu et que vous vous ete déja connecté à CIDAD. <br />
+          <span> 2-Mode Non Sécurisé :</span>
+          <br />
+          Pas de demande de code de confirmation sur toute les actions sensibles
+          comme une suppression, modification ect ...Ce qui par conséquence
+          donnera la possibilité a un autre de supprimé vos données ou de les
+          modifiées si et seulement si votre séssion est ouverte et qu'il est en
+          possession de votre ordinateur ou téléphone connecté.
+        </p>
+      </div>
+    </div>
+    <!--***************************DETAILS SUR MODE NAVIGATION*******************************-->
+    <div *ngIf="colDetailmodeNavigation" class="col-details col-12">
+      <div class="bloc-details details-modeNavigation">
+        <h2 class="titre-des">MODE DE NAVIGATION</h2>
+        <p>
+          Avec CIDAD vous avez la possibilité de naviguer en mode identifiable
+          ou mode fantôme dans Edit Profil<br />
+          <span> 1-Mode Identifiable :</span>
+          <br />
+          Vos informations personnelles comme votre Nom, Prénom, Promotion et
+          photo profil serrons presentées aux autres si demandé. Vos
+          plublications serrons identifiées de même que vos réponses et
+          commentaires. <br />
+          <span> 2-Mode Fantôme :</span>
+          <br />Il peut arrivé qu'il est un utilisateur qui veut posté un bug
+          qui lui semble gênant ou vouloir répondre, commenté sans que l'on
+          l'identifie. <br />
+          Avec Mode Fantôme activé, vos informations personnelles ne serrons pas
+          presentées aux autres, vos plublications ne serrons pas identifiées de
+          même que vos réponses et commentaires. <br />
+        </p>
+      </div>
+    </div>
+    <!--***************************DETAILS SUR CODE*******************************-->
+    <div *ngIf="colDetailCode" class="col-details col-12">
+      <div class="bloc-details details-code">
+        <h2 class="titre-des">CODE</h2>
+        <p>
+          Avec CIDAD vous avez un code de quatre (4) chiffres si le Mode
+          Sécurisé est activé <br />
+          <span> 1-Modifier le code :</span>
+          <br />
+          Dans paramètre N°01 saisir votre ancien code ensuite le nouveau code
+          et enfin validé la modification <br />
+          <span> 2-Réinitialiser le code :</span>
+          <br />
+          Dans paramètre N°02 saisir votre mail ensuite mot de passe pour
+          certifié que vous éte l'auteur de cette action de réinitialisation du
+          code et enfin validé. Si vérification valide le code sera réinitialisé
+          a :1234<br />
+        </p>
+      </div>
+    </div>
+    <!--***************************DETAILS SUR MDP*******************************-->
+    <div *ngIf="colDetailMDP" class="col-details col-12">
+      <div class="bloc-details details-mdp">
+        <h2 class="titre-des">MOT DE PASSE</h2>
+        <p>
+          Votre mot de passe vous permet de vous connecté à CIDAD <br />
+          <span> 1-Modifier mot de passe :</span>
+          <br />
+          Dans paramètre N°04 saisir votre ancien mot de passe ensuite le
+          nouveau mot de passe et enfin validé la modification <br />
+          <span> 2-Réinitialiser mot de passe :</span>
+          <br />
+          Déconnectez-vous d'abord allez dans la page connexion cliquez sur mot
+          de passe oublier, et de bien suivre les directives un mail de
+          réinitialisation vous serez envoyé. Définir le nouveau mot de passe
+          suivant ce mail envoyé puis revenir a la page de connexion pour
+          enregistrez le nouveau mot de passe que vous avez défini, et vous
+          serez automatiquement reconnecté. <br />
+        </p>
+      </div>
+    </div>
+    <!--***************************DETAILS SUR MAIL*******************************-->
+    <div *ngIf="colDetailMail" class="col-details col-12">
+      <div class="bloc-details details-mail">
+        <h2 class="titre-des">MAIL</h2>
+        <p>
+          Votre mail vous permet de vous connecté à CIDAD de réinitialisé votre
+          code, mot de passe ect ... <br />
+          <span> 1-Modifier mail :</span>
+          <br />
+          Dans paramètre N°03 <br />
+          saisir votre nouveau mail puis mot de passe et enfin validé la
+          modification. La modification sera effectuée si et seulement si votre
+          nouveau mail n'est pas utilisé par un autre.
+        </p>
+      </div>
+    </div>
+    <!--***************************DETAILS SUR NOTI*******************************-->
+    <div *ngIf="colDetailNoti" class="col-details col-12">
+      <div class="bloc-details details-noti">
+        <h2 class="titre-des">NOTIFICATIONS</h2>
+        <p>
+          Recevez des notifications et alertes en temps réel des nouveaux posts,
+          plugin, url-video, réponses et commentaires. <br />
+          Vous serez notifié de tout ce qui ce passe dans vos posts et plugin.
+          Si vous proposez une réponse a un post vous serez notifier des
+          commentaires sur votre réponse, uniquement votre réponse. <br />
+          Vous serez notifié que des commentaires qui vous concerne, si le post
+          n'est pas le vôtre idem que la ou les réponses et que vous n'avez fait
+          au commentaires donc vous ne recevrez aucune notifications concernent
+          ce post.
+        </p>
+      </div>
+    </div>
+    <!--***************************DETAILS SUR ZONE*******************************-->
+    <div *ngIf="colDetailZone" class="col-details col-12">
+      <div class="bloc-details details-zone">
+        <h2 class="titre-des">ZONE RÉINITIALISATIONS</h2>
+        <p>
+          Vous avez la possibilité de définir des zones à réinitialisées, car il
+          se peut que vous voulez supprimé uniquement vos post(s), ou réponse(s)
+          ect ... <br />
+          Dans paramètre N°06. <br />
+          Sélectionner la zone a réinitialisée, saisir votre mot de passe enfin
+          validé. Si mot de passe valide la réinitialisation sera lancée.
+        </p>
+      </div>
+    </div>
+    <!--***************************DETAILS SUR REINI*******************************-->
+    <div *ngIf="colDetailReini" class="col-details col-12">
+      <div class="bloc-details details-reini">
+        <h2 class="titre-des">RÉINITIALISATION</h2>
+        <p>
+          Vous pouvez réinitialisé toute les données de votre compte CIDAD,
+          repartir à zéro <br />
+          Dans paramètre N°07. <br />
+          Saisir votre mot de passe enfin validé. Si mot de passe valide la
+          réinitialisation générale sera lancée.
+        </p>
+      </div>
+    </div>
+    <!--***************************DETAILS SUR LOCAL*******************************-->
+    <div *ngIf="colDetailLocal" class="col-details col-12">
+      <div class="bloc-details details-local">
+        <h2 class="titre-des">LOCAL</h2>
+        <p>
+          <b style="color: red">NON ACTIVÉ</b> <br />
+          Vous pouvez créer une base de donnée en local et y sauvegardé des
+          données pour travaillez en mode ofline<br />
+          Dans BD LOCAL. <br />
+          Cette fonctionnalitée est developpée mais pas encore implémenté dans
+          CIDAD.
+        </p>
+      </div>
+    </div>
+    <!--***************************DETAILS SUR DELETE*******************************-->
+    <div *ngIf="colDetailDelete" class="col-details col-12">
+      <div class="bloc-details details-delete">
+        <h2 class="titre-des">SUPPRIMÉ</h2>
+        <p>
+          Vous pouvez supprimez votre compte CIDAD <br />
+          Dans paramètre N°08. <br />
+          Saisir votre mot de passe enfin validé. Si mot de passe valide la
+          suppression de votre compte sera lancée.
+        </p>
+      </div>
+    </div>
+    <!--***************************DETAILS SUR ECM CIDAD*******************************-->
+    <div *ngIf="colDetailEcmCidad" class="col-details col-12">
+      <div class="bloc-details details-ecmcidad">
+        <h2 class="titre-des">CIDAD 1.0.0</h2>
+        <p>
+          <span>CIDAD :</span> <br />
+          communauté informatique développement d'application débogueur
+          <br />
+          <span>Version :</span> <br />
+          1.0.0 <br />
+          <span>Développer par :</span> <br />
+          ETIENNE CLÉMENT MBAYE (ECM) <br />
+          <span>Contexte :</span> <br />
+          Nous (IDA) nous formons des groupes whats-app ou télégramme pour
+          passer des informations (diverses), ce qui cause des problémes du
+          moment ou n'importe quelle information peut se fondre dans les
+          messages, donc vous admettez que ce serait difficile d'y résoudre des
+          bugs (problèmes) de code. <br />
+          C'est l'une des raisons pour laquelle CIDAD est Développé, que 50% de
+          CIDAD n'est deployé qui sont : Post, Plugin et URL-Video. Les 50%
+          restant pas encore du fait de l'espace mémoire dédié par nos
+          hébergeurs (oui nos hébergeurs car CIDAD est connecté a deux serveurs)
+          est insuffisante pour déployer la totalité. <br />
+        </p>
+        <hr />
+        <a
+          href="https://docs.google.com/forms/d/e/1FAIpQLScjYCdRt22BtJIgZAkjr894zJIdQ93riPD3EpSNzuMX1oMRMQ/viewform?usp=sf_link"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Envoyer un commentaire à ECM</a
+        >
+        <br />
+
+        <a
+          href="https://docs.google.com/forms/d/e/1FAIpQLSe6_btPMj4cek6sAgUoPcmHL99Pz9uTFEqXnDXjy1IKfm3KoQ/viewform?usp=sf_link"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Signaler une erreur</a
+        >
+      </div>
+    </div>
+  </div>
+  <div class="container-notify">
+    <div class="alert">
+      <p>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="#fff"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M10.872 6.831l1.695 3.904 3.654-1.561-1.79 3.426 3.333.954-3.417 1.338 2.231 4.196-4.773-2.582-2.869 2.287.413-3.004-3.792-.726 2.93-1.74-1.885-2.512 3.427.646.843-4.626zm-.786-6.831l-1.665 9.119-6.512-1.228 3.639 4.851-5.548 3.294 7.108 1.361-.834 6.076 5.742-4.577 9.438 5.104-4.288-8.064 6.834-2.677-6.661-1.907 3.25-6.22-6.98 2.982-3.523-8.114z"
+          />
+        </svg>
+        Veillez ne pas cliquer simultanément ! Une action est en cour patienté
+        ...
+     
+      </p>
+    
+    </div>
+  </div>
+
+</div>

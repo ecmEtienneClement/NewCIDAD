@@ -1,5 +1,5 @@
 <div #card class="row container-card">
-  <div 
+  <div
     class="col-12 card-cible col-lg-4 mt-4"
     *ngFor="
       let item of tbCmpCh | paginate: { itemsPerPage: 12, currentPage: page };
@@ -18,9 +18,16 @@
         ></span>
         <div class="imgUser">
           <img
+            *ngIf="fantome == 'false'"
             class="img-circle"
-            src="https://cdn.pixabay.com/photo/2021/09/04/16/51/girl-6598198__340.jpg"
-            alt="Cinque Terre"
+            [src]="ppUserInfo"
+            alt="Photo Profil"
+          />
+          <img
+            *ngIf="fantome == 'true'"
+            class="img-circle"
+            src="https://images.pexels.com/photos/5380612/pexels-photo-5380612.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+            alt="Photo Fantôme"
           />
         </div>
         <!--...................LE CARDE DE L'INFO USER..............................-->
@@ -115,7 +122,7 @@
         <div class="row ligne-date">
           <span class="date"
             ><p class="txt-date">
-              {{ item.date | date: "short" }}
+              {{ item.date }}
             </p></span
           >
         </div>

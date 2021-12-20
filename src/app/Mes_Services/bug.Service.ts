@@ -11,12 +11,16 @@ import { GardGuard } from './gard.guard';
 import { Notification } from './notification.service';
 import { ReponseBugModel } from '../Models/reponseBug';
 import { ErrorService } from './error.Service';
-import { LocalService } from './local.Service';
-
+import { dbNameType, LocalService } from './local.Service';
+import { EmitEvent } from './emitEvent.service';
+import { EventType } from '../Models/eventAction';
+import * as moment from 'moment';
+moment.locale('fr');
 @Injectable()
 export class BugService {
   subscriptionEvent: any;
   constructor(
+    private emitEventService: EmitEvent,
     private route: Router,
     private _snackBar: MatSnackBar,
     private serviceReponseBug: ReponseBugService,
@@ -27,11 +31,16 @@ export class BugService {
   ) {}
   //....Partie Observable du tbBugService
   tbSubjectBugService: Subject<BugModel[]> = new Subject<BugModel[]>();
+  tbSubjectLocalBugService: Subject<BugModel[]> = new Subject<BugModel[]>();
   private tbBugService: BugModel[];
+  private tbLocalBugService: BugModel[];
   etatConnexion: boolean = false;
 
   updatetbBugService() {
     this.tbSubjectBugService.next(this.tbBugService);
+  }
+  updatetLocalbBugService() {
+    this.tbSubjectLocalBugService.next(this.tbLocalBugService);
   }
   //....................
 
@@ -43,6 +52,7 @@ export class BugService {
     details: string,
     codeBug: string[]
   ) {
+    let dateSaved: string = moment().format('Do MMMM YYYY, HH:mm:ss');
     //User_Id
     const user_Id = this.gardService.user_Id_Connect;
     //Bug_Id
@@ -57,7 +67,7 @@ export class BugService {
       details,
       'Non Résolu',
       0,
-      Date.now(),
+      dateSaved,
       codeBug
     );
     this.tbBugService.unshift(newBug);
@@ -150,7 +160,7 @@ export class BugService {
     //Suppression du bug d'abord
     this.tbBugService.splice(indice, 1);
     //Creation d'un nouveau bug
-
+    let dateSaved: string = moment().format('Do MMMM YYYY, HH:mm:ss');
     const bugUpdate = new BugModel(
       bug.bug_Id,
       bug.user_Id,
@@ -159,7 +169,7 @@ export class BugService {
       details,
       etat,
       1,
-      Date.now(),
+      dateSaved,
       codeBug
     );
 
@@ -298,9 +308,13 @@ export class BugService {
   }
   //.....voir les details
   //TODO
-  onNavigate(objBug: BugModel) {
+  onNavigate(objBug: BugModel): boolean {
     let userIdRepondant = this.gardService.user_Id_Connect;
     let index: number = 0;
+    if (!this.verifyTbBugisNotundefined()) {
+      this.onNavigateLocal(objBug);
+      return false;
+    }
     //Voir commentaire du service tbReponse pour comprendre les raisons d'utilisation de boucle
     this.tbBugService.forEach((element) => {
       if (element.bug_Id == objBug.bug_Id) {
@@ -327,6 +341,17 @@ export class BugService {
     });
     this.sauvegardeBase();
     this.updatetbBugService();
+    this.route.navigate(['/ecm', 'details', index]);
+    return true;
+  }
+  onNavigateLocal(objBug: BugModel) {
+    let index: number = 0;
+    //Voir commentaire du service tbReponse pour comprendre les raisons d'utilisation de boucle
+    this.tbLocalBugService.forEach((element) => {
+      if (element.bug_Id == objBug.bug_Id) {
+        index = this.tbLocalBugService.indexOf(element);
+      }
+    });
     this.route.navigate(['/ecm', 'details', index]);
   }
   //.....voir les details
@@ -415,6 +440,15 @@ export class BugService {
       }
     });
   }
+  //Methode pour verifier si le tb est bien charger
+  //TODO
+  verifyTbBugisNotundefined(): boolean {
+    if (this.tbBugService == null || this.tbBugService == undefined) {
+      return false;
+    }
+    return true;
+  }
+
   //...............PARTIE DE LA BASE DE DONNEE FIREBASE...............
 
   //...Sauvegarde de la base de donnee
@@ -448,7 +482,10 @@ export class BugService {
         (valueBd) => {
           this.tbBugService = valueBd.val() ? valueBd.val() : [];
           this.updatetbBugService();
-          this.sauvegardeDbBugCryptLocal();
+          //this.sauvegardeDbBugCryptLocal();
+          this.emitEventService.emit_Event_Update_({
+            type: EventType.ANIM_NOTIFY_SUCCESS_BUG,
+          });
         },
         () => {
           this.errorNotifyService.notifyAlertErrorDefault(
@@ -551,7 +588,8 @@ export class BugService {
         //Verifi si le tb est different de undif...
         if (this.tbBugService) {
           //recuperation du pourcentage
-          let pourcentage = this.localService.getPoucentageDonneLocal();
+          let pourcentage =
+            this.localService.getPoucentageDonneLocal('ECM_PB_B');
           //arret du processus si le pourcentage est egal a 0
           if (pourcentage == 0) {
             this.errorNotifyService.notifyAlertErrorDefault(
@@ -576,6 +614,7 @@ export class BugService {
             localStorage.setItem(name, window.btoa(JSON.stringify(elementBug)));
             ++i;
           }
+          this.localService.dataSavedDonneLocal(dbNameType.BUG);
           return true;
         } else {
           this.errorNotifyService.notifyAlertErrorDefault(
@@ -605,34 +644,61 @@ export class BugService {
         }
         //Recuperation de la base
         let tbBugLocal: BugModel[] = [];
-        for (let i = 0; i < 0; ++i) {
+        for (let i = 0; i > -1; ++i) {
           let name: string = 'ECM_BB_' + i;
           let element: any = localStorage.getItem(name);
           if (element == null) {
-            this.tbBugService = tbBugLocal;
-            this.updatetbBugService();
+            this.tbLocalBugService = tbBugLocal;
+            this.updatetLocalbBugService();
             return true;
           }
-          const elementDecrypt: string = window.atob(element);
-          const elementDecryptParseJson: any = JSON.parse(elementDecrypt);
-          tbBugLocal.push(elementDecryptParseJson);
+          try {
+            const elementDecrypt: string = window.atob(element);
+            const elementDecryptParseJson: any = JSON.parse(elementDecrypt);
+
+            tbBugLocal.push(elementDecryptParseJson);
+            console.log('bon');
+          } catch {
+            console.log('error');
+          }
         }
       }
     }
     return false;
   }
+  //Methode pour le nombre d'elements sauvegardé les donnees en local
+  //TODO
+  nbrElementDbBugCryptLocal(): number {
+    //Verification preliminaire de l'existance de la bd
+    let nbrElement: number = 0;
+    if (localStorage.getItem('ECM_BB_0') == null) {
+      return 0;
+    }
+
+    for (let i = 0; i > -1; ++i) {
+      let name: string = 'ECM_BB_' + i;
+      let element: any = localStorage.getItem(name);
+      if (element != null) {
+        nbrElement += 1;
+      }
+      if (element == null) {
+        return nbrElement;
+      }
+    }
+
+    return nbrElement;
+  }
   //Methode pour supprimer les donnees en local
   //TODO
-  deleteDbBugCryptLocal(): boolean {
+  deleteDbBugCryptLocal(silence: boolean): boolean {
     //Verification preliminaire de l'existance de la bd
 
-    if (
-      localStorage.getItem('ECM_BB_0') == null &&
-      localStorage.getItem('ECM_BB_1') == null
-    ) {
-      this.errorNotifyService.notifyAlertErrorDefault(
-        "Nous n'avons pas trouvé de données local a supprimées sur les Posts ! "
-      );
+    if (localStorage.getItem('ECM_BB_0') == null) {
+      if (!silence) {
+        this.errorNotifyService.notifyAlertErrorDefault(
+          "Nous n'avons pas trouvé de données local a supprimées sur les Posts ! "
+        );
+      }
       return false;
     }
 
@@ -643,9 +709,11 @@ export class BugService {
         localStorage.removeItem(name);
       }
       if (element == null) {
-        this.errorNotifyService.notifyAlertErrorDefault(
-          'Données local des Posts supprimées ! '
-        );
+        if (!silence) {
+          this.errorNotifyService.notifyAlertErrorDefault(
+            'Données local des Posts supprimées ! '
+          );
+        }
         return true;
       }
     }

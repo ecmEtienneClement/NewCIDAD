@@ -28,7 +28,7 @@
         <div class="row">
           <div class="col- 12">
             <strong>Date du Post</strong><br />
-            {{ bugCmp.date | date: "short" }}
+            {{ bugCmp.date }}
           </div>
         </div>
         <div class="row">
@@ -101,7 +101,8 @@
       <legend>
         <i class="fas fa-hand-holding-medical" style="color: green"></i>
         <span class="txtsolution">
-          Une Solution {{ nomUserConnected }} {{ prenomUserConnected }}
+          Une Solution {{ nomUserConnected | uppercase }}
+          {{ prenomUserConnected | uppercase }}
         </span>
       </legend>
       <div class="row">
@@ -119,13 +120,18 @@
       <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
           <button
+            style="color: white"
             class="btn btnrepondre"
             [disabled]="reponse.length < 5 || diseableBtnRepondre"
             (click)="onSubmitForm()"
           >
             Répondre
           </button>
-          <button class="btn btnannuler" (click)="onResetForm()">
+          <button
+            style="color: red"
+            class="btn btnannuler"
+            (click)="onResetForm()"
+          >
             Annuler
           </button>
         </div>

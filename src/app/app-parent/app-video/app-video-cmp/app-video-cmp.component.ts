@@ -135,12 +135,14 @@ export class AppVideoCmpComponent implements OnInit {
       this.notifyService.tbNotifySubject.subscribe(
         (data_db_Notify: NotificationModel[]) => {
           //Des que les tbDbNotify arriver je lance la methode de filtre
-          if (data_db_Notify.length > 0) {
-            //Recuperation de tbAppVideo
-            this.appVideoService.getAllVideo();
+          if (data_db_Notify) {
+            if (data_db_Notify.length > 0) {
+              //Recuperation de tbAppVideo
+              this.appVideoService.getAllVideo();
+            }
           }
         },
-        (error) => {
+        () => {
           alert('Erreur recup Notify Veiller actualisée');
         }
       )

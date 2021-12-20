@@ -1,10 +1,10 @@
 import {
   Component,
-  ElementRef,
+
   Input,
   OnDestroy,
   OnInit,
-  ViewChild,
+
 } from '@angular/core';
 
 import { EmitEvent } from 'src/app/Mes_Services/emitEvent.service';
@@ -39,8 +39,8 @@ export class ViewecmComponent implements OnInit, OnDestroy {
   @Input() nbrReponseCoche: number;
   @Input() tbCmpCh: BugModel[];
   @Input() user_Id_Connect: string;
+  @Input() ppUserInfo: string;
 
-  @ViewChild('card') myCard: ElementRef;
   page: number = 1;
   /*Cet tb nous permet de gerer les intances de gsap*/
   tbInstanceGsap: instanceGsap[] = [];
@@ -69,35 +69,9 @@ export class ViewecmComponent implements OnInit, OnDestroy {
  ...............................PARTIE POUR REGLAGE D'AFFICHAGE ................ .........
  
 */
-  testanimCardUser() {
-    let instanceT = gsap.timeline();
-    //EventEmitter
-    //va perdre des elements de son affichages
-    instanceT.to(`.example-card`, {
-      opacity: 1,
-      translateY: 100,
-      zIndex: 5,
-      duration: 0.8,
-      stagger: 0.8,
-    });
-  }
+
   traintementEmitEventParametreAffichage(data_Event: EventModel) {
     switch (data_Event.type) {
-      case EventType.ANIM_TOTAL_CARD:
-        this.animCard = true;
-       
-        //attendre 0.5s le temps le ng for finis sont job
-        setTimeout(() => {
-          this.testanimCardUser();
-
-          this.eventService.emit_Event_Update_({
-            type: EventType.FIN_ANIM_CARD,
-          });
-        }, 500);
-        break;
-      case EventType.NO_ANIM_TOTAL_CARD:
-        this.animCard = false;
-        break;
       case EventType.OPEN_BTN_DETAILS:
         this.open_btn_details = !this.open_btn_details;
         break;
@@ -375,7 +349,7 @@ export class ViewecmComponent implements OnInit, OnDestroy {
       data_paylode_obj_Bug: objBug,
     });
   }
-  //Methode Pour la sauppression du Bug eventBug
+  //Methode Pour la suppression du Bug eventBug
   //TODO
   onDeletBug(objBug: BugModel) {
     this.eventService.emit_Event_Obj_Bug_({
@@ -388,7 +362,7 @@ export class ViewecmComponent implements OnInit, OnDestroy {
   pageChanged(event: any) {
     this.eventService.emit_Event_Obj_Bug_({
       type: EventType.CHANGE_PAGINATE,
-      data_paylode_obj_Bug: new BugModel('', '', '', '', '', '', 0, 0, []),
+      data_paylode_obj_Bug: new BugModel('', '', '', '', '', '', 0, '', []),
       data_paylode_String: 'ecm',
       data_paylode_Number: event,
     });

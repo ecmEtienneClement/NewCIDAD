@@ -11,6 +11,7 @@ export class UserModel {
     public mdp: string,
     public fantome: string = 'false',
     public code: any = 1234,
-    public securite: string = 'true'
+    public securite: string = 'true',
+    public ppUser: string = ''
   ) {}
 }

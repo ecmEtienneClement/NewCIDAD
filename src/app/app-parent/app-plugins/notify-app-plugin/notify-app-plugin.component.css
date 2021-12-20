@@ -46,14 +46,19 @@
 }
 
 .box-nom {
+  letter-spacing: 20px;
+  position: relative;
   font-weight: bold;
   text-transform: uppercase;
   margin-top: 15px;
   text-align: center;
-  font-size: 30px;
   color: white;
-  letter-spacing: 20px;
+  letter-spacing: 15px;
+  width: 100%;
+  height: auto;
+  font-size: 7vw;
 }
+
 
 .btn-notify {
   margin-top: 15px;

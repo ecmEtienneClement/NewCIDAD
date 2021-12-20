@@ -30,7 +30,9 @@ export class ErrorService {
   ) {
     switch (status) {
       case 401:
-        this.notifyToken();
+        setTimeout(() => {
+          this.notifyToken();
+        }, 5000);
         break;
       case 400:
         messageError?.length != 0
